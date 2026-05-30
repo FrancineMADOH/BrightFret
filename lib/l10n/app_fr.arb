@@ -1,5 +1,166 @@
 {
   "@@locale": "fr",
+
   "appName": "BrightFret",
-  "@appName": { "description": "Application name" }
+  "@appName": { "description": "Nom de l'application" },
+
+  "cancel": "Annuler",
+  "@cancel": { "description": "Action annuler" },
+
+  "confirm": "Confirmer",
+  "@confirm": { "description": "Action confirmer" },
+
+  "retry": "Réessayer",
+  "@retry": { "description": "Action réessayer" },
+
+  "close": "Fermer",
+  "@close": { "description": "Action fermer" },
+
+  "save": "Sauvegarder",
+  "@save": { "description": "Action sauvegarder" },
+
+  "loading": "Chargement…",
+  "@loading": { "description": "Texte de chargement générique" },
+
+  "viewAll": "Voir tout →",
+  "@viewAll": { "description": "Lien voir tout" },
+
+  "trackYourShipment": "Suivez votre colis",
+  "@trackYourShipment": { "description": "Titre de la barre de recherche" },
+
+  "enterTrackingCode": "Entrer un code…",
+  "@enterTrackingCode": { "description": "Placeholder du champ de saisie" },
+
+  "scanQrCode": "Scanner un QR code",
+  "@scanQrCode": { "description": "Bouton scanner" },
+
+  "myShipments": "Mes colis",
+  "@myShipments": { "description": "Titre écran mes colis" },
+
+  "recentShipments": "Colis récents",
+  "@recentShipments": { "description": "Section colis récents sur S03" },
+
+  "saveShipment": "Sauvegarder ce colis ⭐",
+  "@saveShipment": { "description": "Bouton sauvegarder dans mes colis" },
+
+  "unlockDetails": "Débloquer les détails",
+  "@unlockDetails": { "description": "CTA vers vérification téléphone" },
+
+  "followFirstShipment": "Suivre mon premier colis",
+  "@followFirstShipment": { "description": "CTA empty state mes colis" },
+
+  "statusActive": "En transit",
+  "@statusActive": { "description": "Statut colis en cours de transit" },
+
+  "statusDelivered": "Livré",
+  "@statusDelivered": { "description": "Statut colis livré" },
+
+  "statusWarning": "Attention",
+  "@statusWarning": { "description": "Statut colis nécessitant attention" },
+
+  "statusError": "Problème",
+  "@statusError": { "description": "Statut colis avec problème signalé" },
+
+  "statusArchived": "Archivé",
+  "@statusArchived": { "description": "Statut colis archivé ou ancien" },
+
+  "transportAir": "Aérien",
+  "@transportAir": { "description": "Mode de transport aérien" },
+
+  "transportSea": "Maritime",
+  "@transportSea": { "description": "Mode de transport maritime" },
+
+  "phoneVerification": "Vérification",
+  "@phoneVerification": { "description": "Titre écran vérification téléphone" },
+
+  "enterPhoneLastDigits": "Entrez les 4 derniers chiffres du numéro de téléphone communiqué à votre transitaire.",
+  "@enterPhoneLastDigits": { "description": "Instruction saisie code téléphone" },
+
+  "verificationError": "Code incorrect. Réessayez.",
+  "@verificationError": { "description": "Erreur de vérification téléphone" },
+
+  "tooManyAttempts": "Trop de tentatives. Réessayez dans 10 minutes.",
+  "@tooManyAttempts": { "description": "Blocage après 3 tentatives échouées" },
+
+  "offlineDataBanner": "⚠️ Hors ligne — Données du {datetime}",
+  "@offlineDataBanner": {
+    "description": "Bannière données en cache affichées hors ligne",
+    "placeholders": {
+      "datetime": {
+        "type": "String",
+        "description": "Date et heure de la dernière mise en cache"
+      }
+    }
+  },
+
+  "offlineDocumentsUnavailable": "Documents non disponibles hors connexion",
+  "@offlineDocumentsUnavailable": { "description": "Message S09 hors ligne" },
+
+  "offlineMessagingUnavailable": "La messagerie nécessite une connexion",
+  "@offlineMessagingUnavailable": { "description": "Message S11 hors ligne" },
+
+  "errorUnknownForwarderTitle": "Transitaire non reconnu",
+  "@errorUnknownForwarderTitle": { "description": "Titre S15" },
+
+  "errorUnknownForwarderBody": "Le préfixe de ce code ne correspond à aucun transitaire dans notre réseau.",
+  "@errorUnknownForwarderBody": { "description": "Corps S15" },
+
+  "errorNotFoundTitle": "Colis introuvable",
+  "@errorNotFoundTitle": { "description": "Titre S16" },
+
+  "errorNotFoundBody": "Ce code n'existe pas chez le transitaire. Vérifiez le code et réessayez.",
+  "@errorNotFoundBody": { "description": "Corps S16" },
+
+  "errorNetworkTitle": "Pas de connexion",
+  "@errorNetworkTitle": { "description": "Titre S17" },
+
+  "errorNetworkBody": "Vérifiez votre connexion Internet et réessayez.",
+  "@errorNetworkBody": { "description": "Corps S17" },
+
+  "claimLost": "Colis perdu",
+  "@claimLost": { "description": "Type réclamation perte" },
+
+  "claimDamaged": "Colis endommagé",
+  "@claimDamaged": { "description": "Type réclamation dommage" },
+
+  "claimDelay": "Retard excessif",
+  "@claimDelay": { "description": "Type réclamation retard" },
+
+  "claimSubmit": "Soumettre la réclamation",
+  "@claimSubmit": { "description": "Bouton soumission réclamation" },
+
+  "justNow": "à l'instant",
+  "@justNow": { "description": "Temps relatif : moins d'une minute" },
+
+  "minutesAgo": "il y a {count} min",
+  "@minutesAgo": {
+    "description": "Temps relatif en minutes",
+    "placeholders": {
+      "count": { "type": "int", "description": "Nombre de minutes" }
+    }
+  },
+
+  "hoursAgo": "il y a {count}h",
+  "@hoursAgo": {
+    "description": "Temps relatif en heures",
+    "placeholders": {
+      "count": { "type": "int", "description": "Nombre d'heures" }
+    }
+  },
+
+  "daysAgo": "{count, plural, =1{il y a 1 jour} other{il y a {count} jours}}",
+  "@daysAgo": {
+    "description": "Temps relatif en jours (pluriel ICU)",
+    "placeholders": {
+      "count": { "type": "int", "format": "decimalPattern" }
+    }
+  },
+
+  "updatedAt": "Mis à jour {relativeTime}",
+  "@updatedAt": {
+    "description": "Horodatage de dernière mise à jour sur les cards colis",
+    "placeholders": {
+      "relativeTime": { "type": "String", "description": "Temps relatif localisé" }
+    }
+  }
 }

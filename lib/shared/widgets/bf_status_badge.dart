@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_enums.dart';
@@ -6,7 +7,7 @@ import '../../core/constants/app_text_styles.dart';
 
 /// Coloured rounded badge displaying a shipment status.
 /// Uses only semantic colours from [AppColors] — never a raw [Color].
-/// TODO(F0.6): replace hardcoded labels with AppLocalizations keys.
+/// Labels are localised via [AppLocalizations].
 class BfStatusBadge extends StatelessWidget {
   const BfStatusBadge({super.key, required this.status});
 
@@ -20,16 +21,17 @@ class BfStatusBadge extends StatelessWidget {
         ShipmentStatus.archived => AppColors.statusArchived,
       };
 
-  String get _label => switch (status) {
-        ShipmentStatus.active => 'En transit',
-        ShipmentStatus.delivered => 'Livré',
-        ShipmentStatus.warning => 'Attention',
-        ShipmentStatus.error => 'Problème',
-        ShipmentStatus.archived => 'Archivé',
+  String _localizedLabel(AppLocalizations l10n) => switch (status) {
+        ShipmentStatus.active => l10n.statusActive,
+        ShipmentStatus.delivered => l10n.statusDelivered,
+        ShipmentStatus.warning => l10n.statusWarning,
+        ShipmentStatus.error => l10n.statusError,
+        ShipmentStatus.archived => l10n.statusArchived,
       };
 
   @override
   Widget build(BuildContext context) {
+    final label = _localizedLabel(AppLocalizations.of(context)!);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
@@ -38,7 +40,7 @@ class BfStatusBadge extends StatelessWidget {
         border: Border.all(color: _color),
       ),
       child: Text(
-        _label,
+        label,
         style: AppTextStyles.caption.copyWith(
           color: _color,
           fontWeight: FontWeight.w700,

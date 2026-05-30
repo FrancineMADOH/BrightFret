@@ -59,4 +59,11 @@ abstract class AppStrings {
   static const String claimDamaged = 'claimDamaged';
   static const String claimDelay = 'claimDelay';
   static const String claimSubmit = 'claimSubmit';
+
+  // Relative time (used by BfShipmentCard)
+  static const String justNow = 'justNow';
+  static const String minutesAgo = 'minutesAgo';
+  static const String hoursAgo = 'hoursAgo';
+  static const String daysAgo = 'daysAgo';
+  static const String updatedAt = 'updatedAt';
 }

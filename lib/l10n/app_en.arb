@@ -1,4 +1,57 @@
 {
   "@@locale": "en",
-  "appName": "BrightFret"
+
+  "appName": "BrightFret",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "retry": "Retry",
+  "close": "Close",
+  "save": "Save",
+  "loading": "Loading…",
+  "viewAll": "View all →",
+
+  "trackYourShipment": "Track your shipment",
+  "enterTrackingCode": "Enter a code…",
+  "scanQrCode": "Scan a QR code",
+  "myShipments": "My shipments",
+  "recentShipments": "Recent shipments",
+  "saveShipment": "Save this shipment ⭐",
+  "unlockDetails": "Unlock details",
+  "followFirstShipment": "Track my first shipment",
+
+  "statusActive": "In transit",
+  "statusDelivered": "Delivered",
+  "statusWarning": "Attention",
+  "statusError": "Issue",
+  "statusArchived": "Archived",
+
+  "transportAir": "Air",
+  "transportSea": "Sea",
+
+  "phoneVerification": "Verification",
+  "enterPhoneLastDigits": "Enter the last 4 digits of the phone number you gave your forwarder.",
+  "verificationError": "Incorrect code. Please try again.",
+  "tooManyAttempts": "Too many attempts. Try again in 10 minutes.",
+
+  "offlineDataBanner": "⚠️ Offline — Data from {datetime}",
+  "offlineDocumentsUnavailable": "Documents unavailable offline",
+  "offlineMessagingUnavailable": "Messaging requires a connection",
+
+  "errorUnknownForwarderTitle": "Forwarder not recognised",
+  "errorUnknownForwarderBody": "This code prefix doesn't match any forwarder in our network.",
+  "errorNotFoundTitle": "Shipment not found",
+  "errorNotFoundBody": "This code doesn't exist with the forwarder. Check the code and try again.",
+  "errorNetworkTitle": "No connection",
+  "errorNetworkBody": "Check your internet connection and try again.",
+
+  "claimLost": "Lost shipment",
+  "claimDamaged": "Damaged shipment",
+  "claimDelay": "Excessive delay",
+  "claimSubmit": "Submit claim",
+
+  "justNow": "just now",
+  "minutesAgo": "{count} min ago",
+  "hoursAgo": "{count}h ago",
+  "daysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
+  "updatedAt": "Updated {relativeTime}"
 }
