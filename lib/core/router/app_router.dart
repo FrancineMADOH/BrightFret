@@ -111,6 +111,7 @@ List<RouteBase> _buildRoutes(RouterNotifier notifier) => [
             name: AppRoute.phoneVerify.name,
             builder: (_, state) => PhoneVerifyScreen(
               suffix: state.pathParameters['suffix']!,
+              instanceUrl: state.uri.queryParameters['instance'] ?? '',
             ),
           ),
         ],

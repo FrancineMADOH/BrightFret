@@ -70,6 +70,15 @@
   "transportSea": "Maritime",
   "@transportSea": { "description": "Mode de transport maritime" },
 
+  "helpNoPhone": "Je n'ai pas communiqué mon numéro",
+  "@helpNoPhone": { "description": "Lien aide S07" },
+
+  "helpNoPhoneTitle": "Pas de numéro enregistré ?",
+  "@helpNoPhoneTitle": { "description": "Titre bottom sheet aide S07" },
+
+  "helpNoPhoneBody": "Pour accéder aux détails, votre transitaire doit avoir votre numéro dans le dossier. Si ce n'est pas le cas, contactez-le directement.",
+  "@helpNoPhoneBody": { "description": "Corps bottom sheet aide S07" },
+
   "phoneVerification": "Vérification",
   "@phoneVerification": { "description": "Titre écran vérification téléphone" },
 

@@ -239,6 +239,7 @@ class _TimelineBody extends StatelessWidget {
           onPressed: () => context.pushNamed(
             AppRoute.phoneVerify.name,
             pathParameters: {'suffix': suffix},
+            queryParameters: {'instance': instanceUrl},
           ),
         ),
         const SizedBox(height: 16),

@@ -35,6 +35,11 @@ abstract class AppStrings {
   static const String transportAir = 'transportAir';
   static const String transportSea = 'transportSea';
 
+  // Phone verify S07
+  static const String helpNoPhone = 'helpNoPhone';
+  static const String helpNoPhoneTitle = 'helpNoPhoneTitle';
+  static const String helpNoPhoneBody = 'helpNoPhoneBody';
+
   // Auth
   static const String phoneVerification = 'phoneVerification';
   static const String enterPhoneLastDigits = 'enterPhoneLastDigits';
