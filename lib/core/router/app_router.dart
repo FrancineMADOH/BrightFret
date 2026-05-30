@@ -121,6 +121,7 @@ List<RouteBase> _buildRoutes(RouterNotifier notifier) => [
         name: AppRoute.shipmentDetail.name,
         builder: (_, state) => ShipmentDetailScreen(
           suffix: state.pathParameters['suffix']!,
+          instanceUrl: state.uri.queryParameters['instance'] ?? '',
         ),
         routes: [
           GoRoute(

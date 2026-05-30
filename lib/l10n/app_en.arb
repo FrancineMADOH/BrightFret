@@ -28,6 +28,18 @@
   "transportAir": "Air",
   "transportSea": "Sea",
 
+  "sectionSummary": "Summary",
+  "sectionPricing": "Pricing",
+  "sectionTimeline": "Detailed tracking",
+  "sectionDocuments": "Documents",
+  "sectionMessaging": "Messaging",
+  "paymentConfirmed": "✅ Paid",
+  "paymentPending": "⏳ Pending",
+  "reportIssue": "⚠️ Report an issue",
+  "viewClaim": "📋 View my claim",
+  "viewAllDocuments": "View all documents →",
+  "openMessaging": "Open messaging →",
+
   "helpNoPhone": "I haven't shared my number",
   "helpNoPhoneTitle": "No number on file?",
   "helpNoPhoneBody": "To access the details, your forwarder needs your phone number on file. If that's not the case, contact them directly.",

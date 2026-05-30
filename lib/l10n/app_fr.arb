@@ -70,6 +70,39 @@
   "transportSea": "Maritime",
   "@transportSea": { "description": "Mode de transport maritime" },
 
+  "sectionSummary": "Récapitulatif",
+  "@sectionSummary": { "description": "Titre section récapitulatif S08" },
+
+  "sectionPricing": "Tarification",
+  "@sectionPricing": { "description": "Titre section tarification S08" },
+
+  "sectionTimeline": "Suivi détaillé",
+  "@sectionTimeline": { "description": "Titre accordéon timeline S08" },
+
+  "sectionDocuments": "Documents",
+  "@sectionDocuments": { "description": "Titre section documents S08" },
+
+  "sectionMessaging": "Messagerie",
+  "@sectionMessaging": { "description": "Titre section messagerie S08" },
+
+  "paymentConfirmed": "✅ Payé",
+  "@paymentConfirmed": { "description": "Statut paiement confirmé S08" },
+
+  "paymentPending": "⏳ En attente",
+  "@paymentPending": { "description": "Statut paiement en attente S08" },
+
+  "reportIssue": "⚠️ Signaler un problème",
+  "@reportIssue": { "description": "CTA réclamation S08 — pas de réclamation active" },
+
+  "viewClaim": "📋 Voir ma réclamation",
+  "@viewClaim": { "description": "CTA réclamation S08 — réclamation existante" },
+
+  "viewAllDocuments": "Voir tous les documents →",
+  "@viewAllDocuments": { "description": "Lien vers S09 depuis S08" },
+
+  "openMessaging": "Accéder à la messagerie →",
+  "@openMessaging": { "description": "Lien vers S11 depuis S08" },
+
   "helpNoPhone": "Je n'ai pas communiqué mon numéro",
   "@helpNoPhone": { "description": "Lien aide S07" },
 
