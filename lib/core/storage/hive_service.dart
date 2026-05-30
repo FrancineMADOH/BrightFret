@@ -63,13 +63,20 @@ abstract class HiveService {
     await purgeOldUpdates();
   }
 
+  // Guards prevent double-registration after Hive.deleteFromDisk() + reinit.
   static void _registerAdapters() {
-    Hive
-      ..registerAdapter(CachedShipmentAdapter())
-      ..registerAdapter(SavedShipmentAdapter())
-      ..registerAdapter(AuthTokenAdapter())
-      ..registerAdapter(CachedForwarderInfoAdapter())
-      ..registerAdapter(AppUpdateAdapter());
+    if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(CachedShipmentAdapter());
+    if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(SavedShipmentAdapter());
+    if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(AuthTokenAdapter());
+    if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(CachedForwarderInfoAdapter());
+    if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(AppUpdateAdapter());
+  }
+
+  /// Wipes all Hive storage and re-initialises from scratch.
+  /// Used by SplashScreen's "Réinitialiser l'app" error recovery flow.
+  static Future<void> deleteAllData() async {
+    await Hive.deleteFromDisk();
+    await init();
   }
 
   /// Deletes [AppUpdate] entries older than 30 days.
