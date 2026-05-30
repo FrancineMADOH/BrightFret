@@ -37,6 +37,8 @@
   "offlineDocumentsUnavailable": "Documents unavailable offline",
   "offlineMessagingUnavailable": "Messaging requires a connection",
 
+  "tryAnotherCode": "Enter another code",
+
   "errorUnknownForwarderTitle": "Forwarder not recognised",
   "errorUnknownForwarderBody": "This code prefix doesn't match any forwarder in our network.",
   "errorNotFoundTitle": "Shipment not found",

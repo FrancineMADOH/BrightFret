@@ -12,7 +12,7 @@
     "BWF": {
       "name": "BrightFret Local",
       "url": "http://localhost:8068",
-      "database": "odoo"
+      "database": "odoo" 
     }
   }
 }

@@ -99,6 +99,9 @@
   "offlineMessagingUnavailable": "La messagerie nécessite une connexion",
   "@offlineMessagingUnavailable": { "description": "Message S11 hors ligne" },
 
+  "tryAnotherCode": "Saisir un autre code",
+  "@tryAnotherCode": { "description": "CTA erreur S16 — aller vers S04" },
+
   "errorUnknownForwarderTitle": "Transitaire non reconnu",
   "@errorUnknownForwarderTitle": { "description": "Titre S15" },
 

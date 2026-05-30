@@ -60,6 +60,9 @@ abstract class AppStrings {
   static const String claimDelay = 'claimDelay';
   static const String claimSubmit = 'claimSubmit';
 
+  // Error screens S15/S16
+  static const String tryAnotherCode = 'tryAnotherCode';
+
   // Timeline S06
   static const String noEventsYet = 'noEventsYet';
 
