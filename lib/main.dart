@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/constants/app_theme.dart';
 import 'core/router/app_router.dart';
 
 void main() {
@@ -8,7 +9,7 @@ void main() {
 }
 
 /// Root application widget.
-/// Uses [routerProvider] so go_router controls all navigation.
+/// Uses [routerProvider] for navigation and [AppTheme] for design tokens.
 class BrightFretApp extends ConsumerWidget {
   const BrightFretApp({super.key});
 
@@ -18,6 +19,9 @@ class BrightFretApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'BrightFret',
       debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.system,
       routerConfig: router,
     );
   }
