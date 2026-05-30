@@ -51,7 +51,7 @@ class HomeScreen extends ConsumerWidget {
 
   Widget _scanButton(BuildContext context, AppLocalizations l10n) =>
       OutlinedButton.icon(
-        onPressed: () => context.go(AppRoute.trackScan.path),
+        onPressed: () => context.push(AppRoute.trackScan.path),
         icon: const Icon(Icons.qr_code_scanner),
         label: Text(l10n.scanQrCode),
         style: OutlinedButton.styleFrom(
@@ -111,7 +111,7 @@ class _SearchBarTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.go(AppRoute.trackInput.path),
+      onTap: () => context.push(AppRoute.trackInput.path),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(

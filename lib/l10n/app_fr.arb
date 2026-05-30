@@ -129,6 +129,29 @@
   "claimSubmit": "Soumettre la réclamation",
   "@claimSubmit": { "description": "Bouton soumission réclamation" },
 
+  "codeInputTitle": "Saisir un code",
+  "@codeInputTitle": { "description": "Titre écran saisie code S04" },
+
+  "trackThisShipment": "Suivre ce colis",
+  "@trackThisShipment": { "description": "Bouton CTA saisie code" },
+
+  "forwarderRecognized": "Transitaire reconnu : {name}",
+  "@forwarderRecognized": {
+    "description": "Feedback validation transitaire connu",
+    "placeholders": {
+      "name": { "type": "String", "description": "Nom du transitaire" }
+    }
+  },
+
+  "forwarderUnknown": "Transitaire non référencé — essayez le scanner QR",
+  "@forwarderUnknown": { "description": "Feedback validation transitaire inconnu" },
+
+  "invalidCodeFormat": "Format attendu : KMG-2026-A7X9K2",
+  "@invalidCodeFormat": { "description": "Feedback format de code invalide" },
+
+  "recentCodes": "Codes récents",
+  "@recentCodes": { "description": "Titre historique codes récents S04" },
+
   "tabHome": "Accueil",
   "@tabHome": { "description": "Libellé onglet Accueil" },
 

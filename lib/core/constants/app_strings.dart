@@ -60,6 +60,14 @@ abstract class AppStrings {
   static const String claimDelay = 'claimDelay';
   static const String claimSubmit = 'claimSubmit';
 
+  // Code input S04
+  static const String codeInputTitle = 'codeInputTitle';
+  static const String trackThisShipment = 'trackThisShipment';
+  static const String forwarderRecognized = 'forwarderRecognized';
+  static const String forwarderUnknown = 'forwarderUnknown';
+  static const String invalidCodeFormat = 'invalidCodeFormat';
+  static const String recentCodes = 'recentCodes';
+
   // Bottom navigation tabs
   static const String tabHome = 'tabHome';
   static const String tabUpdates = 'tabUpdates';
