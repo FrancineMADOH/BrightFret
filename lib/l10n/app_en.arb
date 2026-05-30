@@ -49,6 +49,12 @@
   "claimDelay": "Excessive delay",
   "claimSubmit": "Submit claim",
 
+  "notABrightFretQr": "This QR doesn't match a BrightFret shipment",
+  "cameraDeniedTitle": "Camera access denied",
+  "cameraDeniedBody": "Enable camera access in your device settings.",
+  "enterManually": "Enter manually",
+  "scanFromGallery": "Scan from gallery",
+
   "codeInputTitle": "Enter a code",
   "trackThisShipment": "Track this shipment",
   "forwarderRecognized": "Forwarder recognised: {name}",

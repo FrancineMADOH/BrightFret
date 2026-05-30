@@ -129,6 +129,21 @@
   "claimSubmit": "Soumettre la réclamation",
   "@claimSubmit": { "description": "Bouton soumission réclamation" },
 
+  "notABrightFretQr": "Ce QR ne correspond pas à un colis BrightFret",
+  "@notABrightFretQr": { "description": "Erreur QR code non reconnu S05" },
+
+  "cameraDeniedTitle": "Accès caméra refusé",
+  "@cameraDeniedTitle": { "description": "Titre permission caméra refusée S05" },
+
+  "cameraDeniedBody": "Autorisez l'accès à la caméra dans les paramètres de votre appareil.",
+  "@cameraDeniedBody": { "description": "Corps permission caméra refusée S05" },
+
+  "enterManually": "Saisir manuellement",
+  "@enterManually": { "description": "Lien saisie manuelle depuis S05" },
+
+  "scanFromGallery": "Scanner depuis ma galerie",
+  "@scanFromGallery": { "description": "Bouton scanner depuis galerie S05" },
+
   "codeInputTitle": "Saisir un code",
   "@codeInputTitle": { "description": "Titre écran saisie code S04" },
 

@@ -60,6 +60,13 @@ abstract class AppStrings {
   static const String claimDelay = 'claimDelay';
   static const String claimSubmit = 'claimSubmit';
 
+  // QR scanner S05
+  static const String notABrightFretQr = 'notABrightFretQr';
+  static const String cameraDeniedTitle = 'cameraDeniedTitle';
+  static const String cameraDeniedBody = 'cameraDeniedBody';
+  static const String enterManually = 'enterManually';
+  static const String scanFromGallery = 'scanFromGallery';
+
   // Code input S04
   static const String codeInputTitle = 'codeInputTitle';
   static const String trackThisShipment = 'trackThisShipment';
