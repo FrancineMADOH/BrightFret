@@ -129,6 +129,15 @@
   "claimSubmit": "Soumettre la réclamation",
   "@claimSubmit": { "description": "Bouton soumission réclamation" },
 
+  "tabHome": "Accueil",
+  "@tabHome": { "description": "Libellé onglet Accueil" },
+
+  "tabUpdates": "Mises à jour",
+  "@tabUpdates": { "description": "Libellé onglet Mises à jour" },
+
+  "tabSettings": "Paramètres",
+  "@tabSettings": { "description": "Libellé onglet Paramètres" },
+
   "justNow": "à l'instant",
   "@justNow": { "description": "Temps relatif : moins d'une minute" },
 

@@ -1,9 +1,17 @@
 {
   "version": 1,
   "forwarders": {
+    "KMG": {
+      "name": "Kamgho Transit",
+      "url": "https://odoo.kamgho-transit.cm"
+    },
+    "TCC": {
+      "name": "TransChine Cameroun",
+      "url": "https://transchine-cameroun.com"
+    },
     "BWF": {
-      "name": "BrightFret Demo",
-      "url": "http//:localhost:8068"
+      "name": "BrightFret Local",
+      "url": "http://localhost:8068"
     }
   }
 }

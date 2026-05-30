@@ -60,6 +60,11 @@ abstract class AppStrings {
   static const String claimDelay = 'claimDelay';
   static const String claimSubmit = 'claimSubmit';
 
+  // Bottom navigation tabs
+  static const String tabHome = 'tabHome';
+  static const String tabUpdates = 'tabUpdates';
+  static const String tabSettings = 'tabSettings';
+
   // Relative time (used by BfShipmentCard)
   static const String justNow = 'justNow';
   static const String minutesAgo = 'minutesAgo';
