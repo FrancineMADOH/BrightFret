@@ -99,6 +99,24 @@
   "offlineMessagingUnavailable": "La messagerie nécessite une connexion",
   "@offlineMessagingUnavailable": { "description": "Message S11 hors ligne" },
 
+  "filterAll": "Tous",
+  "@filterAll": { "description": "Filtre S12 — tous les colis" },
+
+  "filterActive": "En cours",
+  "@filterActive": { "description": "Filtre S12 — colis actifs" },
+
+  "filterDelivered": "Livrés",
+  "@filterDelivered": { "description": "Filtre S12 — colis livrés" },
+
+  "removeShipment": "Retirer",
+  "@removeShipment": { "description": "Action swipe S12 — retirer un colis" },
+
+  "removeShipmentTitle": "Retirer ce colis ?",
+  "@removeShipmentTitle": { "description": "Titre confirmation suppression S12" },
+
+  "removeShipmentBody": "Le colis sera retiré de votre liste locale. Vos données restent chez le transitaire.",
+  "@removeShipmentBody": { "description": "Corps confirmation suppression S12" },
+
   "tryAnotherCode": "Saisir un autre code",
   "@tryAnotherCode": { "description": "CTA erreur S16 — aller vers S04" },
 

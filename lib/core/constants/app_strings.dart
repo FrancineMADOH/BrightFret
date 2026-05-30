@@ -60,6 +60,14 @@ abstract class AppStrings {
   static const String claimDelay = 'claimDelay';
   static const String claimSubmit = 'claimSubmit';
 
+  // My Shipments S12
+  static const String filterAll = 'filterAll';
+  static const String filterActive = 'filterActive';
+  static const String filterDelivered = 'filterDelivered';
+  static const String removeShipment = 'removeShipment';
+  static const String removeShipmentTitle = 'removeShipmentTitle';
+  static const String removeShipmentBody = 'removeShipmentBody';
+
   // Error screens S15/S16
   static const String tryAnotherCode = 'tryAnotherCode';
 

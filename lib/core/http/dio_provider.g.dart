@@ -6,7 +6,7 @@ part of 'dio_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioForInstanceHash() => r'145bd626c52729701b59981b35e11f9a42a2e732';
+String _$dioForInstanceHash() => r'0293d7a672d5e105165f52df08a2bad0b1fc32ef';
 
 /// Copied from Dart SDK
 class _SystemHash {

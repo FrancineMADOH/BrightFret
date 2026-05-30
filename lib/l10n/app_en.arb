@@ -37,6 +37,13 @@
   "offlineDocumentsUnavailable": "Documents unavailable offline",
   "offlineMessagingUnavailable": "Messaging requires a connection",
 
+  "filterAll": "All",
+  "filterActive": "Active",
+  "filterDelivered": "Delivered",
+  "removeShipment": "Remove",
+  "removeShipmentTitle": "Remove this shipment?",
+  "removeShipmentBody": "The shipment will be removed from your local list. Your data with the forwarder is not affected.",
+
   "tryAnotherCode": "Enter another code",
 
   "errorUnknownForwarderTitle": "Forwarder not recognised",
