@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "forwarders": {
+    "BWF": {
+      "name": "BrightFret Demo",
+      "url": "http//:localhost:8068"
+    }
+  }
+}

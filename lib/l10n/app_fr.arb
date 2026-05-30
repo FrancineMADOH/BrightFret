@@ -1,0 +1,5 @@
+{
+  "@@locale": "fr",
+  "appName": "BrightFret",
+  "@appName": { "description": "Application name" }
+}
