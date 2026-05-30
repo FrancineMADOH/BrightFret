@@ -24,13 +24,15 @@ class CachedShipmentAdapter extends TypeAdapter<CachedShipment> {
       transportType: fields[4] as String,
       cachedAt: fields[5] as DateTime,
       eventsJson: fields[6] as String,
+      origin: fields[7] as String?,
+      destination: fields[8] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, CachedShipment obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.suffix)
       ..writeByte(1)
@@ -44,7 +46,11 @@ class CachedShipmentAdapter extends TypeAdapter<CachedShipment> {
       ..writeByte(5)
       ..write(obj.cachedAt)
       ..writeByte(6)
-      ..write(obj.eventsJson);
+      ..write(obj.eventsJson)
+      ..writeByte(7)
+      ..write(obj.origin)
+      ..writeByte(8)
+      ..write(obj.destination);
   }
 
   @override

@@ -14,6 +14,8 @@ class CachedShipment extends HiveObject {
     required this.transportType,
     required this.cachedAt,
     required this.eventsJson,
+    this.origin,
+    this.destination,
   });
 
   @HiveField(0)
@@ -39,4 +41,12 @@ class CachedShipment extends HiveObject {
   /// JSON-encoded list of transit events.
   @HiveField(6)
   String eventsJson;
+
+  /// Origin city. Nullable for backward-compat with pre-F1.6 cached records.
+  @HiveField(7)
+  String? origin;
+
+  /// Destination city. Nullable for backward-compat with pre-F1.6 cached records.
+  @HiveField(8)
+  String? destination;
 }

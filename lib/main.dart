@@ -6,10 +6,19 @@ import 'core/constants/app_theme.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
 import 'core/storage/hive_service.dart';
+import 'core/utils/forwarder_resolver.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HiveService.init();
+  // Load forwarders.json before runApp so ForwarderResolver is available
+  // regardless of which screen is shown first (direct URL navigation on web
+  // bypasses SplashScreen and its own load() call).
+  try {
+    await ForwarderResolver.load();
+  } catch (_) {
+    // SplashScreen will retry and show the error UI if still unloaded.
+  }
   runApp(const ProviderScope(child: BrightFretApp()));
 }
 
