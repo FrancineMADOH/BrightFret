@@ -6,7 +6,7 @@ part of 'auth_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$hasValidTokenHash() => r'0ecea35849c6d9adc0db63e25dbb01ba8065b2f4';
+String _$hasValidTokenHash() => r'110eb4267e36379ca845e824661f50b315405577';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,25 +30,25 @@ class _SystemHash {
 }
 
 /// Returns true if a valid (non-expired) token exists for [suffix].
-/// Stub: always false. Will check the Hive `tokens` box in F0.5.
+/// Reads from the Hive tokens box via [TokenStorage].
 ///
 /// Copied from [hasValidToken].
 @ProviderFor(hasValidToken)
 const hasValidTokenProvider = HasValidTokenFamily();
 
 /// Returns true if a valid (non-expired) token exists for [suffix].
-/// Stub: always false. Will check the Hive `tokens` box in F0.5.
+/// Reads from the Hive tokens box via [TokenStorage].
 ///
 /// Copied from [hasValidToken].
 class HasValidTokenFamily extends Family<bool> {
   /// Returns true if a valid (non-expired) token exists for [suffix].
-  /// Stub: always false. Will check the Hive `tokens` box in F0.5.
+  /// Reads from the Hive tokens box via [TokenStorage].
   ///
   /// Copied from [hasValidToken].
   const HasValidTokenFamily();
 
   /// Returns true if a valid (non-expired) token exists for [suffix].
-  /// Stub: always false. Will check the Hive `tokens` box in F0.5.
+  /// Reads from the Hive tokens box via [TokenStorage].
   ///
   /// Copied from [hasValidToken].
   HasValidTokenProvider call(
@@ -84,12 +84,12 @@ class HasValidTokenFamily extends Family<bool> {
 }
 
 /// Returns true if a valid (non-expired) token exists for [suffix].
-/// Stub: always false. Will check the Hive `tokens` box in F0.5.
+/// Reads from the Hive tokens box via [TokenStorage].
 ///
 /// Copied from [hasValidToken].
 class HasValidTokenProvider extends AutoDisposeProvider<bool> {
   /// Returns true if a valid (non-expired) token exists for [suffix].
-  /// Stub: always false. Will check the Hive `tokens` box in F0.5.
+  /// Reads from the Hive tokens box via [TokenStorage].
   ///
   /// Copied from [hasValidToken].
   HasValidTokenProvider(

@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/constants/app_theme.dart';
 import 'core/router/app_router.dart';
+import 'core/storage/hive_service.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveService.init();
   runApp(const ProviderScope(child: BrightFretApp()));
 }
 
