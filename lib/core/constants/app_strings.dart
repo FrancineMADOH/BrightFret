@@ -60,6 +60,9 @@ abstract class AppStrings {
   static const String claimDelay = 'claimDelay';
   static const String claimSubmit = 'claimSubmit';
 
+  // Timeline S06
+  static const String noEventsYet = 'noEventsYet';
+
   // QR scanner S05
   static const String notABrightFretQr = 'notABrightFretQr';
   static const String cameraDeniedTitle = 'cameraDeniedTitle';

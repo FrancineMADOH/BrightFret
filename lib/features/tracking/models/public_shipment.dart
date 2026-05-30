@@ -6,19 +6,23 @@ import '../../../core/models/cached_shipment.dart';
 class PublicEvent {
   const PublicEvent({
     required this.stage,
-    required this.datetime,
+    this.datetime,
     this.location,
     this.note,
   });
 
   final String stage;
-  final DateTime datetime;
+
+  /// Null for future steps that have not yet been reached.
+  final DateTime? datetime;
   final String? location;
   final String? note;
 
   factory PublicEvent.fromJson(Map<String, dynamic> json) => PublicEvent(
         stage: json['stage'] as String,
-        datetime: DateTime.parse(json['datetime'] as String),
+        datetime: json['datetime'] != null
+            ? DateTime.parse(json['datetime'] as String)
+            : null,
         location: json['location'] as String?,
         note: json['note'] as String?,
       );
@@ -26,7 +30,7 @@ class PublicEvent {
   /// Serialises to JSON for [CachedShipment.eventsJson] storage.
   Map<String, dynamic> toJson() => {
         'stage': stage,
-        'datetime': datetime.toIso8601String(),
+        'datetime': datetime?.toIso8601String(),
         'location': location,
         'note': note,
       };

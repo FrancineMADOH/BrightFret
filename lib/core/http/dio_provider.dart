@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../storage/token_storage.dart';
+import '../utils/forwarder_resolver.dart';
 import 'dio_client.dart';
 
 part 'dio_provider.g.dart';
@@ -20,5 +21,6 @@ Dio dioForInstance(Ref ref, String instanceUrl) {
   return DioClient.forInstance(
     instanceUrl,
     tokenReader: ref.read(tokenStorageProvider),
+    database: ForwarderResolver.resolveDatabaseForUrl(instanceUrl),
   );
 }

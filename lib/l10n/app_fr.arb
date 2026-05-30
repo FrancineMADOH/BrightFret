@@ -129,6 +129,9 @@
   "claimSubmit": "Soumettre la réclamation",
   "@claimSubmit": { "description": "Bouton soumission réclamation" },
 
+  "noEventsYet": "Aucun événement enregistré pour l'instant",
+  "@noEventsYet": { "description": "Etat vide de la timeline S06" },
+
   "notABrightFretQr": "Ce QR ne correspond pas à un colis BrightFret",
   "@notABrightFretQr": { "description": "Erreur QR code non reconnu S05" },
 

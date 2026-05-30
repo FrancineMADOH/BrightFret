@@ -93,10 +93,19 @@ class DioClient {
 
   /// Returns the cached [Dio] for [baseUrl], or creates one if not yet cached.
   /// [tokenReader] is applied only on first creation — ignored on subsequent calls.
-  static Dio forInstance(String baseUrl, {TokenReader? tokenReader}) {
+  /// [database] sets the `X-Odoo-Database` header required by multi-db Odoo instances.
+  static Dio forInstance(
+    String baseUrl, {
+    TokenReader? tokenReader,
+    String? database,
+  }) {
     return _cache.putIfAbsent(
       baseUrl,
-      () => _build(baseUrl, tokenReader ?? const _NullTokenReader()),
+      () => _build(
+        baseUrl,
+        tokenReader ?? const _NullTokenReader(),
+        database: database,
+      ),
     );
   }
 
@@ -114,13 +123,16 @@ class DioClient {
     _cache.clear();
   }
 
-  static Dio _build(String baseUrl, TokenReader tokenReader) {
+  static Dio _build(String baseUrl, TokenReader tokenReader, {String? database}) {
+    final headers = <String, dynamic>{'Accept': 'application/json'};
+    if (database != null) headers['X-Odoo-Database'] = database;
+
     final dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,
         connectTimeout: _kConnectTimeout,
         receiveTimeout: _kReceiveTimeout,
-        headers: const {'Accept': 'application/json'},
+        headers: headers,
       ),
     );
 

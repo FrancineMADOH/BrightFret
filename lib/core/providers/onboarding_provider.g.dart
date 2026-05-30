@@ -6,7 +6,7 @@ part of 'onboarding_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$onboardingStateHash() => r'6ee0780f6e32530dc407c5425b085a991464421c';
+String _$onboardingStateHash() => r'8dd241c55bf32939ca44ec93a5abec90f4ba38d8';
 
 /// Tracks whether the user has completed onboarding.
 /// Reads from Hive `prefs` box (key: 'onboarding_done'); persists on [markDone].

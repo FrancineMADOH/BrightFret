@@ -4,13 +4,17 @@ import 'package:flutter/services.dart';
 
 /// A single forwarder registry entry parsed from forwarders.json.
 class ForwarderEntry {
-  const ForwarderEntry({required this.name, required this.url});
+  const ForwarderEntry({required this.name, required this.url, this.database});
 
   /// Human-readable forwarder name, e.g. "Kamgho Transit".
   final String name;
 
   /// Odoo instance base URL, e.g. "https://odoo.kamgho-transit.cm".
   final String url;
+
+  /// Odoo database name required in the `X-Odoo-Database` header.
+  /// Optional — omit for single-db instances that don't require it.
+  final String? database;
 }
 
 /// Resolves a tracking-code prefix (e.g. "KMG") to the matching Odoo instance URL.
@@ -48,7 +52,11 @@ abstract class ForwarderResolver {
       if (name == null || url == null) {
         throw StateError('Forwarder "${entry.key}" missing required "name" or "url"');
       }
-      _registry[entry.key.toUpperCase()] = ForwarderEntry(name: name, url: url);
+      _registry[entry.key.toUpperCase()] = ForwarderEntry(
+        name: name,
+        url: url,
+        database: value['database'] as String?,
+      );
     }
 
     _loaded = true;
@@ -62,4 +70,13 @@ abstract class ForwarderResolver {
 
   /// Convenience wrapper — returns the instance URL for [prefix], or null.
   static String? resolveUrl(String prefix) => resolve(prefix)?.url;
+
+  /// Returns the Odoo database name for [instanceUrl], or null if not configured.
+  /// Used to set the `X-Odoo-Database` header in Dio requests.
+  static String? resolveDatabaseForUrl(String instanceUrl) {
+    for (final entry in _registry.values) {
+      if (entry.url == instanceUrl) return entry.database;
+    }
+    return null;
+  }
 }

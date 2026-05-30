@@ -49,6 +49,8 @@
   "claimDelay": "Excessive delay",
   "claimSubmit": "Submit claim",
 
+  "noEventsYet": "No events recorded yet",
+
   "notABrightFretQr": "This QR doesn't match a BrightFret shipment",
   "cameraDeniedTitle": "Camera access denied",
   "cameraDeniedBody": "Enable camera access in your device settings.",
