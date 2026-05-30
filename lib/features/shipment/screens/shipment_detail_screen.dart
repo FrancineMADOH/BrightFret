@@ -8,6 +8,7 @@ import '../../../core/constants/app_enums.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/http/api_exception.dart';
 import '../../../core/router/app_router.dart';
+import '../../../core/storage/token_storage.dart';
 import '../../../shared/widgets/bf_error_screen.dart';
 import '../../../shared/widgets/bf_forwarder_header.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
@@ -74,7 +75,11 @@ class ShipmentDetailScreen extends ConsumerWidget {
     AppLocalizations l10n,
   ) {
     if (error is UnauthorizedException) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!context.mounted) return;
+        // Delete the stale token so the router redirect doesn't immediately
+        // send us back to S08, breaking the S07→S08→S07 flicker loop.
+        await ref.read(tokenStorageProvider).deleteToken(instanceUrl, suffix);
         if (context.mounted) {
           context.goNamed(
             AppRoute.phoneVerify.name,

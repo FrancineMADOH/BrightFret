@@ -129,6 +129,7 @@ List<RouteBase> _buildRoutes(RouterNotifier notifier) => [
             name: AppRoute.documents.name,
             builder: (_, state) => DocumentsScreen(
               suffix: state.pathParameters['suffix']!,
+              instanceUrl: state.uri.queryParameters['instance'] ?? '',
             ),
           ),
           GoRoute(

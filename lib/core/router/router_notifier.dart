@@ -39,11 +39,26 @@ class RouterNotifier extends _$RouterNotifier implements Listenable {
     // Once onboarding is done, redirect away from the onboarding page.
     if (isOnboardingDone && location == '/onboarding') return '/home';
 
+    // If already on verify screen but a valid token exists → skip to S08.
+    // This replaces the per-screen _checkExistingToken() call and avoids
+    // the 1-frame flicker where S07 renders before jumping to S08.
+    if (location.endsWith('/verify')) {
+      final suffix = state.pathParameters['suffix'];
+      final instance = state.uri.queryParameters['instance'] ?? '';
+      if (suffix != null && ref.read(hasValidTokenProvider(suffix))) {
+        final encoded = Uri.encodeQueryComponent(instance);
+        return '/shipment/$suffix?instance=$encoded';
+      }
+    }
+
     // Auth guard: all /shipment/* routes require a valid token.
+    // Preserves the instanceUrl in the redirect so S07 can navigate back to S08.
     if (location.startsWith('/shipment/')) {
       final suffix = state.pathParameters['suffix'];
+      final instance = state.uri.queryParameters['instance'] ?? '';
       if (suffix != null && !ref.read(hasValidTokenProvider(suffix))) {
-        return '/track/$suffix/verify';
+        final encoded = Uri.encodeQueryComponent(instance);
+        return '/track/$suffix/verify?instance=$encoded';
       }
     }
 

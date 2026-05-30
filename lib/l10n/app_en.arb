@@ -31,6 +31,12 @@
   "sectionSummary": "Summary",
   "sectionPricing": "Pricing",
   "sectionTimeline": "Detailed tracking",
+  "noDocumentsYet": "No documents available yet",
+  "openDocument": "Open",
+  "downloadDocument": "Download",
+  "downloadSuccess": "Downloaded ✓",
+  "downloadOnMobileOnly": "Download available on mobile",
+
   "sectionDocuments": "Documents",
   "sectionMessaging": "Messaging",
   "paymentConfirmed": "✅ Paid",

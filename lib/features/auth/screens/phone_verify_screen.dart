@@ -50,8 +50,9 @@ class _PhoneVerifyScreenState extends ConsumerState<PhoneVerifyScreen> {
   @override
   void initState() {
     super.initState();
+    // Token-skip logic is now handled by the router redirect (RouterNotifier).
+    // S07 only renders when no valid token exists — no per-screen check needed.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkExistingToken();
       if (mounted) _focusNodes[0].requestFocus();
     });
   }
@@ -66,17 +67,6 @@ class _PhoneVerifyScreenState extends ConsumerState<PhoneVerifyScreen> {
       f.dispose();
     }
     super.dispose();
-  }
-
-  void _checkExistingToken() {
-    if (!mounted) return;
-    if (ref.read(tokenStorageProvider).hasValidTokenForSuffix(widget.suffix)) {
-      context.goNamed(
-        AppRoute.shipmentDetail.name,
-        pathParameters: {'suffix': widget.suffix},
-        queryParameters: {'instance': widget.instanceUrl},
-      );
-    }
   }
 
   void _onDigitChanged(int index, String value) {

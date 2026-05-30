@@ -79,6 +79,21 @@
   "sectionTimeline": "Suivi détaillé",
   "@sectionTimeline": { "description": "Titre accordéon timeline S08" },
 
+  "noDocumentsYet": "Aucun document disponible pour l'instant",
+  "@noDocumentsYet": { "description": "Etat vide S09" },
+
+  "openDocument": "Ouvrir",
+  "@openDocument": { "description": "Bouton ouvrir document S09" },
+
+  "downloadDocument": "Télécharger",
+  "@downloadDocument": { "description": "Bouton télécharger document S09" },
+
+  "downloadSuccess": "Téléchargé ✓",
+  "@downloadSuccess": { "description": "Toast succès téléchargement S09" },
+
+  "downloadOnMobileOnly": "Téléchargement disponible sur mobile",
+  "@downloadOnMobileOnly": { "description": "Message web S09 — download non dispo" },
+
   "sectionDocuments": "Documents",
   "@sectionDocuments": { "description": "Titre section documents S08" },
 
