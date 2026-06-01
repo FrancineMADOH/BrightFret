@@ -219,6 +219,24 @@
   "errorNetworkBody": "Vérifiez votre connexion Internet et réessayez.",
   "@errorNetworkBody": { "description": "Corps S17" },
 
+  "claimTitle": "Signaler un problème",
+  "@claimTitle": { "description": "Titre écran réclamation S18" },
+
+  "claimTypeLabel": "Type de problème",
+  "@claimTypeLabel": { "description": "Label sélecteur type S18" },
+
+  "claimDescriptionLabel": "Description",
+  "@claimDescriptionLabel": { "description": "Label champ description S18" },
+
+  "claimDescriptionHint": "Décrivez le problème en détail…",
+  "@claimDescriptionHint": { "description": "Placeholder description S18" },
+
+  "claimAmountLabel": "Montant réclamé",
+  "@claimAmountLabel": { "description": "Label champ montant S18" },
+
+  "claimAmountHint": "ex. 50000",
+  "@claimAmountHint": { "description": "Placeholder montant S18" },
+
   "claimLost": "Colis perdu",
   "@claimLost": { "description": "Type réclamation perte" },
 
@@ -230,6 +248,33 @@
 
   "claimSubmit": "Soumettre la réclamation",
   "@claimSubmit": { "description": "Bouton soumission réclamation" },
+
+  "claimSuccessTitle": "Réclamation soumise ✅",
+  "@claimSuccessTitle": { "description": "Titre succès S18" },
+
+  "claimSuccessRef": "Référence : {ref}",
+  "@claimSuccessRef": {
+    "description": "Référence réclamation Odoo S18",
+    "placeholders": { "ref": { "type": "String" } }
+  },
+
+  "claimSuccessBody": "Votre transitaire a été notifié et traitera votre réclamation dans les plus brefs délais.",
+  "@claimSuccessBody": { "description": "Corps succès S18" },
+
+  "claimAlreadyExists": "Une réclamation est déjà ouverte pour ce colis.",
+  "@claimAlreadyExists": { "description": "Erreur 409 S18" },
+
+  "claimSubmitError": "Impossible de soumettre la réclamation. Vérifiez votre connexion.",
+  "@claimSubmitError": { "description": "Erreur générique soumission S18" },
+
+  "claimDescriptionRequired": "La description est requise.",
+  "@claimDescriptionRequired": { "description": "Validation description S18" },
+
+  "claimAmountInvalid": "Entrez un montant supérieur à 0.",
+  "@claimAmountInvalid": { "description": "Validation montant S18" },
+
+  "backToShipment": "Retour au colis",
+  "@backToShipment": { "description": "Bouton retour S18 succès" },
 
   "noEventsYet": "Aucun événement enregistré pour l'instant",
   "@noEventsYet": { "description": "Etat vide de la timeline S06" },

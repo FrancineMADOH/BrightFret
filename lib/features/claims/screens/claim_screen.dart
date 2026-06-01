@@ -1,17 +1,402 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-/// Stub for ClaimScreen — S18.
-/// Full implementation in F4.1/F4.2: claim submission form + status view.
-class ClaimScreen extends StatelessWidget {
-  const ClaimScreen({super.key, required this.suffix});
+import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_text_styles.dart';
+import '../../../core/http/api_exception.dart';
+import '../../../core/router/app_router.dart';
+import '../../../core/storage/token_storage.dart';
+import '../../../shared/widgets/bf_loading_indicator.dart';
+import '../../../shared/widgets/bf_primary_button.dart';
+import '../providers/claim_provider.dart';
+
+/// S18A — Claim submission form.
+/// Switches to a success view after a successful POST.
+class ClaimScreen extends ConsumerStatefulWidget {
+  const ClaimScreen({
+    super.key,
+    required this.suffix,
+    this.instanceUrl = '',
+  });
 
   final String suffix;
+  final String instanceUrl;
+
+  @override
+  ConsumerState<ClaimScreen> createState() => _ClaimScreenState();
+}
+
+class _ClaimScreenState extends ConsumerState<ClaimScreen> {
+  String _claimType = 'lost';
+  final TextEditingController _descController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  String? _descError;
+  String? _amountError;
+
+  @override
+  void dispose() {
+    _descController.dispose();
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  bool _validate(AppLocalizations l10n) {
+    final descOk = _descController.text.trim().isNotEmpty;
+    final amount = double.tryParse(_amountController.text.trim());
+    final amountOk = amount != null && amount > 0;
+    setState(() {
+      _descError = descOk ? null : l10n.claimDescriptionRequired;
+      _amountError = amountOk ? null : l10n.claimAmountInvalid;
+    });
+    return descOk && amountOk;
+  }
+
+  Future<void> _submit(AppLocalizations l10n) async {
+    if (!_validate(l10n)) return;
+    await ref
+        .read(claimNotifierProvider(widget.suffix, widget.instanceUrl).notifier)
+        .submit(
+          claimType: _claimType,
+          description: _descController.text.trim(),
+          claimedAmount:
+              double.parse(_amountController.text.trim()),
+        );
+  }
+
+  void _handleError(BuildContext context, Object error) {
+    if (error is UnauthorizedException) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!context.mounted) return;
+        await ref
+            .read(tokenStorageProvider)
+            .deleteToken(widget.instanceUrl, widget.suffix);
+        if (context.mounted) {
+          context.goNamed(
+            AppRoute.phoneVerify.name,
+            pathParameters: {'suffix': widget.suffix},
+            queryParameters: {'instance': widget.instanceUrl},
+          );
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final claimAsync =
+        ref.watch(claimNotifierProvider(widget.suffix, widget.instanceUrl));
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      body: Center(
-        child: Text('ClaimScreen — S18\nsuffix: $suffix'),
+      appBar: AppBar(
+        title: Text(l10n.claimTitle),
+        leading: BackButton(
+          onPressed: () =>
+              context.canPop() ? context.pop() : context.go(AppRoute.home.path),
+        ),
+      ),
+      body: claimAsync.when(
+        loading: () => const BfLoadingIndicator(),
+        data: (reference) => reference != null
+            ? _SuccessView(
+                reference: reference,
+                l10n: l10n,
+                onBack: () => context.canPop()
+                    ? context.pop()
+                    : context.go(AppRoute.home.path),
+              )
+            : _ClaimForm(
+                claimType: _claimType,
+                descController: _descController,
+                amountController: _amountController,
+                descError: _descError,
+                amountError: _amountError,
+                apiError: null,
+                onTypeChanged: (t) => setState(() => _claimType = t),
+                onSubmit: () => _submit(l10n),
+                l10n: l10n,
+              ),
+        error: (err, _) {
+          _handleError(context, err);
+          if (err is UnauthorizedException) return const BfLoadingIndicator();
+          return _ClaimForm(
+            claimType: _claimType,
+            descController: _descController,
+            amountController: _amountController,
+            descError: _descError,
+            amountError: _amountError,
+            apiError: _errorMessage(err, l10n),
+            onTypeChanged: (t) => setState(() => _claimType = t),
+            onSubmit: () => _submit(l10n),
+            l10n: l10n,
+          );
+        },
+      ),
+    );
+  }
+
+  static String _errorMessage(Object err, AppLocalizations l10n) {
+    if (err is ConflictException) return l10n.claimAlreadyExists;
+    if (err is NetworkException) return l10n.errorNetworkBody;
+    return l10n.claimSubmitError;
+  }
+}
+
+// ── Claim form ────────────────────────────────────────────────────────────────
+
+class _ClaimForm extends StatelessWidget {
+  const _ClaimForm({
+    required this.claimType,
+    required this.descController,
+    required this.amountController,
+    required this.descError,
+    required this.amountError,
+    required this.apiError,
+    required this.onTypeChanged,
+    required this.onSubmit,
+    required this.l10n,
+  });
+
+  final String claimType;
+  final TextEditingController descController;
+  final TextEditingController amountController;
+  final String? descError;
+  final String? amountError;
+  final String? apiError;
+  final ValueChanged<String> onTypeChanged;
+  final VoidCallback onSubmit;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (apiError != null) ...[
+            _ApiErrorBanner(message: apiError!),
+            const SizedBox(height: 20),
+          ],
+          _SectionLabel(l10n.claimTypeLabel),
+          const SizedBox(height: 8),
+          _TypeSelector(
+            selected: claimType,
+            onChanged: onTypeChanged,
+            l10n: l10n,
+          ),
+          const SizedBox(height: 24),
+          _SectionLabel(l10n.claimDescriptionLabel),
+          const SizedBox(height: 8),
+          TextField(
+            controller: descController,
+            minLines: 3,
+            maxLines: 6,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: InputDecoration(
+              hintText: l10n.claimDescriptionHint,
+              errorText: descError,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          _SectionLabel(l10n.claimAmountLabel),
+          const SizedBox(height: 8),
+          TextField(
+            controller: amountController,
+            keyboardType:
+                const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+            ],
+            decoration: InputDecoration(
+              hintText: l10n.claimAmountHint,
+              errorText: amountError,
+              suffixText: 'XAF',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+          const SizedBox(height: 32),
+          BfPrimaryButton(
+            label: l10n.claimSubmit,
+            onPressed: onSubmit,
+          ),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Type selector ─────────────────────────────────────────────────────────────
+
+class _TypeSelector extends StatelessWidget {
+  const _TypeSelector({
+    required this.selected,
+    required this.onChanged,
+    required this.l10n,
+  });
+
+  final String selected;
+  final ValueChanged<String> onChanged;
+  final AppLocalizations l10n;
+
+  static const _types = [
+    ('lost', Icons.inventory_2_outlined),
+    ('damaged', Icons.broken_image_outlined),
+    ('delayed', Icons.timer_off_outlined),
+  ];
+
+  String _label(String type, AppLocalizations l10n) => switch (type) {
+        'lost' => l10n.claimLost,
+        'damaged' => l10n.claimDamaged,
+        _ => l10n.claimDelay,
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: _types.map((entry) {
+        final (type, icon) = entry;
+        final isSelected = selected == type;
+        return Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? AppColors.primary.withAlpha(15)
+                : AppColors.surface,
+            border: Border.all(
+              color: isSelected ? AppColors.primary : AppColors.divider,
+              width: isSelected ? 2 : 1,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: RadioListTile<String>(
+            value: type,
+            groupValue: selected,
+            onChanged: (v) => onChanged(v!),
+            activeColor: AppColors.primary,
+            title: Row(
+              children: [
+                Icon(icon, size: 20, color: AppColors.primary),
+                const SizedBox(width: 12),
+                Text(_label(type, l10n), style: AppTextStyles.label),
+              ],
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
+// ── Success view ──────────────────────────────────────────────────────────────
+
+class _SuccessView extends StatelessWidget {
+  const _SuccessView({
+    required this.reference,
+    required this.l10n,
+    required this.onBack,
+  });
+
+  final String reference;
+  final AppLocalizations l10n;
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.check_circle_outline,
+                size: 80, color: AppColors.statusDelivered),
+            const SizedBox(height: 24),
+            Text(
+              l10n.claimSuccessTitle,
+              style: AppTextStyles.heading2,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                color: AppColors.background,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                l10n.claimSuccessRef(reference),
+                style: AppTextStyles.label
+                    .copyWith(color: AppColors.statusArchived),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.claimSuccessBody,
+              style: AppTextStyles.bodySmall
+                  .copyWith(color: AppColors.statusArchived),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            BfPrimaryButton(
+              label: l10n.backToShipment,
+              onPressed: onBack,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Text(text, style: AppTextStyles.label);
+}
+
+class _ApiErrorBanner extends StatelessWidget {
+  const _ApiErrorBanner({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.statusError.withAlpha(20),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.statusError.withAlpha(80)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline,
+              color: AppColors.statusError, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              message,
+              style: AppTextStyles.bodySmall
+                  .copyWith(color: AppColors.statusError),
+            ),
+          ),
+        ],
       ),
     );
   }

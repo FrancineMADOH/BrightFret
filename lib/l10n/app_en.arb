@@ -85,10 +85,29 @@
   "errorNetworkTitle": "No connection",
   "errorNetworkBody": "Check your internet connection and try again.",
 
+  "claimTitle": "Report an issue",
+  "claimTypeLabel": "Type of issue",
+  "claimDescriptionLabel": "Description",
+  "claimDescriptionHint": "Describe the issue in detail…",
+  "claimAmountLabel": "Claimed amount",
+  "claimAmountHint": "e.g. 50000",
+
   "claimLost": "Lost shipment",
   "claimDamaged": "Damaged shipment",
   "claimDelay": "Excessive delay",
   "claimSubmit": "Submit claim",
+
+  "claimSuccessTitle": "Claim submitted ✅",
+  "claimSuccessRef": "Reference: {ref}",
+  "@claimSuccessRef": {
+    "placeholders": { "ref": { "type": "String" } }
+  },
+  "claimSuccessBody": "Your forwarder has been notified and will process your claim as soon as possible.",
+  "claimAlreadyExists": "A claim is already open for this shipment.",
+  "claimSubmitError": "Could not submit the claim. Please try again.",
+  "claimDescriptionRequired": "Description is required.",
+  "claimAmountInvalid": "Enter an amount greater than 0.",
+  "backToShipment": "Back to shipment",
 
   "noEventsYet": "No events recorded yet",
 

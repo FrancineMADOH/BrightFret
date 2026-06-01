@@ -161,6 +161,7 @@ List<RouteBase> _buildRoutes(RouterNotifier notifier) => [
             name: AppRoute.claim.name,
             builder: (_, state) => ClaimScreen(
               suffix: state.pathParameters['suffix']!,
+              instanceUrl: state.uri.queryParameters['instance'] ?? '',
             ),
           ),
         ],

@@ -26,6 +26,7 @@ sealed class ApiException implements Exception {
     return switch (status) {
       401 => const UnauthorizedException(),
       404 => const NotFoundException(),
+      409 => const ConflictException(),
       429 => const RateLimitException(),
       >= 500 => ServerException(e.response?.statusMessage ?? 'Server error'),
       _ => ServerException('Unexpected HTTP status $status'),
@@ -56,6 +57,15 @@ final class UnauthorizedException extends ApiException {
 
   @override
   String toString() => 'UnauthorizedException: token expired or invalid (401)';
+}
+
+/// A conflicting resource already exists (HTTP 409).
+/// Used when a claim is submitted but an active claim already exists.
+final class ConflictException extends ApiException {
+  const ConflictException();
+
+  @override
+  String toString() => 'ConflictException: resource conflict (409)';
 }
 
 /// Request was rate-limited by the server (HTTP 429).
