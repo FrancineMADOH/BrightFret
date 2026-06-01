@@ -4,6 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../core/models/app_update.dart';
+import '../../core/models/auth_token.dart';
+import '../../core/storage/hive_service.dart';
+
 import '../../features/auth/screens/phone_verify_screen.dart';
 import '../../features/claims/screens/claim_screen.dart';
 import '../../features/messaging/screens/messaging_screen.dart';
@@ -138,6 +142,10 @@ List<RouteBase> _buildRoutes(RouterNotifier notifier) => [
             builder: (_, state) => DocumentViewerScreen(
               suffix: state.pathParameters['suffix']!,
               documentId: state.pathParameters['id']!,
+              instanceUrl: state.uri.queryParameters['instance'] ?? '',
+              documentUrl: state.uri.queryParameters['url'] ?? '',
+              documentName: state.uri.queryParameters['name'] ?? '',
+              documentType: state.uri.queryParameters['type'] ?? 'other',
             ),
           ),
           GoRoute(
@@ -145,6 +153,7 @@ List<RouteBase> _buildRoutes(RouterNotifier notifier) => [
             name: AppRoute.messaging.name,
             builder: (_, state) => MessagingScreen(
               suffix: state.pathParameters['suffix']!,
+              instanceUrl: state.uri.queryParameters['instance'] ?? '',
             ),
           ),
           GoRoute(
@@ -181,4 +190,120 @@ List<RouteBase> _buildRoutes(RouterNotifier notifier) => [
         name: AppRoute.errorNotFound.name,
         builder: (_, __) => const ErrorNotFoundScreen(),
       ),
+      // Debug-only: inject a token into Hive and redirect to the messaging screen
+      // Usage: /#/test/inject?suffix=31PSQJ&token=xxx&instance=http://localhost:8068
+      if (kDebugMode)
+        GoRoute(
+          path: '/test/inject',
+          builder: (_, state) {
+            final suffix = state.uri.queryParameters['suffix'] ?? '';
+            final token = state.uri.queryParameters['token'] ?? '';
+            final instance = state.uri.queryParameters['instance'] ?? '';
+            return _TestInjectScreen(
+                suffix: suffix, token: token, instance: instance);
+          },
+        ),
+      // Debug-only: seed fake AppUpdate entries and redirect to updates screen
+      // Usage: /#/test/seed-updates
+      if (kDebugMode)
+        GoRoute(
+          path: '/test/seed-updates',
+          builder: (_, __) => const _SeedUpdatesScreen(),
+        ),
     ];
+
+/// Debug-only screen: stores a test token into Hive and redirects to the messaging screen.
+/// Only reachable at /#/test/inject?suffix=...&token=...&instance=...
+class _TestInjectScreen extends StatefulWidget {
+  const _TestInjectScreen({
+    required this.suffix,
+    required this.token,
+    required this.instance,
+  });
+
+  final String suffix;
+  final String token;
+  final String instance;
+
+  @override
+  State<_TestInjectScreen> createState() => _TestInjectScreenState();
+}
+
+class _TestInjectScreenState extends State<_TestInjectScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _inject();
+  }
+
+  Future<void> _inject() async {
+    if (widget.token.isNotEmpty && widget.suffix.isNotEmpty) {
+      final authToken = AuthToken(
+        token: widget.token,
+        suffix: widget.suffix,
+        instanceUrl: widget.instance,
+        expiresAt: DateTime.now().add(const Duration(hours: 24)),
+      );
+      await HiveService.tokens.put(
+        '${widget.instance}:${widget.suffix}',
+        authToken,
+      );
+    }
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+    final encoded = Uri.encodeQueryComponent(widget.instance);
+    GoRouter.of(context).go('/shipment/${widget.suffix}/messages?instance=$encoded');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
+  }
+}
+
+/// Debug-only screen: seeds fake AppUpdate entries into Hive and redirects to S13.
+class _SeedUpdatesScreen extends StatefulWidget {
+  const _SeedUpdatesScreen();
+
+  @override
+  State<_SeedUpdatesScreen> createState() => _SeedUpdatesScreenState();
+}
+
+class _SeedUpdatesScreenState extends State<_SeedUpdatesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _seed();
+  }
+
+  Future<void> _seed() async {
+    final box = HiveService.updates;
+    await box.clear();
+    final now = DateTime.now();
+    await box.add(AppUpdate(
+      trackingCode: 'BWF-2026-31PSQJ',
+      message: 'Votre colis est arrivé au port de Douala.',
+      detectedAt: now.subtract(const Duration(hours: 2)),
+    ));
+    await box.add(AppUpdate(
+      trackingCode: 'BWF-2026-31PSQJ',
+      message: 'Dédouanement en cours.',
+      detectedAt: now.subtract(const Duration(days: 1)),
+      isRead: true,
+    ));
+    await box.add(AppUpdate(
+      trackingCode: 'BWF-2026-AB1234',
+      message: 'Votre colis a été expédié de Shanghai.',
+      detectedAt: now.subtract(const Duration(days: 3)),
+      isRead: true,
+    ));
+    await Future.delayed(const Duration(milliseconds: 200));
+    if (!mounted) return;
+    GoRouter.of(context).go('/updates');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
+  }
+}

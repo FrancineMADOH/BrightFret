@@ -202,7 +202,12 @@ class _DocumentRowState extends State<_DocumentRow> {
             onPressed: () => context.goNamed(
               AppRoute.documentViewer.name,
               pathParameters: {'suffix': widget.suffix, 'id': doc.id},
-              queryParameters: {'instance': widget.instanceUrl},
+              queryParameters: {
+                'instance': widget.instanceUrl,
+                'url': doc.url,
+                'name': doc.name,
+                'type': doc.type,
+              },
             ),
             child: Text(widget.l10n.openDocument),
           ),

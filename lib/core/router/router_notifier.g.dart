@@ -6,7 +6,7 @@ part of 'router_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$routerNotifierHash() => r'74d5ededf53f6deeaebccf6405f8116c84105723';
+String _$routerNotifierHash() => r'1c5b64f860a57f13ddb94fde040b9cdbbb5b88f7';
 
 /// Bridges Riverpod state into go_router's redirect and refresh mechanism.
 /// Listens to [OnboardingState]; notify listeners so the router re-evaluates

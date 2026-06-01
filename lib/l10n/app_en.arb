@@ -31,6 +31,11 @@
   "sectionSummary": "Summary",
   "sectionPricing": "Pricing",
   "sectionTimeline": "Detailed tracking",
+  "shareDocument": "Share",
+  "pdfViewerUnavailable": "Preview not available on web",
+  "useDownloadButton": "Use the ⬇ button to download this file.",
+  "errorLoadingDocument": "Could not load this document",
+
   "noDocumentsYet": "No documents available yet",
   "openDocument": "Open",
   "downloadDocument": "Download",
@@ -58,6 +63,11 @@
   "offlineDataBanner": "⚠️ Offline — Data from {datetime}",
   "offlineDocumentsUnavailable": "Documents unavailable offline",
   "offlineMessagingUnavailable": "Messaging requires a connection",
+
+  "noMessagesYet": "No messages yet. Ask your forwarder a question.",
+  "messageHint": "Your message…",
+  "sendMessage": "Send",
+  "messageSendError": "Could not send message. Please try again.",
 
   "filterAll": "All",
   "filterActive": "Active",
@@ -99,6 +109,10 @@
   "forwarderUnknown": "Forwarder not in network — try the QR scanner",
   "invalidCodeFormat": "Expected format: KMG-2026-A7X9K2",
   "recentCodes": "Recent codes",
+
+  "noUpdatesYet": "No updates yet",
+  "noUpdatesHint": "You'll be notified here when one of your shipments changes status.",
+  "clearAllUpdates": "Clear all",
 
   "tabHome": "Home",
   "tabUpdates": "Updates",

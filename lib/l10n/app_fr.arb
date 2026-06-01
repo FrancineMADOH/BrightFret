@@ -79,6 +79,18 @@
   "sectionTimeline": "Suivi détaillé",
   "@sectionTimeline": { "description": "Titre accordéon timeline S08" },
 
+  "shareDocument": "Partager",
+  "@shareDocument": { "description": "Bouton partager S10" },
+
+  "pdfViewerUnavailable": "Aperçu non disponible sur le web",
+  "@pdfViewerUnavailable": { "description": "Message PDF/autre viewer indisponible S10" },
+
+  "useDownloadButton": "Utilisez le bouton ⬇ pour télécharger ce fichier.",
+  "@useDownloadButton": { "description": "Indication download S10" },
+
+  "errorLoadingDocument": "Impossible de charger ce document",
+  "@errorLoadingDocument": { "description": "Erreur chargement image S10" },
+
   "noDocumentsYet": "Aucun document disponible pour l'instant",
   "@noDocumentsYet": { "description": "Etat vide S09" },
 
@@ -155,6 +167,18 @@
 
   "offlineMessagingUnavailable": "La messagerie nécessite une connexion",
   "@offlineMessagingUnavailable": { "description": "Message S11 hors ligne" },
+
+  "noMessagesYet": "Aucun message pour l'instant. Posez vos questions à votre transitaire.",
+  "@noMessagesYet": { "description": "Etat vide S11 — aucun message" },
+
+  "messageHint": "Votre message…",
+  "@messageHint": { "description": "Placeholder saisie message S11" },
+
+  "sendMessage": "Envoyer",
+  "@sendMessage": { "description": "Bouton envoi message S11" },
+
+  "messageSendError": "Impossible d'envoyer le message. Réessayez.",
+  "@messageSendError": { "description": "Erreur d'envoi de message S11" },
 
   "filterAll": "Tous",
   "@filterAll": { "description": "Filtre S12 — tous les colis" },
@@ -247,6 +271,15 @@
 
   "recentCodes": "Codes récents",
   "@recentCodes": { "description": "Titre historique codes récents S04" },
+
+  "noUpdatesYet": "Aucune mise à jour pour l'instant",
+  "@noUpdatesYet": { "description": "Etat vide S13 — aucune notification" },
+
+  "noUpdatesHint": "Vous serez notifié ici lorsque l'état d'un de vos colis changera.",
+  "@noUpdatesHint": { "description": "Sous-titre état vide S13" },
+
+  "clearAllUpdates": "Tout effacer",
+  "@clearAllUpdates": { "description": "Action effacer toutes les notifications S13" },
 
   "tabHome": "Accueil",
   "@tabHome": { "description": "Libellé onglet Accueil" },
