@@ -220,10 +220,46 @@
   "@errorNetworkBody": { "description": "Corps S17" },
 
   "claimTitle": "Signaler un problème",
-  "@claimTitle": { "description": "Titre écran réclamation S18" },
+  "@claimTitle": { "description": "Titre écran réclamation S18A" },
+
+  "claimStatusTitle": "Ma réclamation",
+  "@claimStatusTitle": { "description": "Titre écran statut réclamation S18B" },
 
   "claimTypeLabel": "Type de problème",
   "@claimTypeLabel": { "description": "Label sélecteur type S18" },
+
+  "claimTypeDisplayLabel": "Type",
+  "@claimTypeDisplayLabel": { "description": "Label type dans vue statut S18B" },
+
+  "claimOpenDate": "Ouvert le",
+  "@claimOpenDate": { "description": "Date d'ouverture S18B" },
+
+  "claimCloseDate": "Fermé le",
+  "@claimCloseDate": { "description": "Date de fermeture S18B" },
+
+  "claimResolutionNote": "Note de résolution",
+  "@claimResolutionNote": { "description": "Note de résolution S18B" },
+
+  "claimCreditAmount": "Montant accordé",
+  "@claimCreditAmount": { "description": "Montant accordé S18B (état accepté)" },
+
+  "claimStateOpen": "En attente",
+  "@claimStateOpen": { "description": "Statut réclamation ouverte" },
+
+  "claimStateUnderReview": "En cours d'examen",
+  "@claimStateUnderReview": { "description": "Statut réclamation en examen" },
+
+  "claimStateAccepted": "Acceptée",
+  "@claimStateAccepted": { "description": "Statut réclamation acceptée" },
+
+  "claimStateRejected": "Refusée",
+  "@claimStateRejected": { "description": "Statut réclamation refusée" },
+
+  "claimStateCancelled": "Annulée",
+  "@claimStateCancelled": { "description": "Statut réclamation annulée" },
+
+  "noClaimFound": "Aucune réclamation trouvée pour ce colis.",
+  "@noClaimFound": { "description": "Erreur 404 S18B — aucune réclamation" },
 
   "claimDescriptionLabel": "Description",
   "@claimDescriptionLabel": { "description": "Label champ description S18" },

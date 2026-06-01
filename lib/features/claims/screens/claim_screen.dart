@@ -11,19 +11,26 @@ import '../../../core/router/app_router.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
 import '../../../shared/widgets/bf_primary_button.dart';
+import '../models/claim_detail.dart';
 import '../providers/claim_provider.dart';
+import '../providers/claim_status_provider.dart';
 
-/// S18A — Claim submission form.
-/// Switches to a success view after a successful POST.
+/// S18 — Claim screen.
+/// [showStatus]=false → S18A submission form.
+/// [showStatus]=true  → S18B status view (fetches existing claim via GET).
 class ClaimScreen extends ConsumerStatefulWidget {
   const ClaimScreen({
     super.key,
     required this.suffix,
     this.instanceUrl = '',
+    this.showStatus = false,
   });
 
   final String suffix;
   final String instanceUrl;
+
+  /// When true, skips the form and shows the claim status view instead.
+  final bool showStatus;
 
   @override
   ConsumerState<ClaimScreen> createState() => _ClaimScreenState();
@@ -84,18 +91,38 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
     }
   }
 
+  VoidCallback get _onBack => () =>
+      context.canPop() ? context.pop() : context.go(AppRoute.home.path);
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    // S18B: status view — skip the form entirely
+    if (widget.showStatus) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.claimStatusTitle),
+          leading: BackButton(onPressed: _onBack),
+        ),
+        body: _ClaimStatusBody(
+          suffix: widget.suffix,
+          instanceUrl: widget.instanceUrl,
+          l10n: l10n,
+          onBack: _onBack,
+        ),
+      );
+    }
+
+    // S18A: submission form
     final claimAsync =
         ref.watch(claimNotifierProvider(widget.suffix, widget.instanceUrl));
-    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.claimTitle),
         leading: BackButton(
-          onPressed: () =>
-              context.canPop() ? context.pop() : context.go(AppRoute.home.path),
+          onPressed: _onBack,
         ),
       ),
       body: claimAsync.when(
@@ -104,9 +131,7 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
             ? _SuccessView(
                 reference: reference,
                 l10n: l10n,
-                onBack: () => context.canPop()
-                    ? context.pop()
-                    : context.go(AppRoute.home.path),
+                onBack: _onBack,
               )
             : _ClaimForm(
                 claimType: _claimType,
@@ -369,6 +394,233 @@ class _SectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(text, style: AppTextStyles.label);
 }
+
+// ── S18B — Claim status ───────────────────────────────────────────────────────
+
+/// Watches [claimStatusProvider] and delegates to [_ClaimStatusView] or error states.
+class _ClaimStatusBody extends ConsumerWidget {
+  const _ClaimStatusBody({
+    required this.suffix,
+    required this.instanceUrl,
+    required this.l10n,
+    required this.onBack,
+  });
+
+  final String suffix;
+  final String instanceUrl;
+  final AppLocalizations l10n;
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final claimAsync = ref.watch(claimStatusProvider(suffix, instanceUrl));
+
+    return claimAsync.when(
+      loading: () => const BfLoadingIndicator(),
+      error: (err, _) => _buildError(context, ref, err),
+      data: (claim) => _ClaimStatusView(
+        claim: claim,
+        l10n: l10n,
+        onBack: onBack,
+      ),
+    );
+  }
+
+  Widget _buildError(BuildContext context, WidgetRef ref, Object err) {
+    final msg = err is NotFoundException
+        ? l10n.noClaimFound
+        : err is NetworkException
+            ? l10n.errorNetworkBody
+            : l10n.claimSubmitError;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.folder_off_outlined,
+                size: 64, color: AppColors.statusArchived.withAlpha(120)),
+            const SizedBox(height: 20),
+            Text(msg,
+                style: AppTextStyles.body
+                    .copyWith(color: AppColors.statusArchived),
+                textAlign: TextAlign.center),
+            const SizedBox(height: 24),
+            BfPrimaryButton(
+              label: l10n.retry,
+              onPressed: () =>
+                  ref.invalidate(claimStatusProvider(suffix, instanceUrl)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Displays the full claim detail: state badge, reference, dates, resolution.
+class _ClaimStatusView extends StatelessWidget {
+  const _ClaimStatusView({
+    required this.claim,
+    required this.l10n,
+    required this.onBack,
+  });
+
+  final ClaimDetail claim;
+  final AppLocalizations l10n;
+  final VoidCallback onBack;
+
+  static String _formatDate(DateTime? dt) {
+    if (dt == null) return '—';
+    return '${dt.day.toString().padLeft(2, '0')}/'
+        '${dt.month.toString().padLeft(2, '0')}/'
+        '${dt.year}';
+  }
+
+  Color _stateColor() => switch (claim.state) {
+        'open' => AppColors.statusWarning,
+        'under_review' => AppColors.statusActive,
+        'accepted' => AppColors.statusDelivered,
+        'rejected' => AppColors.statusError,
+        _ => AppColors.statusArchived,
+      };
+
+  String _stateLabel() => switch (claim.state) {
+        'open' => l10n.claimStateOpen,
+        'under_review' => l10n.claimStateUnderReview,
+        'accepted' => l10n.claimStateAccepted,
+        'rejected' => l10n.claimStateRejected,
+        _ => l10n.claimStateCancelled,
+      };
+
+  String _typeLabel() => switch (claim.claimType) {
+        'lost' => l10n.claimLost,
+        'damaged' => l10n.claimDamaged,
+        _ => l10n.claimDelay,
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    final color = _stateColor();
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _StateHeader(
+            stateLabel: _stateLabel(),
+            reference: claim.reference,
+            color: color,
+          ),
+          const SizedBox(height: 24),
+          _DetailRow(l10n.claimTypeDisplayLabel, _typeLabel()),
+          const Divider(height: 24),
+          _DetailRow(l10n.claimDescriptionLabel, claim.description),
+          const Divider(height: 24),
+          _DetailRow(l10n.claimOpenDate, _formatDate(claim.openDate)),
+          if (claim.closeDate != null) ...[
+            const Divider(height: 24),
+            _DetailRow(l10n.claimCloseDate, _formatDate(claim.closeDate)),
+          ],
+          if (claim.resolutionNote != null &&
+              claim.resolutionNote!.isNotEmpty) ...[
+            const Divider(height: 24),
+            _DetailRow(l10n.claimResolutionNote, claim.resolutionNote!),
+          ],
+          if (claim.creditAmount != null) ...[
+            const Divider(height: 24),
+            _DetailRow(
+              l10n.claimCreditAmount,
+              '${claim.creditAmount!.toStringAsFixed(0)} XAF',
+            ),
+          ],
+          const SizedBox(height: 32),
+          BfPrimaryButton(label: l10n.backToShipment, onPressed: onBack),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+}
+
+class _StateHeader extends StatelessWidget {
+  const _StateHeader({
+    required this.stateLabel,
+    required this.reference,
+    required this.color,
+  });
+
+  final String stateLabel;
+  final String reference;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withAlpha(20),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withAlpha(60)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.assignment_outlined, color: color, size: 32),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: color,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    stateLabel,
+                    style: AppTextStyles.caption
+                        .copyWith(color: Colors.white, fontWeight: FontWeight.w700),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(reference,
+                    style: AppTextStyles.bodySmall
+                        .copyWith(color: AppColors.statusArchived)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DetailRow extends StatelessWidget {
+  const _DetailRow(this.label, this.value);
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style:
+                AppTextStyles.caption.copyWith(color: AppColors.statusArchived)),
+        const SizedBox(height: 4),
+        Text(value, style: AppTextStyles.body),
+      ],
+    );
+  }
+}
+
+// ── API error banner ──────────────────────────────────────────────────────────
 
 class _ApiErrorBanner extends StatelessWidget {
   const _ApiErrorBanner({required this.message});

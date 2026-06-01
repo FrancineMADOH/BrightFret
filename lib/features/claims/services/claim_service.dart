@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 
 import '../../../core/http/api_exception.dart';
+import '../models/claim_detail.dart';
 
 /// Service for claim endpoints:
 /// - `POST /api/shipment/{suffix}/claim`
+/// - `GET  /api/shipment/{suffix}/claim`
 class ClaimService {
   const ClaimService(this._dio);
 
@@ -27,6 +29,17 @@ class ClaimService {
         },
       );
       return (response.data as Map<String, dynamic>)['reference'] as String;
+    } on DioException catch (e) {
+      throw e.asApiException;
+    }
+  }
+
+  /// Fetches the latest claim for [suffix].
+  /// Throws [NotFoundException] (404) when no claim exists.
+  Future<ClaimDetail> getClaim({required String suffix}) async {
+    try {
+      final response = await _dio.get('/api/shipment/$suffix/claim');
+      return ClaimDetail.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw e.asApiException;
     }

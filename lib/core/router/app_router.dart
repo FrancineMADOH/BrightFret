@@ -162,6 +162,7 @@ List<RouteBase> _buildRoutes(RouterNotifier notifier) => [
             builder: (_, state) => ClaimScreen(
               suffix: state.pathParameters['suffix']!,
               instanceUrl: state.uri.queryParameters['instance'] ?? '',
+              showStatus: state.uri.queryParameters['view'] == 'status',
             ),
           ),
         ],

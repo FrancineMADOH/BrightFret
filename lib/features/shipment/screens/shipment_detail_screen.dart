@@ -164,7 +164,10 @@ class _DetailBody extends StatelessWidget {
           onTap: () => context.goNamed(
             AppRoute.claim.name,
             pathParameters: {'suffix': suffix},
-            queryParameters: {'instance': instanceUrl},
+            queryParameters: {
+              'instance': instanceUrl,
+              if (shipment.hasActiveClaim) 'view': 'status',
+            },
           ),
         ),
         const SizedBox(height: 16),
