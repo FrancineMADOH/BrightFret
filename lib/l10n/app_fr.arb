@@ -4,6 +4,33 @@
   "appName": "BrightFret",
   "@appName": { "description": "Nom de l'application" },
 
+  "onboardingSkip": "Passer",
+  "@onboardingSkip": { "description": "Bouton passer onboarding" },
+
+  "onboardingNext": "Suivant",
+  "@onboardingNext": { "description": "Bouton slide suivant onboarding" },
+
+  "onboardingGetStarted": "Commencer",
+  "@onboardingGetStarted": { "description": "Bouton démarrer depuis dernier slide onboarding" },
+
+  "onboardingSlide1Title": "Suivez vos colis en temps réel",
+  "@onboardingSlide1Title": { "description": "Titre slide 1 onboarding" },
+
+  "onboardingSlide1Body": "Restez informé à chaque étape du voyage de vos marchandises depuis la Chine.",
+  "@onboardingSlide1Body": { "description": "Corps slide 1 onboarding" },
+
+  "onboardingSlide2Title": "Accédez à tous vos documents",
+  "@onboardingSlide2Title": { "description": "Titre slide 2 onboarding" },
+
+  "onboardingSlide2Body": "Factures, photos, bons de livraison — tous vos documents en un seul endroit.",
+  "@onboardingSlide2Body": { "description": "Corps slide 2 onboarding" },
+
+  "onboardingSlide3Title": "Communiquez avec votre transitaire",
+  "@onboardingSlide3Title": { "description": "Titre slide 3 onboarding" },
+
+  "onboardingSlide3Body": "Posez vos questions et suivez l'avancement directement depuis l'application.",
+  "@onboardingSlide3Body": { "description": "Corps slide 3 onboarding" },
+
   "cancel": "Annuler",
   "@cancel": { "description": "Action annuler" },
 
@@ -150,6 +177,9 @@
 
   "tooManyAttempts": "Trop de tentatives. Réessayez dans 10 minutes.",
   "@tooManyAttempts": { "description": "Blocage après 3 tentatives échouées" },
+
+  "offlineBannerGeneric": "⚠️ Hors ligne — Les données affichées peuvent ne pas être à jour.",
+  "@offlineBannerGeneric": { "description": "Bannière générique hors-ligne (sans date)" },
 
   "offlineDataBanner": "⚠️ Hors ligne — Données du {datetime}",
   "@offlineDataBanner": {
@@ -361,6 +391,39 @@
 
   "clearAllUpdates": "Tout effacer",
   "@clearAllUpdates": { "description": "Action effacer toutes les notifications S13" },
+
+  "settingsLanguageSection": "Langue",
+  "@settingsLanguageSection": { "description": "Titre section langue S14" },
+
+  "settingsLanguageFr": "Français",
+  "@settingsLanguageFr": { "description": "Option langue française S14" },
+
+  "settingsLanguageEn": "English",
+  "@settingsLanguageEn": { "description": "Option langue anglaise S14" },
+
+  "settingsDataSection": "Données",
+  "@settingsDataSection": { "description": "Titre section données S14" },
+
+  "settingsClearCache": "Vider le cache",
+  "@settingsClearCache": { "description": "Titre tuile vider cache S14" },
+
+  "settingsClearCacheSubtitle": "Supprime les données mises en cache (colis, transitaire). Vos colis sauvegardés ne sont pas affectés.",
+  "@settingsClearCacheSubtitle": { "description": "Sous-titre tuile vider cache S14" },
+
+  "settingsClearCacheTitle": "Vider le cache ?",
+  "@settingsClearCacheTitle": { "description": "Titre boîte de dialogue confirmation S14" },
+
+  "settingsClearCacheConfirm": "Vider",
+  "@settingsClearCacheConfirm": { "description": "Bouton confirmation vider cache S14" },
+
+  "settingsCacheClearedDone": "Cache vidé ✓",
+  "@settingsCacheClearedDone": { "description": "SnackBar confirmation cache vidé S14" },
+
+  "settingsAboutSection": "À propos",
+  "@settingsAboutSection": { "description": "Titre section à propos S14" },
+
+  "settingsVersion": "Version",
+  "@settingsVersion": { "description": "Label version dans à propos S14" },
 
   "tabHome": "Accueil",
   "@tabHome": { "description": "Libellé onglet Accueil" },

@@ -5,8 +5,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../../core/providers/connectivity_provider.dart';
 import '../../../core/router/app_router.dart';
 import '../../../shared/widgets/bf_bottom_nav.dart';
+import '../../../shared/widgets/bf_offline_banner.dart';
 import '../../../shared/widgets/bf_shipment_card.dart';
 import '../providers/home_provider.dart';
 
@@ -18,21 +20,30 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final shipments = ref.watch(homeShipmentsProvider);
+    final isOnline = ref.watch(connectivityNotifierProvider);
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _searchSection(context, l10n),
-              const SizedBox(height: 12),
-              _scanButton(context, l10n),
-              const SizedBox(height: 32),
-              _recentSection(context, l10n, shipments),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (!isOnline) const BfOfflineBanner(),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _searchSection(context, l10n),
+                    const SizedBox(height: 12),
+                    _scanButton(context, l10n),
+                    const SizedBox(height: 32),
+                    _recentSection(context, l10n, shipments),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: const BfBottomNavBar(currentIndex: 0),

@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/constants/app_theme.dart';
+import 'core/deep_links/deep_link_handler.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
 import 'core/storage/hive_service.dart';
@@ -23,13 +24,35 @@ Future<void> main() async {
 }
 
 /// Root application widget.
-/// Wires [routerProvider], [AppTheme], and [AppLocalizations].
+/// Wires [routerProvider], [AppTheme], [AppLocalizations], and [DeepLinkHandler].
 /// Locale is driven by [localeStateProvider] and persisted in Hive.
-class BrightFretApp extends ConsumerWidget {
+class BrightFretApp extends ConsumerStatefulWidget {
   const BrightFretApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BrightFretApp> createState() => _BrightFretAppState();
+}
+
+class _BrightFretAppState extends ConsumerState<BrightFretApp> {
+  @override
+  void initState() {
+    super.initState();
+    // Defer until after the first frame so the GoRouter is fully mounted
+    // before any deep-link navigation fires.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      DeepLinkHandler.listen(ref.read(routerProvider));
+    });
+  }
+
+  @override
+  void dispose() {
+    DeepLinkHandler.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
     final locale = ref.watch(localeStateProvider);
     return MaterialApp.router(

@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/http/api_exception.dart';
+import '../../../core/providers/connectivity_provider.dart';
 import '../../../core/router/app_router.dart';
 import '../../../shared/widgets/bf_error_screen.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
@@ -30,6 +31,7 @@ class DocumentsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final docsAsync = ref.watch(documentsProvider(suffix, instanceUrl));
+    final isOnline = ref.watch(connectivityNotifierProvider);
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -61,6 +63,7 @@ class DocumentsScreen extends ConsumerWidget {
                     document: docs[i],
                     suffix: suffix,
                     instanceUrl: instanceUrl,
+                    isOnline: isOnline,
                     l10n: l10n,
                   ),
                 ),
@@ -111,12 +114,14 @@ class _DocumentRow extends StatefulWidget {
     required this.document,
     required this.suffix,
     required this.instanceUrl,
+    required this.isOnline,
     required this.l10n,
   });
 
   final ShipmentDocument document;
   final String suffix;
   final String instanceUrl;
+  final bool isOnline;
   final AppLocalizations l10n;
 
   @override
@@ -199,16 +204,24 @@ class _DocumentRowState extends State<_DocumentRow> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextButton(
-            onPressed: () => context.goNamed(
-              AppRoute.documentViewer.name,
-              pathParameters: {'suffix': widget.suffix, 'id': doc.id},
-              queryParameters: {
-                'instance': widget.instanceUrl,
-                'url': doc.url,
-                'name': doc.name,
-                'type': doc.type,
-              },
-            ),
+            onPressed: () {
+              if (!widget.isOnline) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(widget.l10n.offlineDocumentsUnavailable),
+                ));
+                return;
+              }
+              context.goNamed(
+                AppRoute.documentViewer.name,
+                pathParameters: {'suffix': widget.suffix, 'id': doc.id},
+                queryParameters: {
+                  'instance': widget.instanceUrl,
+                  'url': doc.url,
+                  'name': doc.name,
+                  'type': doc.type,
+                },
+              );
+            },
             child: Text(widget.l10n.openDocument),
           ),
           const SizedBox(width: 4),

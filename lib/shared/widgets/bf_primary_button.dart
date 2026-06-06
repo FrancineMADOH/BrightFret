@@ -20,14 +20,16 @@ class BfPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Uses the ambient theme's primary colour so BfForwarderTheme overrides work.
+    final color = Theme.of(context).colorScheme.primary;
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: color,
           foregroundColor: AppColors.white,
-          disabledBackgroundColor: AppColors.primary.withAlpha(128),
+          disabledBackgroundColor: color.withAlpha(128),
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../../core/providers/connectivity_provider.dart';
 import '../../../core/http/api_exception.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/storage/token_storage.dart';
@@ -63,6 +64,14 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
   Future<void> _handleSend() async {
     final text = _inputController.text.trim();
     if (text.isEmpty || _sending) return;
+
+    // Block sending when offline — show the offline message instead.
+    if (!ref.read(connectivityNotifierProvider)) {
+      setState(() {
+        _sendError = AppLocalizations.of(context)!.offlineMessagingUnavailable;
+      });
+      return;
+    }
 
     setState(() {
       _sending = true;
@@ -121,6 +130,7 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
     final messagesAsync = ref.watch(
       messagesNotifierProvider(widget.suffix, widget.instanceUrl),
     );
+    final isOnline = ref.watch(connectivityNotifierProvider);
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -185,6 +195,7 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
           _MessageInput(
             controller: _inputController,
             sending: _sending,
+            isOnline: isOnline,
             onSend: _handleSend,
             l10n: l10n,
           ),
@@ -371,12 +382,14 @@ class _MessageInput extends StatelessWidget {
   const _MessageInput({
     required this.controller,
     required this.sending,
+    required this.isOnline,
     required this.onSend,
     required this.l10n,
   });
 
   final TextEditingController controller;
   final bool sending;
+  final bool isOnline;
   final VoidCallback onSend;
   final AppLocalizations l10n;
 
@@ -430,14 +443,19 @@ class _MessageInput extends StatelessWidget {
                     )
                   : IconButton(
                       key: const ValueKey('send'),
-                      onPressed: onSend,
+                      onPressed: isOnline ? onSend : null,
                       style: IconButton.styleFrom(
-                        backgroundColor: AppColors.primary,
+                        backgroundColor: isOnline
+                            ? AppColors.primary
+                            : AppColors.statusArchived,
                         foregroundColor: AppColors.white,
+                        disabledBackgroundColor: AppColors.statusArchived,
                         padding: const EdgeInsets.all(12),
                         shape: const CircleBorder(),
                       ),
-                      icon: const Icon(Icons.send_rounded),
+                      icon: Icon(
+                        isOnline ? Icons.send_rounded : Icons.wifi_off,
+                      ),
                     ),
             ),
           ],

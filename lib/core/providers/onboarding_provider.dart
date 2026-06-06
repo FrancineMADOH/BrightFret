@@ -12,7 +12,7 @@ class OnboardingState extends _$OnboardingState {
 
   @override
   bool build() {
-    return true; // temp
+    return HiveService.prefs.get(_key, defaultValue: false) as bool;
   }
 
   /// Marks onboarding as complete and persists to Hive.

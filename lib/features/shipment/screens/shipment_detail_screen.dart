@@ -11,6 +11,7 @@ import '../../../core/router/app_router.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../../shared/widgets/bf_error_screen.dart';
 import '../../../shared/widgets/bf_forwarder_header.dart';
+import '../../../shared/widgets/bf_forwarder_theme.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
 import '../../../shared/widgets/bf_timeline_step.dart';
 import '../../tracking/models/forwarder_info.dart';
@@ -38,30 +39,33 @@ class ShipmentDetailScreen extends ConsumerWidget {
         ?? ForwarderInfo.fallback;
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(suffix, style: AppTextStyles.label.copyWith(color: AppColors.white)),
-        leading: BackButton(
-          onPressed: () =>
-              context.canPop() ? context.pop() : context.go(AppRoute.home.path),
+    return BfForwarderTheme(
+      instanceUrl: instanceUrl,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(suffix, style: AppTextStyles.label.copyWith(color: AppColors.white)),
+          leading: BackButton(
+            onPressed: () =>
+                context.canPop() ? context.pop() : context.go(AppRoute.home.path),
+          ),
         ),
-      ),
-      body: shipmentAsync.when(
-        loading: () => const BfLoadingIndicator(),
-        error: (err, _) => _buildError(context, ref, err, l10n),
-        data: (shipment) => RefreshIndicator(
-          onRefresh: () async {
-            ref.invalidate(fullShipmentProvider(suffix, instanceUrl));
-            await ref
-                .read(fullShipmentProvider(suffix, instanceUrl).future)
-                .catchError((_) => shipment);
-          },
-          child: _DetailBody(
-            shipment: shipment,
-            forwarder: forwarder,
-            suffix: suffix,
-            instanceUrl: instanceUrl,
-            l10n: l10n,
+        body: shipmentAsync.when(
+          loading: () => const BfLoadingIndicator(),
+          error: (err, _) => _buildError(context, ref, err, l10n),
+          data: (shipment) => RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(fullShipmentProvider(suffix, instanceUrl));
+              await ref
+                  .read(fullShipmentProvider(suffix, instanceUrl).future)
+                  .catchError((_) => shipment);
+            },
+            child: _DetailBody(
+              shipment: shipment,
+              forwarder: forwarder,
+              suffix: suffix,
+              instanceUrl: instanceUrl,
+              l10n: l10n,
+            ),
           ),
         ),
       ),

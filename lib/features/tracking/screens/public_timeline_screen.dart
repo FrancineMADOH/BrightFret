@@ -10,6 +10,7 @@ import '../../../core/http/api_exception.dart';
 import '../../../core/router/app_router.dart';
 import '../../../shared/widgets/bf_error_screen.dart';
 import '../../../shared/widgets/bf_forwarder_header.dart';
+import '../../../shared/widgets/bf_forwarder_theme.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
 import '../../../shared/widgets/bf_primary_button.dart';
 import '../../../shared/widgets/bf_timeline_step.dart';
@@ -41,9 +42,11 @@ class PublicTimelineScreen extends ConsumerWidget {
             ForwarderInfo.fallback;
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: _buildAppBar(context, trackingAsync),
-      body: RefreshIndicator(
+    return BfForwarderTheme(
+      instanceUrl: instanceUrl,
+      child: Scaffold(
+        appBar: _buildAppBar(context, trackingAsync),
+        body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(shipmentTrackingProvider(suffix, instanceUrl));
           try {
@@ -63,7 +66,8 @@ class PublicTimelineScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
+    ),    // Scaffold
+    );    // BfForwarderTheme
   }
 
   PreferredSizeWidget _buildAppBar(
@@ -335,8 +339,9 @@ class _ProgressBar extends StatelessWidget {
             value: progress,
             minHeight: 8,
             backgroundColor: AppColors.divider,
-            valueColor:
-                const AlwaysStoppedAnimation<Color>(AppColors.statusActive),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
       ],
