@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../core/constants/app_enums.dart';
 import '../../core/models/app_update.dart';
 import '../../core/models/auth_token.dart';
 import '../../core/storage/hive_service.dart';
@@ -284,18 +285,18 @@ class _SeedUpdatesScreenState extends State<_SeedUpdatesScreen> {
     final now = DateTime.now();
     await box.add(AppUpdate(
       trackingCode: 'BWF-2026-31PSQJ',
-      message: 'Votre colis est arrivé au port de Douala.',
+      message: ShipmentStatus.delivered.name,
       detectedAt: now.subtract(const Duration(hours: 2)),
     ));
     await box.add(AppUpdate(
       trackingCode: 'BWF-2026-31PSQJ',
-      message: 'Dédouanement en cours.',
+      message: ShipmentStatus.active.name,
       detectedAt: now.subtract(const Duration(days: 1)),
       isRead: true,
     ));
     await box.add(AppUpdate(
       trackingCode: 'BWF-2026-AB1234',
-      message: 'Votre colis a été expédié de Shanghai.',
+      message: ShipmentStatus.active.name,
       detectedAt: now.subtract(const Duration(days: 3)),
       isRead: true,
     ));

@@ -55,6 +55,7 @@
 
   "sectionDocuments": "Documents",
   "sectionMessaging": "Messaging",
+  "sectionClaim": "Claim",
   "paymentConfirmed": "✅ Paid",
   "paymentPending": "⏳ Pending",
   "reportIssue": "⚠️ Report an issue",
@@ -178,5 +179,6 @@
   "minutesAgo": "{count} min ago",
   "hoursAgo": "{count}h ago",
   "daysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
-  "updatedAt": "Updated {relativeTime}"
+  "updatedAt": "Updated {relativeTime}",
+  "updateNewStatus": "New status: {status}"
 }

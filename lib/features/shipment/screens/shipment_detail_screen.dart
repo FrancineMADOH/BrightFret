@@ -164,6 +164,8 @@ class _DetailBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
+        Text(l10n.sectionClaim, style: AppTextStyles.heading2),
+        const SizedBox(height: 8),
         _ClaimButton(
           hasActiveClaim: shipment.hasActiveClaim,
           l10n: l10n,

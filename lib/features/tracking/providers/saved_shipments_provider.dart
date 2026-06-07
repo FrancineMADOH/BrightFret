@@ -2,12 +2,25 @@ import 'dart:math';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/constants/app_enums.dart';
 import '../../../core/http/dio_provider.dart';
+import '../../../core/models/app_update.dart';
 import '../../../core/models/saved_shipment.dart';
+import '../../../core/providers/updates_provider.dart';
 import '../../../core/storage/hive_service.dart';
 import '../services/tracking_service.dart';
 
 part 'saved_shipments_provider.g.dart';
+
+/// Maps the public API's fixed status enum (`registered`/`in_transit`/
+/// `delivered`/`cancelled`/`unknown`) to a [ShipmentStatus]. Stored as
+/// [AppUpdate.message] so S13 can render a localized label at display time
+/// instead of the raw API identifier.
+ShipmentStatus _apiStatusToShipmentStatus(String raw) => switch (raw) {
+      'delivered' => ShipmentStatus.delivered,
+      'cancelled' => ShipmentStatus.error,
+      _ => ShipmentStatus.active,
+    };
 
 /// Manages the list of saved shipments from [HiveService.myShipments].
 /// Active shipments are sorted first, then by most recently seen.
@@ -58,6 +71,12 @@ class SavedShipments extends _$SavedShipments {
         shipment.lastStatus = result.status;
         shipment.lastSeen = DateTime.now();
         await shipment.save();
+        await HiveService.updates.add(AppUpdate(
+          trackingCode: shipment.trackingCode,
+          message: _apiStatusToShipmentStatus(result.status).name,
+          detectedAt: DateTime.now(),
+        ));
+        ref.invalidate(hasUnreadUpdatesProvider);
       }
     } catch (_) {
       // Offline or API error — keep existing cached data silently.

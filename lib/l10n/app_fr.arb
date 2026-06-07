@@ -142,6 +142,9 @@
   "sectionMessaging": "Messagerie",
   "@sectionMessaging": { "description": "Titre section messagerie S08" },
 
+  "sectionClaim": "Réclamation",
+  "@sectionClaim": { "description": "Titre section réclamation S08" },
+
   "paymentConfirmed": "✅ Payé",
   "@paymentConfirmed": { "description": "Statut paiement confirmé S08" },
 
@@ -469,6 +472,14 @@
     "description": "Horodatage de dernière mise à jour sur les cards colis",
     "placeholders": {
       "relativeTime": { "type": "String", "description": "Temps relatif localisé" }
+    }
+  },
+
+  "updateNewStatus": "Nouveau statut : {status}",
+  "@updateNewStatus": {
+    "description": "Message de notification S13 quand le statut d'un colis sauvegardé change",
+    "placeholders": {
+      "status": { "type": "String", "description": "Libellé brut du nouveau statut renvoyé par l'API" }
     }
   }
 }

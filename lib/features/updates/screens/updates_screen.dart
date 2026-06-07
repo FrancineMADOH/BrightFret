@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_enums.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/models/app_update.dart';
 import '../../../core/router/app_router.dart';
@@ -112,6 +113,23 @@ class _UpdateTile extends StatelessWidget {
 
   final AppUpdate update;
 
+  /// [AppUpdate.message] stores a [ShipmentStatus.name] (written by
+  /// [SavedShipments._refreshOne]). Falls back to the raw string for
+  /// debug-seeded entries that predate this convention.
+  static String _statusLabel(String message, AppLocalizations l10n) {
+    final status = ShipmentStatus.values
+        .where((s) => s.name == message)
+        .firstOrNull;
+    if (status == null) return message;
+    return switch (status) {
+      ShipmentStatus.active => l10n.statusActive,
+      ShipmentStatus.delivered => l10n.statusDelivered,
+      ShipmentStatus.warning => l10n.statusWarning,
+      ShipmentStatus.error => l10n.statusError,
+      ShipmentStatus.archived => l10n.statusArchived,
+    };
+  }
+
   static String _relativeTime(DateTime dt, AppLocalizations l10n) {
     final diff = DateTime.now().difference(dt);
     if (diff.isNegative || diff.inMinutes < 1) return l10n.justNow;
@@ -158,7 +176,7 @@ class _UpdateTile extends StatelessWidget {
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(
-                update.message,
+                l10n.updateNewStatus(_statusLabel(update.message, l10n)),
                 style: AppTextStyles.bodySmall
                     .copyWith(color: AppColors.statusArchived),
                 maxLines: 2,
