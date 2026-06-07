@@ -12,6 +12,7 @@ class TermsScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return BfStaticPage(
       title: l10n.termsTitle,
+      currentNavIndex: 3,
       sections: [
         BfStaticSection(
             heading: l10n.termsAcceptanceTitle, body: l10n.termsAcceptanceBody),

@@ -12,6 +12,7 @@ class AboutScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return BfStaticPage(
       title: l10n.aboutTitle,
+      currentNavIndex: 3,
       sections: [
         BfStaticSection(heading: l10n.aboutWhatTitle, body: l10n.aboutWhatBody),
         BfStaticSection(heading: l10n.aboutHowTitle, body: l10n.aboutHowBody),
