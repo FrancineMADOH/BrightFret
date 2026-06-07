@@ -485,7 +485,7 @@
 
   "aboutTitle": "À propos",
   "aboutWhatTitle": "BrightFret, c'est quoi ?",
-  "aboutWhatBody": "BrightFret est l'application de suivi de colis qui vous connecte à votre transitaire. Elle vous permet de suivre en temps réel l'acheminement de vos expéditions entre la Chine et l'Afrique, par voie aérienne ou maritime.",
+  "aboutWhatBody": "BrightFret est l'application de suivi de colis qui vous connecte à votre transitaire. Elle vous permet de suivre en temps réel l'acheminement de vos expéditions internationales, par voie aérienne ou maritime.",
   "aboutHowTitle": "Comment ça marche",
   "aboutHowBody": "Votre transitaire vous communique un code de suivi unique. Saisissez-le ou scannez son QR code dans l'application pour accéder aux étapes de votre expédition, à vos documents et pour échanger directement avec votre transitaire.",
   "aboutVersionTitle": "Version",

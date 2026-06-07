@@ -184,7 +184,7 @@
 
   "aboutTitle": "About",
   "aboutWhatTitle": "What is BrightFret?",
-  "aboutWhatBody": "BrightFret is the shipment-tracking app that connects you to your forwarder. It lets you follow your shipments from China to Africa in real time, by air or by sea.",
+  "aboutWhatBody": "BrightFret is the shipment-tracking app that connects you to your forwarder. It lets you follow your international shipments in real time, by air or by sea.",
   "aboutHowTitle": "How it works",
   "aboutHowBody": "Your forwarder gives you a unique tracking code. Enter it or scan its QR code in the app to see your shipment's progress, access your documents, and message your forwarder directly.",
   "aboutVersionTitle": "Version",

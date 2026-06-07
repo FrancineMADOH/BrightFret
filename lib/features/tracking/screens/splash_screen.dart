@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_text_styles.dart';
 import '../../../core/providers/onboarding_provider.dart';
 import '../../../core/storage/hive_service.dart';
 import '../../../core/utils/forwarder_resolver.dart';
@@ -91,11 +92,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         child: RepaintBoundary(
           child: FadeTransition(
             opacity: _fadeAnimation,
-            child: Image.asset(
-              'assets/images/logo_brightfret.png',
-              width: 120,
-              height: 120,
-              fit: BoxFit.contain,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/images/splash_logo.png',
+                  width: 160,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'BrightFret',
+                  style: AppTextStyles.heading1.copyWith(
+                    color: Colors.white,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
