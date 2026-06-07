@@ -329,8 +329,12 @@ class _EmptyState extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () => context.push(AppRoute.trackInput.path),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+              ),
               icon: const Icon(Icons.add),
-              label: Text(l10n.enterTrackingCode),
+              label: Text(l10n.enterTrackingCode, overflow: TextOverflow.visible),
             ),
           ],
         ),

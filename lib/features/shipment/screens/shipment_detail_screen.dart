@@ -9,6 +9,7 @@ import '../../../core/constants/app_text_styles.dart';
 import '../../../core/http/api_exception.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/storage/token_storage.dart';
+import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_error_screen.dart';
 import '../../../shared/widgets/bf_forwarder_header.dart';
 import '../../../shared/widgets/bf_forwarder_theme.dart';
@@ -49,6 +50,7 @@ class ShipmentDetailScreen extends ConsumerWidget {
                 context.canPop() ? context.pop() : context.go(AppRoute.home.path),
           ),
         ),
+        bottomNavigationBar: const BfBottomNavBar(currentIndex: 1),
         body: shipmentAsync.when(
           loading: () => const BfLoadingIndicator(),
           error: (err, _) => _buildError(context, ref, err, l10n),

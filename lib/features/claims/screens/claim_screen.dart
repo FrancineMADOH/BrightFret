@@ -9,6 +9,7 @@ import '../../../core/constants/app_text_styles.dart';
 import '../../../core/http/api_exception.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/storage/token_storage.dart';
+import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
 import '../../../shared/widgets/bf_primary_button.dart';
 import '../models/claim_detail.dart';
@@ -105,6 +106,7 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
           title: Text(l10n.claimStatusTitle),
           leading: BackButton(onPressed: _onBack),
         ),
+        bottomNavigationBar: const BfBottomNavBar(currentIndex: 1),
         body: _ClaimStatusBody(
           suffix: widget.suffix,
           instanceUrl: widget.instanceUrl,
@@ -125,6 +127,7 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
           onPressed: _onBack,
         ),
       ),
+      bottomNavigationBar: const BfBottomNavBar(currentIndex: 1),
       body: claimAsync.when(
         loading: () => const BfLoadingIndicator(),
         data: (reference) => reference != null

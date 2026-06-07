@@ -7,6 +7,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/providers/connectivity_provider.dart';
 import '../../../core/router/app_router.dart';
+import '../../../shared/widgets/bf_app_bar.dart';
 import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_offline_banner.dart';
 import '../../../shared/widgets/bf_shipment_card.dart';
@@ -23,6 +24,7 @@ class HomeScreen extends ConsumerWidget {
     final isOnline = ref.watch(connectivityNotifierProvider);
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
+      appBar: BfAppBar(title: l10n.appName),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -174,6 +176,10 @@ class _EmptyState extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => context.go(AppRoute.trackInput.path),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              ),
               child: Text(l10n.followFirstShipment),
             ),
           ],

@@ -12,6 +12,7 @@ import '../../../core/http/api_exception.dart';
 import '../../../core/http/dio_provider.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/storage/token_storage.dart';
+import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../services/auth_service.dart';
 
 /// S07 — Phone verification: 4-digit PIN entry, 24h token stored in Hive.
@@ -182,11 +183,13 @@ class _PhoneVerifyScreenState extends ConsumerState<PhoneVerifyScreen> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
+        title: Text(l10n.phoneVerification),
         leading: BackButton(
           onPressed: () =>
               context.canPop() ? context.pop() : context.go(AppRoute.home.path),
         ),
       ),
+      bottomNavigationBar: const BfBottomNavBar(currentIndex: 1),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),

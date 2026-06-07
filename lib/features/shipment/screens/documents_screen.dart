@@ -11,6 +11,7 @@ import '../../../core/constants/app_text_styles.dart';
 import '../../../core/http/api_exception.dart';
 import '../../../core/providers/connectivity_provider.dart';
 import '../../../core/router/app_router.dart';
+import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_error_screen.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
 import '../models/shipment_document.dart';
@@ -42,6 +43,7 @@ class DocumentsScreen extends ConsumerWidget {
               context.canPop() ? context.pop() : context.go(AppRoute.home.path),
         ),
       ),
+      bottomNavigationBar: const BfBottomNavBar(currentIndex: 1),
       body: docsAsync.when(
         loading: () => const BfLoadingIndicator(),
         error: (err, _) => _buildError(context, ref, err, l10n),

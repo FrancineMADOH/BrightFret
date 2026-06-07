@@ -9,6 +9,7 @@ import '../../../core/constants/app_text_styles.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/utils/forwarder_resolver.dart';
 import '../../../core/utils/tracking_code_parser.dart';
+import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_primary_button.dart';
 import '../providers/code_history_provider.dart';
 
@@ -145,6 +146,7 @@ class _CodeInputScreenState extends ConsumerState<CodeInputScreen> {
               : context.go(AppRoute.home.path),
         ),
       ),
+      bottomNavigationBar: const BfBottomNavBar(currentIndex: 0),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),

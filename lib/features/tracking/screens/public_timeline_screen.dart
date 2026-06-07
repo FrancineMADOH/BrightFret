@@ -8,6 +8,7 @@ import '../../../core/constants/app_enums.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/http/api_exception.dart';
 import '../../../core/router/app_router.dart';
+import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_error_screen.dart';
 import '../../../shared/widgets/bf_forwarder_header.dart';
 import '../../../shared/widgets/bf_forwarder_theme.dart';
@@ -46,6 +47,7 @@ class PublicTimelineScreen extends ConsumerWidget {
       instanceUrl: instanceUrl,
       child: Scaffold(
         appBar: _buildAppBar(context, trackingAsync),
+        bottomNavigationBar: const BfBottomNavBar(currentIndex: 1),
         body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(shipmentTrackingProvider(suffix, instanceUrl));
@@ -289,6 +291,7 @@ class _ShipmentSummary extends StatelessWidget {
           child: Text(
             '${shipment.origin} → ${shipment.destination}',
             style: AppTextStyles.bodySmall.copyWith(color: AppColors.statusArchived),
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ),

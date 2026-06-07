@@ -28,7 +28,7 @@ abstract class AppTheme {
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,
         elevation: 0,
-        centerTitle: false,
+        centerTitle: true,
       ),
       cardTheme: CardTheme(
         color: isDark ? const Color(0xFF1E1E1E) : AppColors.surface,

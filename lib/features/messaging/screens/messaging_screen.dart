@@ -11,6 +11,7 @@ import '../../../core/providers/connectivity_provider.dart';
 import '../../../core/http/api_exception.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/storage/token_storage.dart';
+import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_error_screen.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
 import '../models/shipment_message.dart';
@@ -144,6 +145,7 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
               context.canPop() ? context.pop() : context.go(AppRoute.home.path),
         ),
       ),
+      bottomNavigationBar: const BfBottomNavBar(currentIndex: 1),
       body: Column(
         children: [
           if (_sendError != null)

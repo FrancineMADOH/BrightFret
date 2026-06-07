@@ -11,6 +11,7 @@ import '../../../core/constants/app_text_styles.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/storage/hive_service.dart';
 import '../../../core/utils/forwarder_resolver.dart';
+import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
 
 /// S10 — In-app document viewer.
@@ -106,6 +107,7 @@ class DocumentViewerScreen extends StatelessWidget {
           ),
         ],
       ),
+      bottomNavigationBar: const BfBottomNavBar(currentIndex: 1),
       body: _buildContent(l10n, headers),
     );
   }

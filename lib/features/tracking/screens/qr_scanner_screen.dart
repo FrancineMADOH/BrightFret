@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../core/router/app_router.dart';
+import '../../../shared/widgets/bf_bottom_nav.dart';
 
 // ── QR URL parsing ────────────────────────────────────────────────────────────
 
@@ -116,6 +117,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: _buildAppBar(l10n),
+      bottomNavigationBar: const BfBottomNavBar(currentIndex: 0),
       body: Stack(
         fit: StackFit.expand,
         children: [
