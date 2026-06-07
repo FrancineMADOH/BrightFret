@@ -481,5 +481,25 @@
     "placeholders": {
       "status": { "type": "String", "description": "Libellé brut du nouveau statut renvoyé par l'API" }
     }
-  }
+  },
+
+  "aboutTitle": "À propos",
+  "aboutWhatTitle": "BrightFret, c'est quoi ?",
+  "aboutWhatBody": "BrightFret est l'application de suivi de colis qui vous connecte à votre transitaire. Elle vous permet de suivre en temps réel l'acheminement de vos expéditions entre la Chine et l'Afrique, par voie aérienne ou maritime.",
+  "aboutHowTitle": "Comment ça marche",
+  "aboutHowBody": "Votre transitaire vous communique un code de suivi unique. Saisissez-le ou scannez son QR code dans l'application pour accéder aux étapes de votre expédition, à vos documents et pour échanger directement avec votre transitaire.",
+  "aboutVersionTitle": "Version",
+  "aboutVersionBody": "Version 1.0.0 — © 2026 BrightFret. Tous droits réservés.",
+
+  "termsTitle": "Conditions d'utilisation",
+  "termsAcceptanceTitle": "Acceptation des conditions",
+  "termsAcceptanceBody": "En utilisant l'application BrightFret, vous acceptez les présentes conditions d'utilisation. Si vous n'êtes pas d'accord avec l'une de ces conditions, merci de ne pas utiliser l'application.",
+  "termsServiceTitle": "Description du service",
+  "termsServiceBody": "BrightFret est une interface de consultation qui vous donne accès aux informations de suivi fournies par votre transitaire. L'application ne transporte ni ne gère elle-même vos expéditions.",
+  "termsResponsibilityTitle": "Votre responsabilité",
+  "termsResponsibilityBody": "Vous êtes responsable de l'exactitude du code de suivi saisi et de la confidentialité des informations associées à votre compte. Ne partagez votre code de suivi qu'avec des personnes de confiance.",
+  "termsLiabilityTitle": "Limites de responsabilité",
+  "termsLiabilityBody": "Les informations affichées proviennent de votre transitaire et peuvent évoluer sans préavis. BrightFret ne peut être tenu responsable des retards, pertes ou litiges liés au transport de vos marchandises — ceux-ci relèvent de la responsabilité du transitaire.",
+  "termsChangesTitle": "Modifications et contact",
+  "termsChangesBody": "Ces conditions peuvent être mises à jour à tout moment. Pour toute question, contactez directement votre transitaire depuis la messagerie intégrée à l'application."
 }

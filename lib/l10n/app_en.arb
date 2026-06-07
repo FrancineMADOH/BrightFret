@@ -180,5 +180,25 @@
   "hoursAgo": "{count}h ago",
   "daysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
   "updatedAt": "Updated {relativeTime}",
-  "updateNewStatus": "New status: {status}"
+  "updateNewStatus": "New status: {status}",
+
+  "aboutTitle": "About",
+  "aboutWhatTitle": "What is BrightFret?",
+  "aboutWhatBody": "BrightFret is the shipment-tracking app that connects you to your forwarder. It lets you follow your shipments from China to Africa in real time, by air or by sea.",
+  "aboutHowTitle": "How it works",
+  "aboutHowBody": "Your forwarder gives you a unique tracking code. Enter it or scan its QR code in the app to see your shipment's progress, access your documents, and message your forwarder directly.",
+  "aboutVersionTitle": "Version",
+  "aboutVersionBody": "Version 1.0.0 — © 2026 BrightFret. All rights reserved.",
+
+  "termsTitle": "Terms & conditions",
+  "termsAcceptanceTitle": "Acceptance of terms",
+  "termsAcceptanceBody": "By using the BrightFret app, you agree to these terms and conditions. If you do not agree with any part of them, please do not use the app.",
+  "termsServiceTitle": "Description of the service",
+  "termsServiceBody": "BrightFret is a viewing interface that gives you access to tracking information provided by your forwarder. The app does not itself transport or manage your shipments.",
+  "termsResponsibilityTitle": "Your responsibility",
+  "termsResponsibilityBody": "You are responsible for the accuracy of the tracking code you enter and for keeping the information linked to your account confidential. Only share your tracking code with people you trust.",
+  "termsLiabilityTitle": "Limits of liability",
+  "termsLiabilityBody": "The information shown comes from your forwarder and may change without notice. BrightFret cannot be held responsible for delays, losses or disputes related to the transport of your goods — these are the forwarder's responsibility.",
+  "termsChangesTitle": "Changes & contact",
+  "termsChangesBody": "These terms may be updated at any time. For any question, contact your forwarder directly through the messaging feature built into the app."
 }

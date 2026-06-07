@@ -13,7 +13,9 @@ import '../../features/auth/screens/phone_verify_screen.dart';
 import '../../features/claims/screens/claim_screen.dart';
 import '../../features/messaging/screens/messaging_screen.dart';
 import '../../features/onboarding/screens/onboarding_screen.dart';
+import '../../features/settings/screens/about_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
+import '../../features/settings/screens/terms_screen.dart';
 import '../../features/shipment/screens/document_viewer_screen.dart';
 import '../../features/shipment/screens/documents_screen.dart';
 import '../../features/shipment/screens/shipment_detail_screen.dart';
@@ -50,6 +52,8 @@ enum AppRoute {
   myShipments('/my-shipments'),
   updates('/updates'),
   settings('/settings'),
+  about('about'),
+  terms('terms'),
   errorUnknownForwarder('/error/unknown-forwarder'),
   errorNotFound('/error/not-found'),
   claim('claim');
@@ -182,6 +186,18 @@ List<RouteBase> _buildRoutes(RouterNotifier notifier) => [
         path: AppRoute.settings.path,
         name: AppRoute.settings.name,
         builder: (_, __) => const SettingsScreen(),
+        routes: [
+          GoRoute(
+            path: AppRoute.about.path,
+            name: AppRoute.about.name,
+            builder: (_, __) => const AboutScreen(),
+          ),
+          GoRoute(
+            path: AppRoute.terms.path,
+            name: AppRoute.terms.name,
+            builder: (_, __) => const TermsScreen(),
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoute.errorUnknownForwarder.path,

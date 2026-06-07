@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../../core/router/app_router.dart';
 import '../../../core/providers/locale_provider.dart';
 import '../../../core/providers/updates_provider.dart';
 import '../../../core/storage/hive_service.dart';
@@ -54,6 +56,16 @@ class SettingsScreen extends ConsumerWidget {
             icon: Icons.local_shipping_outlined,
             label: 'BrightFret',
             value: '© 2026',
+          ),
+          _NavTile(
+            icon: Icons.info_outline,
+            label: l10n.aboutTitle,
+            onTap: () => context.pushNamed(AppRoute.about.name),
+          ),
+          _NavTile(
+            icon: Icons.description_outlined,
+            label: l10n.termsTitle,
+            onTap: () => context.pushNamed(AppRoute.terms.name),
           ),
         ],
       ),
@@ -182,6 +194,30 @@ class _CacheTile extends StatelessWidget {
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
+      trailing: const Icon(Icons.chevron_right, color: AppColors.statusArchived),
+      onTap: onTap,
+    );
+  }
+}
+
+// ── Navigation tile ───────────────────────────────────────────────────────────
+
+class _NavTile extends StatelessWidget {
+  const _NavTile({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.statusArchived),
+      title: Text(label, style: AppTextStyles.body),
       trailing: const Icon(Icons.chevron_right, color: AppColors.statusArchived),
       onTap: onTap,
     );
