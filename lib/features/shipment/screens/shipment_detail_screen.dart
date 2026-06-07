@@ -200,8 +200,8 @@ class _SummarySection extends StatelessWidget {
         _Row('Client', shipment.clientName),
         _Row(l10n.transportAir.isEmpty ? 'Mode' : 'Mode',
             shipment.transportType == 'air' ? '✈️ ${l10n.transportAir}' : '🚢 ${l10n.transportSea}'),
-        _Row('Origine', shipment.origin),
-        _Row('Destination', shipment.destination),
+        _Row('Origine', shipment.origin, maxLines: 2),
+        _Row('Destination', shipment.destination, maxLines: 2),
         if (shipment.supplierRef != null)
           _Row('Réf. fournisseur', shipment.supplierRef!),
       ],
@@ -374,10 +374,11 @@ class _ClaimButton extends StatelessWidget {
 // ── Shared row widget ─────────────────────────────────────────────────────────
 
 class _Row extends StatelessWidget {
-  const _Row(this.label, this.value);
+  const _Row(this.label, this.value, {this.maxLines = 1});
 
   final String label;
   final String value;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -385,14 +386,17 @@ class _Row extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label,
               style: AppTextStyles.bodySmall.copyWith(color: AppColors.statusArchived)),
+          const SizedBox(width: 12),
           Flexible(
             child: Text(
               value,
               style: AppTextStyles.label,
               textAlign: TextAlign.end,
+              maxLines: maxLines,
               overflow: TextOverflow.ellipsis,
             ),
           ),
