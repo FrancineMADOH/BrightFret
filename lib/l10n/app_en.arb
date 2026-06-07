@@ -51,6 +51,7 @@
   "downloadDocument": "Download",
   "downloadSuccess": "Downloaded ✓",
   "downloadOnMobileOnly": "Download available on mobile",
+  "downloadFailed": "Download failed",
 
   "sectionDocuments": "Documents",
   "sectionMessaging": "Messaging",

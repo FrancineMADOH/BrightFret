@@ -1,3 +1,5 @@
+import '../../../core/utils/odoo_datetime.dart';
+
 /// Full claim data returned by `GET /api/shipment/{suffix}/claim`.
 class ClaimDetail {
   const ClaimDetail({
@@ -37,12 +39,8 @@ class ClaimDetail {
       claimType: json['claim_type'] as String? ?? '',
       description: json['description'] as String? ?? '',
       state: json['state'] as String? ?? 'open',
-      openDate: json['open_date'] != null
-          ? DateTime.tryParse(json['open_date'] as String)
-          : null,
-      closeDate: json['close_date'] != null
-          ? DateTime.tryParse(json['close_date'] as String)
-          : null,
+      openDate: parseOdooDateTime(json['open_date'] as String?),
+      closeDate: parseOdooDateTime(json['close_date'] as String?),
       resolutionNote: json['resolution_note'] as String?,
       creditAmount: (json['credit_amount'] as num?)?.toDouble(),
     );

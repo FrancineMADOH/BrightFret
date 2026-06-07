@@ -1,3 +1,4 @@
+import '../../../core/utils/odoo_datetime.dart';
 import '../../tracking/models/public_shipment.dart';
 
 /// Full authenticated shipment detail returned by `GET /api/shipment/{suffix}`.
@@ -49,7 +50,7 @@ class FullShipment extends PublicShipment {
       transportType: json['transport_type'] as String,
       origin: json['origin'] as String,
       destination: json['destination'] as String,
-      expectedDate: DateTime.tryParse(json['expected_date'] as String? ?? ''),
+      expectedDate: parseOdooDateTime(json['expected_date'] as String?),
       events: rawEvents
           .map((e) => PublicEvent.fromJson(e as Map<String, dynamic>))
           .toList(),

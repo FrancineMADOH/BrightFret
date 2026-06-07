@@ -133,6 +133,9 @@
   "downloadOnMobileOnly": "Téléchargement disponible sur mobile",
   "@downloadOnMobileOnly": { "description": "Message web S09 — download non dispo" },
 
+  "downloadFailed": "Échec du téléchargement",
+  "@downloadFailed": { "description": "Toast échec téléchargement S09/S10" },
+
   "sectionDocuments": "Documents",
   "@sectionDocuments": { "description": "Titre section documents S08" },
 

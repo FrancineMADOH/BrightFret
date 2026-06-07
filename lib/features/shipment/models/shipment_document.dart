@@ -1,3 +1,5 @@
+import '../../../core/utils/odoo_datetime.dart';
+
 /// A document attached to a shipment, returned by `GET /api/shipment/{suffix}/documents`.
 /// Handles the actual Odoo response format: `id` (int), `mimetype`, relative `url`.
 class ShipmentDocument {
@@ -46,7 +48,7 @@ class ShipmentDocument {
       type: type,
       size: (json['size'] as num?)?.toInt() ?? 0,
       url: absoluteUrl,
-      createdAt: createdRaw != null ? DateTime.parse(createdRaw) : DateTime.now(),
+      createdAt: parseOdooDateTime(createdRaw) ?? DateTime.now(),
     );
   }
 

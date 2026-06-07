@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -9,8 +10,10 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/http/api_exception.dart';
+import '../../../core/http/dio_provider.dart';
 import '../../../core/providers/connectivity_provider.dart';
 import '../../../core/router/app_router.dart';
+import '../../../core/utils/document_downloader.dart';
 import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_error_screen.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
@@ -33,6 +36,7 @@ class DocumentsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final docsAsync = ref.watch(documentsProvider(suffix, instanceUrl));
     final isOnline = ref.watch(connectivityNotifierProvider);
+    final dio = ref.watch(dioForInstanceProvider(instanceUrl));
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -66,6 +70,7 @@ class DocumentsScreen extends ConsumerWidget {
                     suffix: suffix,
                     instanceUrl: instanceUrl,
                     isOnline: isOnline,
+                    dio: dio,
                     l10n: l10n,
                   ),
                 ),
@@ -117,6 +122,7 @@ class _DocumentRow extends StatefulWidget {
     required this.suffix,
     required this.instanceUrl,
     required this.isOnline,
+    required this.dio,
     required this.l10n,
   });
 
@@ -124,6 +130,7 @@ class _DocumentRow extends StatefulWidget {
   final String suffix;
   final String instanceUrl;
   final bool isOnline;
+  final Dio dio;
   final AppLocalizations l10n;
 
   @override
@@ -161,21 +168,34 @@ class _DocumentRowState extends State<_DocumentRow> {
       _progress = 0;
     });
 
-    // Simulated progress — real Dio download + open_filex wired in mobile build
-    for (var i = 1; i <= 10; i++) {
-      await Future.delayed(const Duration(milliseconds: 80));
-      if (!mounted) return;
-      setState(() => _progress = i / 10);
-    }
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(widget.l10n.downloadSuccess)),
+    try {
+      await downloadAndOpenDocument(
+        dio: widget.dio,
+        url: widget.document.url,
+        fileName: widget.document.name,
+        documentType: widget.document.type,
+        onProgress: (p) {
+          if (mounted) setState(() => _progress = p);
+        },
       );
-      setState(() {
-        _isDownloading = false;
-        _progress = 0;
-      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(widget.l10n.downloadSuccess)),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(widget.l10n.downloadFailed)),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isDownloading = false;
+          _progress = 0;
+        });
+      }
     }
   }
 

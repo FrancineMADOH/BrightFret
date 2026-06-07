@@ -1,3 +1,5 @@
+import '../../../core/utils/odoo_datetime.dart';
+
 /// A single chatter message exchanged between client and forwarder.
 class ShipmentMessage {
   const ShipmentMessage({
@@ -22,9 +24,8 @@ class ShipmentMessage {
       body: _stripHtml(json['body'] as String? ?? ''),
       author: json['author'] as String? ?? '',
       isFromClient: json['is_from_client'] as bool? ?? false,
-      createdAt: json['datetime'] != null
-          ? DateTime.tryParse(json['datetime'] as String) ?? DateTime.now()
-          : DateTime.now(),
+      createdAt:
+          parseOdooDateTime(json['datetime'] as String?) ?? DateTime.now(),
     );
   }
 

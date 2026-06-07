@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import '../../../core/models/cached_shipment.dart';
+import '../../../core/utils/odoo_datetime.dart';
 
 /// A single transit event on the public shipment timeline.
 class PublicEvent {
@@ -20,9 +21,7 @@ class PublicEvent {
 
   factory PublicEvent.fromJson(Map<String, dynamic> json) => PublicEvent(
         stage: json['stage'] as String,
-        datetime: json['datetime'] != null
-            ? DateTime.parse(json['datetime'] as String)
-            : null,
+        datetime: parseOdooDateTime(json['datetime'] as String?),
         location: json['location'] as String?,
         note: json['note'] as String?,
       );
@@ -71,7 +70,7 @@ class PublicShipment {
       transportType: json['transport_type'] as String,
       origin: json['origin'] as String,
       destination: json['destination'] as String,
-      expectedDate: DateTime.tryParse(json['expected_date'] as String? ?? ''),
+      expectedDate: parseOdooDateTime(json['expected_date'] as String?),
       events: rawEvents
           .map((e) => PublicEvent.fromJson(e as Map<String, dynamic>))
           .toList(),

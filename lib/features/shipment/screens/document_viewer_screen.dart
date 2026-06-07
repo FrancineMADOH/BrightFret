@@ -1,15 +1,19 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../core/constants/app_text_styles.dart';
+import '../../../core/http/dio_provider.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/storage/hive_service.dart';
+import '../../../core/utils/document_downloader.dart';
 import '../../../core/utils/forwarder_resolver.dart';
 import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
@@ -18,7 +22,7 @@ import '../../../shared/widgets/bf_loading_indicator.dart';
 /// Images display with pinch-to-zoom via [InteractiveViewer] + [CachedNetworkImage].
 /// PDFs and other types show a download-prompt (no PDF renderer on web).
 /// Share and download actions in the AppBar.
-class DocumentViewerScreen extends StatelessWidget {
+class DocumentViewerScreen extends ConsumerWidget {
   const DocumentViewerScreen({
     super.key,
     required this.suffix,
@@ -73,9 +77,10 @@ class DocumentViewerScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final headers = _authHeaders();
+    final dio = ref.watch(dioForInstanceProvider(instanceUrl));
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -97,7 +102,8 @@ class DocumentViewerScreen extends StatelessWidget {
           _DownloadButton(
             documentUrl: documentUrl,
             documentName: documentName,
-            headers: headers,
+            documentType: documentType,
+            dio: dio,
             l10n: l10n,
           ),
           IconButton(
@@ -218,13 +224,15 @@ class _DownloadButton extends StatefulWidget {
   const _DownloadButton({
     required this.documentUrl,
     required this.documentName,
-    required this.headers,
+    required this.documentType,
+    required this.dio,
     required this.l10n,
   });
 
   final String documentUrl;
   final String documentName;
-  final Map<String, String> headers;
+  final String documentType;
+  final Dio dio;
   final AppLocalizations l10n;
 
   @override
@@ -250,20 +258,34 @@ class _DownloadButtonState extends State<_DownloadButton> {
       _progress = 0;
     });
 
-    for (var i = 1; i <= 10; i++) {
-      await Future.delayed(const Duration(milliseconds: 80));
-      if (!mounted) return;
-      setState(() => _progress = i / 10);
-    }
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(widget.l10n.downloadSuccess)),
+    try {
+      await downloadAndOpenDocument(
+        dio: widget.dio,
+        url: widget.documentUrl,
+        fileName: widget.documentName,
+        documentType: widget.documentType,
+        onProgress: (p) {
+          if (mounted) setState(() => _progress = p);
+        },
       );
-      setState(() {
-        _downloading = false;
-        _progress = 0;
-      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(widget.l10n.downloadSuccess)),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(widget.l10n.downloadFailed)),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _downloading = false;
+          _progress = 0;
+        });
+      }
     }
   }
 
