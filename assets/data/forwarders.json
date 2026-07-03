@@ -2,9 +2,14 @@
   "version": 1,
   "forwarders": {
     "BWF": {
-      "name": "BrightFret Local",
-      "url": "https://test-client.178.104.32.32.nip.io",
+      "name": "BrightFret Core",
+      "url": "http://localhost:8070",
       "database": "odoo"
+    },
+    "CCI": {
+      "name": "BrightFret",
+      "url": "https://bw-dev-services.brightwill.org",
+      "database": "brightwill_dev_dev"
     }
   }
 }

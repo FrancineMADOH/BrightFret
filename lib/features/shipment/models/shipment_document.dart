@@ -10,6 +10,7 @@ class ShipmentDocument {
     required this.size,
     required this.url,
     required this.createdAt,
+    this.data,
   });
 
   final String id;
@@ -21,10 +22,13 @@ class ShipmentDocument {
   /// File size in bytes (0 if not provided by the API).
   final int size;
 
-  /// Absolute URL to the document (auth header required).
+  /// Absolute URL to the document (auth header required). Empty for inline [data] docs.
   final String url;
 
   final DateTime createdAt;
+
+  /// Base64-encoded inline image data (alternative to [url] for binary fields).
+  final String? data;
 
   /// Parses an Odoo document entry.
   /// [baseUrl] is the forwarder instance URL, used to make relative URLs absolute.
@@ -49,6 +53,7 @@ class ShipmentDocument {
       size: (json['size'] as num?)?.toInt() ?? 0,
       url: absoluteUrl,
       createdAt: parseOdooDateTime(createdRaw) ?? DateTime.now(),
+      data: json['data'] as String?,
     );
   }
 
@@ -66,7 +71,8 @@ class ShipmentDocument {
 
   bool get isImage {
     final n = name.toLowerCase();
-    return type == 'image' ||
+    return data != null ||
+        type == 'image' ||
         n.endsWith('.jpg') ||
         n.endsWith('.jpeg') ||
         n.endsWith('.png');

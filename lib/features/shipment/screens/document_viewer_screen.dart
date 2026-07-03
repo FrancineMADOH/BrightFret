@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -31,6 +32,7 @@ class DocumentViewerScreen extends ConsumerWidget {
     this.documentUrl = '',
     this.documentName = '',
     this.documentType = 'other',
+    this.documentData,
   });
 
   final String suffix;
@@ -40,9 +42,14 @@ class DocumentViewerScreen extends ConsumerWidget {
   final String documentName;
   final String documentType;
 
+  /// Base64-encoded inline image data. When set, renders via [MemoryImage]
+  /// instead of a network request — used for binary fields (photo, QR code).
+  final String? documentData;
+
   bool get _isImage {
     final n = documentName.toLowerCase();
-    return documentType == 'image' ||
+    return documentData != null ||
+        documentType == 'image' ||
         n.endsWith('.jpg') ||
         n.endsWith('.jpeg') ||
         n.endsWith('.png');
@@ -119,6 +126,9 @@ class DocumentViewerScreen extends ConsumerWidget {
   }
 
   Widget _buildContent(AppLocalizations l10n, Map<String, String> headers) {
+    if (documentData != null) {
+      return _InlineImageViewer(base64Data: documentData!, l10n: l10n);
+    }
     if (documentUrl.isEmpty) {
       return _UnavailableView(
         icon: Icons.link_off,
@@ -135,6 +145,33 @@ class DocumentViewerScreen extends ConsumerWidget {
       hint: l10n.useDownloadButton,
       l10n: l10n,
     );
+  }
+}
+
+// ── Inline image viewer (base64 data, no network request) ────────────────────
+
+class _InlineImageViewer extends StatelessWidget {
+  const _InlineImageViewer({required this.base64Data, required this.l10n});
+
+  final String base64Data;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    try {
+      final bytes = base64Decode(base64Data);
+      return InteractiveViewer(
+        maxScale: 5.0,
+        minScale: 0.5,
+        child: Center(child: Image.memory(bytes, fit: BoxFit.contain)),
+      );
+    } catch (_) {
+      return _UnavailableView(
+        icon: Icons.broken_image_outlined,
+        message: l10n.errorLoadingDocument,
+        l10n: l10n,
+      );
+    }
   }
 }
 

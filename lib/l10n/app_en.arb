@@ -200,5 +200,23 @@
   "termsLiabilityTitle": "Limits of liability",
   "termsLiabilityBody": "The information shown comes from your forwarder and may change without notice. BrightFret cannot be held responsible for delays, losses or disputes related to the transport of your goods — these are the forwarder's responsibility.",
   "termsChangesTitle": "Changes & contact",
-  "termsChangesBody": "These terms may be updated at any time. For any question, contact your forwarder directly through the messaging feature built into the app."
+  "termsChangesBody": "These terms may be updated at any time. For any question, contact your forwarder directly through the messaging feature built into the app.",
+
+  "cargoScreenTitle": "Invoice",
+  "cargoSubtitle": "Cargo summary · {currency}",
+  "cargoColGoods": "Goods",
+  "cargoColWeightVol": "Weight/Vol",
+  "cargoColUnitPrice": "U.P.",
+  "cargoColTotal": "Total",
+  "cargoTotalWeight": "Total weight",
+  "cargoTotalVolume": "Total volume",
+  "cargoGrandTotal": "GRAND TOTAL",
+  "cargoTagline": "your trusted freight forwarder",
+  "cargoSectionTitle": "Shipment detail",
+  "cargoViewButton": "View invoice",
+  "cargoShareTitle": "Shipment detail — {code}",
+  "cargoShareSummary": "Cargo summary",
+  "cargoShareTotalWeight": "Total weight: {value}",
+  "cargoShareTotalVolume": "Total volume: {value}",
+  "cargoShareGrandTotal": "GRAND TOTAL: {value}"
 }

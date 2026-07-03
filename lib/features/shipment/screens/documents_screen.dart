@@ -19,6 +19,7 @@ import '../../../shared/widgets/bf_error_screen.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
 import '../models/shipment_document.dart';
 import '../providers/documents_provider.dart';
+import 'document_viewer_screen.dart';
 
 /// S09 — Document list for a shipment.
 /// Lists all attached files with open (→ S10) and download actions.
@@ -227,10 +228,26 @@ class _DocumentRowState extends State<_DocumentRow> {
         children: [
           TextButton(
             onPressed: () {
-              if (!widget.isOnline) {
+              if (!widget.isOnline && doc.data == null) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(widget.l10n.offlineDocumentsUnavailable),
                 ));
+                return;
+              }
+              if (doc.data != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => DocumentViewerScreen(
+                      suffix: widget.suffix,
+                      documentId: doc.id,
+                      instanceUrl: widget.instanceUrl,
+                      documentName: doc.name,
+                      documentType: doc.type,
+                      documentData: doc.data,
+                    ),
+                  ),
+                );
                 return;
               }
               context.goNamed(

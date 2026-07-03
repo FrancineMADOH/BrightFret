@@ -18,8 +18,11 @@ import '../../../shared/widgets/bf_timeline_step.dart';
 import '../../tracking/models/forwarder_info.dart';
 import '../../tracking/models/public_shipment.dart';
 import '../../tracking/providers/forwarder_info_provider.dart';
+import '../../tracking/providers/saved_shipment_toggle_provider.dart';
 import '../models/full_shipment.dart';
+import '../models/cargo_summary.dart';
 import '../providers/full_shipment_provider.dart';
+import 'cargo_summary_screen.dart';
 
 /// S08 — Full authenticated shipment detail.
 /// Requires a valid token (enforced by the router auth guard and [fullShipmentProvider]).
@@ -49,6 +52,15 @@ class ShipmentDetailScreen extends ConsumerWidget {
             onPressed: () =>
                 context.canPop() ? context.pop() : context.go(AppRoute.home.path),
           ),
+          actions: [
+            if (shipmentAsync.valueOrNull != null)
+              _SaveButton(
+                trackingCode: shipmentAsync.valueOrNull!.trackingCode,
+                suffix: suffix,
+                instanceUrl: instanceUrl,
+                status: shipmentAsync.valueOrNull!.status,
+              ),
+          ],
         ),
         bottomNavigationBar: const BfBottomNavBar(currentIndex: 1),
         body: shipmentAsync.when(
@@ -163,6 +175,15 @@ class _DetailBody extends StatelessWidget {
             queryParameters: {'instance': instanceUrl},
           ),
         ),
+        if (shipment.cargo != null) ...[
+          const Divider(height: 32),
+          _CargoSection(
+            cargo: shipment.cargo!,
+            trackingCode: shipment.trackingCode,
+            forwarderName: forwarder.name,
+            l10n: l10n,
+          ),
+        ],
         const SizedBox(height: 16),
         Text(l10n.sectionClaim, style: AppTextStyles.heading2),
         const SizedBox(height: 8),
@@ -369,6 +390,75 @@ class _ClaimButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 14),
       ),
       child: Text(hasActiveClaim ? l10n.viewClaim : l10n.reportIssue),
+    );
+  }
+}
+
+// ── Cargo section ─────────────────────────────────────────────────────────────
+
+class _CargoSection extends StatelessWidget {
+  const _CargoSection({
+    required this.cargo,
+    required this.trackingCode,
+    required this.forwarderName,
+    required this.l10n,
+  });
+
+  final CargoSummary cargo;
+  final String trackingCode;
+  final String forwarderName;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l10n.cargoSectionTitle, style: AppTextStyles.heading2),
+        const SizedBox(height: 8),
+        OutlinedButton.icon(
+          icon: const Icon(Icons.inventory_2_outlined),
+          label: Text(l10n.cargoViewButton),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => CargoSummaryScreen(
+                cargo: cargo,
+                trackingCode: trackingCode,
+                forwarderName: forwarderName,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ── Save button (S08) ─────────────────────────────────────────────────────────
+
+class _SaveButton extends ConsumerWidget {
+  const _SaveButton({
+    required this.trackingCode,
+    required this.suffix,
+    required this.instanceUrl,
+    required this.status,
+  });
+
+  final String trackingCode;
+  final String suffix;
+  final String instanceUrl;
+  final String status;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isSaved = ref.watch(savedShipmentToggleProvider(trackingCode));
+    return IconButton(
+      icon: Icon(isSaved ? Icons.star : Icons.star_border),
+      color: AppColors.white,
+      tooltip: AppLocalizations.of(context)!.saveShipment,
+      onPressed: () => ref
+          .read(savedShipmentToggleProvider(trackingCode).notifier)
+          .toggle(suffix: suffix, instanceUrl: instanceUrl, status: status),
     );
   }
 }

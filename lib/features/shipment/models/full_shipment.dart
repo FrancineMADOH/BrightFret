@@ -1,5 +1,6 @@
 import '../../../core/utils/odoo_datetime.dart';
 import '../../tracking/models/public_shipment.dart';
+import 'cargo_summary.dart';
 
 /// Full authenticated shipment detail returned by `GET /api/shipment/{suffix}`.
 /// Extends [PublicShipment] with pricing, client, and claim fields
@@ -22,6 +23,7 @@ class FullShipment extends PublicShipment {
     required this.totalVolume,
     required this.hasActiveClaim,
     this.claimStatus,
+    this.cargo,
   });
 
   final String clientName;
@@ -40,6 +42,9 @@ class FullShipment extends PublicShipment {
 
   final bool hasActiveClaim;
   final String? claimStatus;
+
+  /// Cargo lines for the client-facing shipment summary. Null if no lines exist yet.
+  final CargoSummary? cargo;
 
   /// Parses the JSON response from `GET /api/shipment/{suffix}`.
   factory FullShipment.fromJson(Map<String, dynamic> json) {
@@ -63,6 +68,9 @@ class FullShipment extends PublicShipment {
       totalVolume: (json['total_volume'] as num?)?.toDouble() ?? 0.0,
       hasActiveClaim: json['has_active_claim'] as bool? ?? false,
       claimStatus: json['claim_status'] as String?,
+      cargo: json['cargo'] != null
+          ? CargoSummary.fromJson(json['cargo'] as Map<String, dynamic>)
+          : null,
     );
   }
 }
