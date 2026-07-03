@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../core/http/api_exception.dart';
 import '../models/shipment_message.dart';
@@ -10,6 +13,8 @@ class MessagingService {
   const MessagingService(this._dio);
 
   final Dio _dio;
+
+  static const _maxBytes = 5 * 1024 * 1024; // 5 MB
 
   /// Returns all messages for [suffix], ordered oldest-first.
   Future<List<ShipmentMessage>> getMessages(String suffix) async {
@@ -24,16 +29,38 @@ class MessagingService {
     }
   }
 
-  /// Posts [body] to the forwarder chatter for [suffix].
-  /// Odoo returns `{'status': 'sent'}` — caller must refresh message list.
-  Future<void> sendMessage(String suffix, String body) async {
+  /// Posts [body] (and optional [attachment]) to the forwarder chatter.
+  /// Throws [AttachmentTooLargeException] if the file exceeds 5 MB.
+  Future<void> sendMessage(
+    String suffix,
+    String body, {
+    XFile? attachment,
+  }) async {
     try {
-      await _dio.post(
-        '/api/shipment/$suffix/message',
-        data: {'body': body},
-      );
+      final Map<String, dynamic> payload = {'body': body};
+      if (attachment != null) {
+        final bytes = await attachment.readAsBytes();
+        if (bytes.length > _maxBytes) {
+          throw const AttachmentTooLargeException();
+        }
+        payload['attachments'] = [
+          {
+            'name': attachment.name,
+            'data': base64Encode(bytes),
+            'mimetype': attachment.mimeType ?? 'image/jpeg',
+          }
+        ];
+      }
+      await _dio.post('/api/shipment/$suffix/message', data: payload);
+    } on AttachmentTooLargeException {
+      rethrow;
     } on DioException catch (e) {
       throw e.asApiException;
     }
   }
+}
+
+/// Thrown when the selected file exceeds the 5 MB limit.
+class AttachmentTooLargeException implements Exception {
+  const AttachmentTooLargeException();
 }

@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/http/api_exception.dart';
@@ -29,11 +30,10 @@ class MessagesNotifier extends _$MessagesNotifier {
     }
   }
 
-  /// Sends [body] to the forwarder then refreshes the message list.
-  /// POST returns `{'status': 'sent'}` so a fresh GET is needed to show the new message.
-  Future<void> sendMessage(String body) async {
+  /// Sends [body] (and optional [attachment]) then refreshes the message list.
+  Future<void> sendMessage(String body, {XFile? attachment}) async {
     final dio = ref.read(dioForInstanceProvider(instanceUrl));
-    await MessagingService(dio).sendMessage(suffix, body);
+    await MessagingService(dio).sendMessage(suffix, body, attachment: attachment);
     await refresh();
   }
 }

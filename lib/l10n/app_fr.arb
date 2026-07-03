@@ -109,6 +109,15 @@
   "shareDocument": "Partager",
   "@shareDocument": { "description": "Bouton partager S10" },
 
+  "attachFile": "Joindre un fichier",
+  "@attachFile": { "description": "Tooltip bouton pièce jointe S11" },
+  "attachmentTooLarge": "Fichier trop volumineux (5 Mo max)",
+  "@attachmentTooLarge": { "description": "Erreur taille pièce jointe S11" },
+  "removeAttachment": "Retirer",
+  "@removeAttachment": { "description": "Bouton retirer pièce jointe S11" },
+  "openAttachment": "Ouvrir",
+  "@openAttachment": { "description": "Bouton ouvrir pièce jointe dans bulle S11" },
+
   "pdfViewerUnavailable": "Aperçu non disponible sur le web",
   "@pdfViewerUnavailable": { "description": "Message PDF/autre viewer indisponible S10" },
 
