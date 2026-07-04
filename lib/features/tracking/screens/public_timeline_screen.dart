@@ -235,6 +235,7 @@ class _TimelineBody extends StatelessWidget {
                   stepState: _stepState(entry.key, currentIdx, shipment.status == 'delivered'),
                   label: entry.value.stage,
                   datetime: entry.value.datetime,
+                  location: entry.value.location,
                   note: entry.value.note,
                   isLast: entry.key == events.length - 1,
                 ),
@@ -291,8 +292,6 @@ class _ShipmentSummary extends StatelessWidget {
           child: Text(
             '${shipment.origin} → ${shipment.destination}',
             style: AppTextStyles.bodySmall.copyWith(color: AppColors.statusArchived),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
           ),
         ),
         if (shipment.expectedDate != null)

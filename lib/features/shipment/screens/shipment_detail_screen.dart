@@ -305,6 +305,7 @@ class _TimelineAccordion extends StatelessWidget {
           stepState: _stepState(i, currentIdx, shipmentStatus == 'delivered'),
           label: event.stage,
           datetime: event.datetime,
+          location: event.location,
           note: event.note,
           isLast: i == events.length - 1,
         );

@@ -19,6 +19,7 @@ class BfTimelineStep extends StatefulWidget {
     required this.stepState,
     required this.label,
     this.datetime,
+    this.location,
     this.note,
     this.isLast = false,
   });
@@ -26,6 +27,7 @@ class BfTimelineStep extends StatefulWidget {
   final TimelineStepState stepState;
   final String label;
   final DateTime? datetime;
+  final String? location;
   final String? note;
   final bool isLast;
 
@@ -154,6 +156,16 @@ class _BfTimelineStepState extends State<BfTimelineStep>
               Text(
                 _formatDatetime(widget.datetime!),
                 style: AppTextStyles.caption.copyWith(color: AppColors.statusArchived),
+              ),
+            ],
+            if (widget.location != null && widget.location!.isNotEmpty) ...[
+              const SizedBox(height: 2),
+              Text(
+                '📍 ${widget.location}',
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.statusArchived,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ],
             if (widget.note != null) ...[
