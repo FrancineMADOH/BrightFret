@@ -114,8 +114,7 @@
   "claimStateOpen": "Pending",
   "claimStateUnderReview": "Under review",
   "claimStateAccepted": "Accepted",
-  "claimStateRejected": "Rejected",
-  "claimStateCancelled": "Cancelled",
+  "claimStateRefused": "Refused",
   "noClaimFound": "No claim found for this shipment.",
 
   "settingsLanguageSection": "Language",
@@ -150,6 +149,11 @@
   "claimDescriptionRequired": "Description is required.",
   "claimAmountInvalid": "Enter an amount greater than 0.",
   "backToShipment": "Back to shipment",
+  "fileNewClaim": "File a new claim",
+  "myClaims": "My claims",
+  "viewMyClaims": "View my claims",
+  "noClaims": "No claims for this shipment.",
+  "newClaim": "New claim",
 
   "noEventsYet": "No events recorded yet",
 

@@ -25,6 +25,7 @@ class ClaimScreen extends ConsumerStatefulWidget {
     required this.suffix,
     this.instanceUrl = '',
     this.showStatus = false,
+    this.prefetchedClaim,
   });
 
   final String suffix;
@@ -32,6 +33,10 @@ class ClaimScreen extends ConsumerStatefulWidget {
 
   /// When true, skips the form and shows the claim status view instead.
   final bool showStatus;
+
+  /// When provided (from the claims list), S18B uses this data directly
+  /// without fetching from the API.
+  final ClaimDetail? prefetchedClaim;
 
   @override
   ConsumerState<ClaimScreen> createState() => _ClaimScreenState();
@@ -100,7 +105,7 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     // S18B: status view — skip the form entirely
-    if (widget.showStatus) {
+    if (widget.showStatus || widget.prefetchedClaim != null) {
       return Scaffold(
         appBar: AppBar(
           title: Text(l10n.claimStatusTitle),
@@ -112,6 +117,7 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
           instanceUrl: widget.instanceUrl,
           l10n: l10n,
           onBack: _onBack,
+          prefetchedClaim: widget.prefetchedClaim,
         ),
       );
     }
@@ -407,16 +413,21 @@ class _ClaimStatusBody extends ConsumerWidget {
     required this.instanceUrl,
     required this.l10n,
     required this.onBack,
+    this.prefetchedClaim,
   });
 
   final String suffix;
   final String instanceUrl;
   final AppLocalizations l10n;
   final VoidCallback onBack;
+  final ClaimDetail? prefetchedClaim;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final claimAsync = ref.watch(claimStatusProvider(suffix, instanceUrl));
+    // Use prefetched data from the list screen when available — avoids a redundant API call.
+    final claimAsync = prefetchedClaim != null
+        ? AsyncData(prefetchedClaim!)
+        : ref.watch(claimStatusProvider(suffix, instanceUrl));
 
     return claimAsync.when(
       loading: () => const BfLoadingIndicator(),
@@ -425,9 +436,19 @@ class _ClaimStatusBody extends ConsumerWidget {
         claim: claim,
         l10n: l10n,
         onBack: onBack,
+        onNewClaim: _isTerminal(claim.state)
+            ? () => context.goNamed(
+                  AppRoute.claim.name,
+                  pathParameters: {'suffix': suffix},
+                  queryParameters: {'instance': instanceUrl},
+                )
+            : null,
       ),
     );
   }
+
+  static bool _isTerminal(String state) =>
+      state == 'refused' || state == 'accepted';
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object err) {
     final msg = err is NotFoundException
@@ -468,11 +489,13 @@ class _ClaimStatusView extends StatelessWidget {
     required this.claim,
     required this.l10n,
     required this.onBack,
+    this.onNewClaim,
   });
 
   final ClaimDetail claim;
   final AppLocalizations l10n;
   final VoidCallback onBack;
+  final VoidCallback? onNewClaim;
 
   static String _formatDate(DateTime? dt) {
     if (dt == null) return '—';
@@ -485,7 +508,7 @@ class _ClaimStatusView extends StatelessWidget {
         'open' => AppColors.statusWarning,
         'under_review' => AppColors.statusActive,
         'accepted' => AppColors.statusDelivered,
-        'rejected' => AppColors.statusError,
+        'refused' => AppColors.statusError,
         _ => AppColors.statusArchived,
       };
 
@@ -493,8 +516,8 @@ class _ClaimStatusView extends StatelessWidget {
         'open' => l10n.claimStateOpen,
         'under_review' => l10n.claimStateUnderReview,
         'accepted' => l10n.claimStateAccepted,
-        'rejected' => l10n.claimStateRejected,
-        _ => l10n.claimStateCancelled,
+        'refused' => l10n.claimStateRefused,
+        _ => claim.state,
       };
 
   String _typeLabel() => switch (claim.claimType) {
@@ -541,6 +564,19 @@ class _ClaimStatusView extends StatelessWidget {
           ],
           const SizedBox(height: 32),
           BfPrimaryButton(label: l10n.backToShipment, onPressed: onBack),
+          if (onNewClaim != null) ...[
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: onNewClaim,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.statusWarning,
+                side: const BorderSide(color: AppColors.statusWarning),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                minimumSize: const Size.fromHeight(0),
+              ),
+              child: Text(l10n.fileNewClaim),
+            ),
+          ],
           const SizedBox(height: 24),
         ],
       ),

@@ -44,4 +44,17 @@ class ClaimService {
       throw e.asApiException;
     }
   }
+
+  /// Fetches all claims for [suffix], newest first.
+  Future<List<ClaimDetail>> getClaims({required String suffix}) async {
+    try {
+      final response = await _dio.get('/api/shipment/$suffix/claims');
+      final list = response.data as List<dynamic>;
+      return list
+          .map((e) => ClaimDetail.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } on DioException catch (e) {
+      throw e.asApiException;
+    }
+  }
 }

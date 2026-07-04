@@ -188,15 +188,14 @@ class _DetailBody extends StatelessWidget {
         Text(l10n.sectionClaim, style: AppTextStyles.heading2),
         const SizedBox(height: 8),
         _ClaimButton(
-          hasActiveClaim: shipment.hasActiveClaim,
+          claimStatus: shipment.claimStatus,
           l10n: l10n,
           onTap: () => context.goNamed(
-            AppRoute.claim.name,
+            shipment.claimStatus != null
+                ? AppRoute.claims.name
+                : AppRoute.claim.name,
             pathParameters: {'suffix': suffix},
-            queryParameters: {
-              'instance': instanceUrl,
-              if (shipment.hasActiveClaim) 'view': 'status',
-            },
+            queryParameters: {'instance': instanceUrl},
           ),
         ),
         const SizedBox(height: 16),
@@ -375,27 +374,36 @@ class _MessagingSection extends StatelessWidget {
 
 class _ClaimButton extends StatelessWidget {
   const _ClaimButton({
-    required this.hasActiveClaim,
+    required this.claimStatus,
     required this.l10n,
     required this.onTap,
   });
 
-  final bool hasActiveClaim;
+  final String? claimStatus;
   final AppLocalizations l10n;
   final VoidCallback onTap;
+
+  Color get _color => switch (claimStatus) {
+        null => AppColors.statusWarning,
+        'open' => AppColors.statusWarning,
+        'under_review' => AppColors.statusActive,
+        'accepted' => AppColors.statusDelivered,
+        _ => AppColors.statusArchived,
+      };
+
+  String _label(AppLocalizations l10n) =>
+      claimStatus == null ? l10n.reportIssue : l10n.viewMyClaims;
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: onTap,
       style: OutlinedButton.styleFrom(
-        foregroundColor: hasActiveClaim ? AppColors.statusActive : AppColors.statusWarning,
-        side: BorderSide(
-          color: hasActiveClaim ? AppColors.statusActive : AppColors.statusWarning,
-        ),
+        foregroundColor: _color,
+        side: BorderSide(color: _color),
         padding: const EdgeInsets.symmetric(vertical: 14),
       ),
-      child: Text(hasActiveClaim ? l10n.viewClaim : l10n.reportIssue),
+      child: Text(_label(l10n)),
     );
   }
 }

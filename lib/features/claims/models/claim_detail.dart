@@ -21,13 +21,13 @@ class ClaimDetail {
 
   final String description;
 
-  /// `'open'` | `'under_review'` | `'accepted'` | `'rejected'` | `'cancelled'`.
+  /// `'open'` | `'under_review'` | `'accepted'` | `'refused'`.
   final String state;
 
   final DateTime? openDate;
   final DateTime? closeDate;
 
-  /// Populated by the forwarder when accepted or rejected.
+  /// Populated by the forwarder when accepted or refused.
   final String? resolutionNote;
 
   /// Non-null only when [state] is `'accepted'`.

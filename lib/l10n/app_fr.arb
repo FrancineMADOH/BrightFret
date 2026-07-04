@@ -297,11 +297,8 @@
   "claimStateAccepted": "Acceptée",
   "@claimStateAccepted": { "description": "Statut réclamation acceptée" },
 
-  "claimStateRejected": "Refusée",
-  "@claimStateRejected": { "description": "Statut réclamation refusée" },
-
-  "claimStateCancelled": "Annulée",
-  "@claimStateCancelled": { "description": "Statut réclamation annulée" },
+  "claimStateRefused": "Refusée",
+  "@claimStateRefused": { "description": "Statut réclamation refusée par le transitaire" },
 
   "noClaimFound": "Aucune réclamation trouvée pour ce colis.",
   "@noClaimFound": { "description": "Erreur 404 S18B — aucune réclamation" },
@@ -356,6 +353,18 @@
 
   "backToShipment": "Retour au colis",
   "@backToShipment": { "description": "Bouton retour S18 succès" },
+
+  "fileNewClaim": "Ouvrir une nouvelle réclamation",
+  "@fileNewClaim": { "description": "Bouton nouvelle réclamation depuis S18B (état terminal)" },
+
+  "myClaims": "Mes réclamations",
+  "@myClaims": { "description": "Titre écran liste des claims" },
+  "viewMyClaims": "Voir mes réclamations",
+  "@viewMyClaims": { "description": "Bouton S08 quand au moins un claim existe" },
+  "noClaims": "Aucune réclamation pour ce colis.",
+  "@noClaims": { "description": "État vide liste des claims" },
+  "newClaim": "Nouvelle réclamation",
+  "@newClaim": { "description": "Bouton nouvelle réclamation dans la liste" },
 
   "noEventsYet": "Aucun événement enregistré pour l'instant",
   "@noEventsYet": { "description": "Etat vide de la timeline S06" },

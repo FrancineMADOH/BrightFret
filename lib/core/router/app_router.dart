@@ -11,6 +11,8 @@ import '../../core/storage/hive_service.dart';
 
 import '../../features/auth/screens/phone_verify_screen.dart';
 import '../../features/claims/screens/claim_screen.dart';
+import '../../features/claims/screens/claims_list_screen.dart';
+import '../../features/claims/models/claim_detail.dart';
 import '../../features/messaging/screens/messaging_screen.dart';
 import '../../features/onboarding/screens/onboarding_screen.dart';
 import '../../features/settings/screens/about_screen.dart';
@@ -56,7 +58,8 @@ enum AppRoute {
   terms('terms'),
   errorUnknownForwarder('/error/unknown-forwarder'),
   errorNotFound('/error/not-found'),
-  claim('claim');
+  claim('claim'),
+  claims('claims');
 
   const AppRoute(this.path);
 
@@ -162,12 +165,23 @@ List<RouteBase> _buildRoutes(RouterNotifier notifier) => [
             ),
           ),
           GoRoute(
+            path: AppRoute.claims.path,
+            name: AppRoute.claims.name,
+            builder: (_, state) => ClaimsListScreen(
+              suffix: state.pathParameters['suffix']!,
+              instanceUrl: state.uri.queryParameters['instance'] ?? '',
+            ),
+          ),
+          GoRoute(
             path: AppRoute.claim.path,
             name: AppRoute.claim.name,
             builder: (_, state) => ClaimScreen(
               suffix: state.pathParameters['suffix']!,
               instanceUrl: state.uri.queryParameters['instance'] ?? '',
               showStatus: state.uri.queryParameters['view'] == 'status',
+              prefetchedClaim: state.extra is ClaimDetail
+                  ? state.extra as ClaimDetail
+                  : null,
             ),
           ),
         ],
