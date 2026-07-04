@@ -154,7 +154,7 @@ class _DetailBody extends StatelessWidget {
         const Divider(height: 32),
         _PricingSection(shipment: shipment, l10n: l10n),
         const Divider(height: 32),
-        _TimelineAccordion(events: shipment.events, l10n: l10n),
+        _TimelineAccordion(events: shipment.events, shipmentStatus: shipment.status, l10n: l10n),
         const Divider(height: 32),
         _DocumentsSection(
           suffix: suffix,
@@ -267,9 +267,14 @@ class _PricingSection extends StatelessWidget {
 }
 
 class _TimelineAccordion extends StatelessWidget {
-  const _TimelineAccordion({required this.events, required this.l10n});
+  const _TimelineAccordion({
+    required this.events,
+    required this.shipmentStatus,
+    required this.l10n,
+  });
 
   final List<PublicEvent> events;
+  final String shipmentStatus;
   final AppLocalizations l10n;
 
   static int _currentEventIndex(List<PublicEvent> events) {
@@ -279,10 +284,10 @@ class _TimelineAccordion extends StatelessWidget {
     return -1;
   }
 
-  static TimelineStepState _stepState(int index, int currentIdx) {
+  static TimelineStepState _stepState(int index, int currentIdx, bool isDone) {
     if (currentIdx == -1) return TimelineStepState.future;
     if (index < currentIdx) return TimelineStepState.past;
-    if (index == currentIdx) return TimelineStepState.current;
+    if (index == currentIdx) return isDone ? TimelineStepState.past : TimelineStepState.current;
     return TimelineStepState.future;
   }
 
@@ -297,7 +302,7 @@ class _TimelineAccordion extends StatelessWidget {
         final i = entry.key;
         final event = entry.value;
         return BfTimelineStep(
-          stepState: _stepState(i, currentIdx),
+          stepState: _stepState(i, currentIdx, shipmentStatus == 'delivered'),
           label: event.stage,
           datetime: event.datetime,
           note: event.note,

@@ -232,7 +232,7 @@ class _TimelineBody extends StatelessWidget {
         else
           ...events.asMap().entries.map(
                 (entry) => BfTimelineStep(
-                  stepState: _stepState(entry.key, currentIdx),
+                  stepState: _stepState(entry.key, currentIdx, shipment.status == 'delivered'),
                   label: entry.value.stage,
                   datetime: entry.value.datetime,
                   note: entry.value.note,
@@ -260,10 +260,10 @@ class _TimelineBody extends StatelessWidget {
     return -1;
   }
 
-  static TimelineStepState _stepState(int index, int currentIdx) {
+  static TimelineStepState _stepState(int index, int currentIdx, bool isDone) {
     if (currentIdx == -1) return TimelineStepState.future;
     if (index < currentIdx) return TimelineStepState.past;
-    if (index == currentIdx) return TimelineStepState.current;
+    if (index == currentIdx) return isDone ? TimelineStepState.past : TimelineStepState.current;
     return TimelineStepState.future;
   }
 }
