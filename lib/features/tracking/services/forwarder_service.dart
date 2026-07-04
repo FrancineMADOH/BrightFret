@@ -10,11 +10,15 @@ class ForwarderService {
   final Dio _dio;
 
   /// Fetches the forwarder's name, logo URL, primary colour, and contact phone.
+  /// Pass [baseUrl] so relative logo URLs are made absolute at parse time.
   /// Throws an [ApiException] subtype on failure.
-  Future<ForwarderInfo> getForwarderInfo() async {
+  Future<ForwarderInfo> getForwarderInfo({String? baseUrl}) async {
     try {
       final response = await _dio.get('/api/forwarder/info');
-      return ForwarderInfo.fromJson(response.data as Map<String, dynamic>);
+      return ForwarderInfo.fromJson(
+        response.data as Map<String, dynamic>,
+        baseUrl: baseUrl,
+      );
     } on DioException catch (e) {
       throw e.asApiException;
     }

@@ -24,7 +24,7 @@ Future<ForwarderInfo> forwarderInfo(Ref ref, String instanceUrl) async {
 
   try {
     final dio = ref.read(dioForInstanceProvider(instanceUrl));
-    final info = await ForwarderService(dio).getForwarderInfo();
+    final info = await ForwarderService(dio).getForwarderInfo(baseUrl: instanceUrl);
     await HiveService.forwarderInfo.put(instanceUrl, info.toCached(instanceUrl));
     return info;
   } on ApiException catch (_) {

@@ -19,9 +19,13 @@ class ForwarderInfo {
   /// Safe fallback used when the API is unreachable and no cache exists.
   static const ForwarderInfo fallback = ForwarderInfo(name: 'BrightFret');
 
-  factory ForwarderInfo.fromJson(Map<String, dynamic> json) => ForwarderInfo(
+  factory ForwarderInfo.fromJson(
+    Map<String, dynamic> json, {
+    String? baseUrl,
+  }) =>
+      ForwarderInfo(
         name: json['name'] as String,
-        logoUrl: json['logo_url'] as String?,
+        logoUrl: _absolute(json['logo_url'] as String?, baseUrl),
         primaryColor: json['primary_color'] as String?,
         contactPhone: json['contact_phone'] as String?,
       );
@@ -37,10 +41,18 @@ class ForwarderInfo {
       );
 
   /// Reconstructs a [ForwarderInfo] from a Hive [CachedForwarderInfo].
+  /// Normalises stale relative [logoUrl] entries using the stored [instanceUrl].
   factory ForwarderInfo.fromCached(CachedForwarderInfo cached) => ForwarderInfo(
         name: cached.name,
-        logoUrl: cached.logoUrl,
+        logoUrl: _absolute(cached.logoUrl, cached.instanceUrl),
         primaryColor: cached.primaryColor,
         contactPhone: cached.contactPhone,
       );
+
+  /// Makes [url] absolute using [base]. Returns [url] unchanged if already
+  /// absolute or if either argument is null.
+  static String? _absolute(String? url, String? base) {
+    if (url == null || base == null || !url.startsWith('/')) return url;
+    return '${base.replaceAll(RegExp(r'/$'), '')}$url';
+  }
 }
