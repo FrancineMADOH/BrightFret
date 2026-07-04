@@ -189,6 +189,7 @@
   "daysAgo": "{count, plural, =1{1 day ago} other{{count} days ago}}",
   "updatedAt": "Updated {relativeTime}",
   "updateNewStatus": "New status: {status}",
+  "updateClaimStatus": "Claim: {status}",
 
   "aboutTitle": "About",
   "aboutWhatTitle": "What is BrightFret?",

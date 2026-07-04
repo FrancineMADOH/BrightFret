@@ -6,7 +6,7 @@ part of 'full_shipment_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fullShipmentHash() => r'd4060675fb4d57fbe1df3716687bb566173acee1';
+String _$fullShipmentHash() => r'99c5a03e9c29c60792305d793ac969f1768f44d3';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -35,6 +35,9 @@ class _SystemHash {
 /// catches this and redirects to S07. All other [ApiException]s surface as
 /// [AsyncError] for the UI to display.
 ///
+/// Side-effect: detects claim state changes and writes an [AppUpdate] to Hive
+/// when the state transitions (e.g. open → under_review → accepted/refused).
+///
 /// Copied from [fullShipment].
 @ProviderFor(fullShipment)
 const fullShipmentProvider = FullShipmentFamily();
@@ -45,6 +48,9 @@ const fullShipmentProvider = FullShipmentFamily();
 /// catches this and redirects to S07. All other [ApiException]s surface as
 /// [AsyncError] for the UI to display.
 ///
+/// Side-effect: detects claim state changes and writes an [AppUpdate] to Hive
+/// when the state transitions (e.g. open → under_review → accepted/refused).
+///
 /// Copied from [fullShipment].
 class FullShipmentFamily extends Family<AsyncValue<FullShipment>> {
   /// Fetches full authenticated shipment detail for [suffix] from [instanceUrl].
@@ -52,6 +58,9 @@ class FullShipmentFamily extends Family<AsyncValue<FullShipment>> {
   /// Throws [UnauthorizedException] when the token is expired — [ShipmentDetailScreen]
   /// catches this and redirects to S07. All other [ApiException]s surface as
   /// [AsyncError] for the UI to display.
+  ///
+  /// Side-effect: detects claim state changes and writes an [AppUpdate] to Hive
+  /// when the state transitions (e.g. open → under_review → accepted/refused).
   ///
   /// Copied from [fullShipment].
   const FullShipmentFamily();
@@ -61,6 +70,9 @@ class FullShipmentFamily extends Family<AsyncValue<FullShipment>> {
   /// Throws [UnauthorizedException] when the token is expired — [ShipmentDetailScreen]
   /// catches this and redirects to S07. All other [ApiException]s surface as
   /// [AsyncError] for the UI to display.
+  ///
+  /// Side-effect: detects claim state changes and writes an [AppUpdate] to Hive
+  /// when the state transitions (e.g. open → under_review → accepted/refused).
   ///
   /// Copied from [fullShipment].
   FullShipmentProvider call(
@@ -104,6 +116,9 @@ class FullShipmentFamily extends Family<AsyncValue<FullShipment>> {
 /// catches this and redirects to S07. All other [ApiException]s surface as
 /// [AsyncError] for the UI to display.
 ///
+/// Side-effect: detects claim state changes and writes an [AppUpdate] to Hive
+/// when the state transitions (e.g. open → under_review → accepted/refused).
+///
 /// Copied from [fullShipment].
 class FullShipmentProvider extends AutoDisposeFutureProvider<FullShipment> {
   /// Fetches full authenticated shipment detail for [suffix] from [instanceUrl].
@@ -111,6 +126,9 @@ class FullShipmentProvider extends AutoDisposeFutureProvider<FullShipment> {
   /// Throws [UnauthorizedException] when the token is expired — [ShipmentDetailScreen]
   /// catches this and redirects to S07. All other [ApiException]s surface as
   /// [AsyncError] for the UI to display.
+  ///
+  /// Side-effect: detects claim state changes and writes an [AppUpdate] to Hive
+  /// when the state transitions (e.g. open → under_review → accepted/refused).
   ///
   /// Copied from [fullShipment].
   FullShipmentProvider(

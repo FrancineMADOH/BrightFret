@@ -113,10 +113,20 @@ class _UpdateTile extends StatelessWidget {
 
   final AppUpdate update;
 
-  /// [AppUpdate.message] stores a [ShipmentStatus.name] (written by
-  /// [SavedShipments._refreshOne]). Falls back to the raw string for
-  /// debug-seeded entries that predate this convention.
+  /// [AppUpdate.message] is either:
+  /// - A [ShipmentStatus.name] (written by [SavedShipments._refreshOne])
+  /// - `"claim:<state>"` (written by [_detectClaimUpdate] in fullShipmentProvider)
   static String _statusLabel(String message, AppLocalizations l10n) {
+    if (message.startsWith('claim:')) {
+      final state = message.substring(6);
+      return switch (state) {
+        'open' => l10n.claimStateOpen,
+        'under_review' => l10n.claimStateUnderReview,
+        'accepted' => l10n.claimStateAccepted,
+        'refused' => l10n.claimStateRefused,
+        _ => state,
+      };
+    }
     final status = ShipmentStatus.values
         .where((s) => s.name == message)
         .firstOrNull;
@@ -129,6 +139,8 @@ class _UpdateTile extends StatelessWidget {
       ShipmentStatus.archived => l10n.statusArchived,
     };
   }
+
+  static bool _isClaim(String message) => message.startsWith('claim:');
 
   static String _relativeTime(DateTime dt, AppLocalizations l10n) {
     final diff = DateTime.now().difference(dt);
@@ -176,7 +188,9 @@ class _UpdateTile extends StatelessWidget {
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(
-                l10n.updateNewStatus(_statusLabel(update.message, l10n)),
+                _isClaim(update.message)
+                    ? l10n.updateClaimStatus(_statusLabel(update.message, l10n))
+                    : l10n.updateNewStatus(_statusLabel(update.message, l10n)),
                 style: AppTextStyles.bodySmall
                     .copyWith(color: AppColors.statusArchived),
                 maxLines: 2,

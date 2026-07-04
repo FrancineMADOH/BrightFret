@@ -34,4 +34,9 @@ class SavedShipment extends HiveObject {
   /// Whether the user has authenticated for this shipment.
   @HiveField(5)
   bool isAuthenticated;
+
+  /// Last known claim state (`'open'` | `'under_review'` | `'accepted'` | `'refused'`).
+  /// Null if no claim has been observed yet on this device.
+  @HiveField(6)
+  String? lastClaimStatus;
 }

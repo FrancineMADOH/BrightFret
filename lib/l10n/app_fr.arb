@@ -494,6 +494,11 @@
   },
 
   "updateNewStatus": "Nouveau statut : {status}",
+  "updateClaimStatus": "Réclamation : {status}",
+  "@updateClaimStatus": {
+    "description": "Ligne de mise à jour dans S13 quand l'état d'un claim évolue",
+    "placeholders": { "status": { "type": "String" } }
+  },
   "@updateNewStatus": {
     "description": "Message de notification S13 quand le statut d'un colis sauvegardé change",
     "placeholders": {

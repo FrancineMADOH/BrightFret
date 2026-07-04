@@ -23,13 +23,13 @@ class SavedShipmentAdapter extends TypeAdapter<SavedShipment> {
       lastStatus: fields[3] as String,
       lastSeen: fields[4] as DateTime,
       isAuthenticated: fields[5] as bool,
-    );
+    )..lastClaimStatus = fields[6] as String?;
   }
 
   @override
   void write(BinaryWriter writer, SavedShipment obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.trackingCode)
       ..writeByte(1)
@@ -41,7 +41,9 @@ class SavedShipmentAdapter extends TypeAdapter<SavedShipment> {
       ..writeByte(4)
       ..write(obj.lastSeen)
       ..writeByte(5)
-      ..write(obj.isAuthenticated);
+      ..write(obj.isAuthenticated)
+      ..writeByte(6)
+      ..write(obj.lastClaimStatus);
   }
 
   @override
