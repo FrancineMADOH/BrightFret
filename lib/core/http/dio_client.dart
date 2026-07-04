@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 
 import 'api_exception.dart';
 
@@ -52,6 +53,18 @@ class ErrorInterceptor extends Interceptor {
         message: ApiException.fromDioException(err).toString(),
       ),
     );
+  }
+}
+
+/// Injects `Accept-Language` from the persisted locale preference (Hive).
+/// Reads at request time so a mid-session language change takes effect immediately.
+class LanguageInterceptor extends Interceptor {
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    final box = Hive.box<dynamic>('prefs');
+    final code = box.get('language', defaultValue: 'fr') as String;
+    options.headers['Accept-Language'] = code;
+    handler.next(options);
   }
 }
 
@@ -138,6 +151,7 @@ class DioClient {
 
     dio.interceptors.addAll([
       AuthInterceptor(tokenReader),
+      LanguageInterceptor(),
       ErrorInterceptor(),
       if (kDebugMode) _BfLogInterceptor(),
     ]);

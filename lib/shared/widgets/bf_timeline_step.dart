@@ -168,13 +168,6 @@ class _BfTimelineStepState extends State<BfTimelineStep>
                 ),
               ),
             ],
-            if (widget.note != null) ...[
-              const SizedBox(height: 4),
-              Text(
-                widget.note!,
-                style: AppTextStyles.bodySmall.copyWith(color: textColor),
-              ),
-            ],
           ],
         ),
       ),
