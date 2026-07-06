@@ -24,6 +24,7 @@ sealed class ApiException implements Exception {
   static ApiException _fromStatus(DioException e) {
     final status = e.response?.statusCode ?? 0;
     return switch (status) {
+      400 => const BadRequestException(),
       401 => const UnauthorizedException(),
       404 => const NotFoundException(),
       409 => const ConflictException(),
@@ -57,6 +58,15 @@ final class UnauthorizedException extends ApiException {
 
   @override
   String toString() => 'UnauthorizedException: token expired or invalid (401)';
+}
+
+/// The request was rejected by the server due to invalid data (HTTP 400).
+/// Used when a claim amount exceeds the declared shipment value.
+final class BadRequestException extends ApiException {
+  const BadRequestException();
+
+  @override
+  String toString() => 'BadRequestException: invalid request data (400)';
 }
 
 /// A conflicting resource already exists (HTTP 409).

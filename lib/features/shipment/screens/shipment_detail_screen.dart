@@ -190,13 +190,22 @@ class _DetailBody extends StatelessWidget {
         _ClaimButton(
           claimStatus: shipment.claimStatus,
           l10n: l10n,
-          onTap: () => context.goNamed(
-            shipment.claimStatus != null
-                ? AppRoute.claims.name
-                : AppRoute.claim.name,
-            pathParameters: {'suffix': suffix},
-            queryParameters: {'instance': instanceUrl},
-          ),
+          onTap: () {
+            if (shipment.claimStatus != null) {
+              context.goNamed(
+                AppRoute.claims.name,
+                pathParameters: {'suffix': suffix},
+                queryParameters: {'instance': instanceUrl},
+              );
+            } else {
+              context.goNamed(
+                AppRoute.claim.name,
+                pathParameters: {'suffix': suffix},
+                queryParameters: {'instance': instanceUrl},
+                extra: shipment.declaredValue,
+              );
+            }
+          },
         ),
         const SizedBox(height: 16),
       ],

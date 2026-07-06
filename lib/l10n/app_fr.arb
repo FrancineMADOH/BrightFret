@@ -351,6 +351,17 @@
   "claimAmountInvalid": "Entrez un montant supérieur à 0.",
   "@claimAmountInvalid": { "description": "Validation montant S18" },
 
+  "claimAmountExceedsValue": "Dépasse la valeur déclarée ({amount} XAF max).",
+  "@claimAmountExceedsValue": {
+    "description": "Validation inline : montant > valeur déclarée (côté client) S18",
+    "placeholders": {
+      "amount": { "type": "int", "format": "decimalPattern" }
+    }
+  },
+
+  "claimAmountExceedsDeclared": "Le montant réclamé dépasse la valeur déclarée du colis.",
+  "@claimAmountExceedsDeclared": { "description": "Erreur 400 soumission claim : montant trop élevé" },
+
   "backToShipment": "Retour au colis",
   "@backToShipment": { "description": "Bouton retour S18 succès" },
 

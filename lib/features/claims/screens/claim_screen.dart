@@ -26,6 +26,7 @@ class ClaimScreen extends ConsumerStatefulWidget {
     this.instanceUrl = '',
     this.showStatus = false,
     this.prefetchedClaim,
+    this.declaredValue,
   });
 
   final String suffix;
@@ -37,6 +38,10 @@ class ClaimScreen extends ConsumerStatefulWidget {
   /// When provided (from the claims list), S18B uses this data directly
   /// without fetching from the API.
   final ClaimDetail? prefetchedClaim;
+
+  /// Ceiling for client-side validation. Passed by [ShipmentDetailScreen]
+  /// from [FullShipment.declaredValue]. Null when navigating from [ClaimsListScreen].
+  final double? declaredValue;
 
   @override
   ConsumerState<ClaimScreen> createState() => _ClaimScreenState();
@@ -60,11 +65,22 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
     final descOk = _descController.text.trim().isNotEmpty;
     final amount = double.tryParse(_amountController.text.trim());
     final amountOk = amount != null && amount > 0;
+    final ceiling = widget.declaredValue;
+    final withinCeiling = ceiling == null ||
+        ceiling <= 0 ||
+        (amount != null && amount <= ceiling);
+
     setState(() {
       _descError = descOk ? null : l10n.claimDescriptionRequired;
-      _amountError = amountOk ? null : l10n.claimAmountInvalid;
+      if (!amountOk) {
+        _amountError = l10n.claimAmountInvalid;
+      } else if (!withinCeiling) {
+        _amountError = l10n.claimAmountExceedsValue(ceiling.toInt());
+      } else {
+        _amountError = null;
+      }
     });
-    return descOk && amountOk;
+    return descOk && amountOk && withinCeiling;
   }
 
   Future<void> _submit(AppLocalizations l10n) async {
@@ -174,6 +190,7 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
 
   static String _errorMessage(Object err, AppLocalizations l10n) {
     if (err is ConflictException) return l10n.claimAlreadyExists;
+    if (err is BadRequestException) return l10n.claimAmountExceedsDeclared;
     if (err is NetworkException) return l10n.errorNetworkBody;
     return l10n.claimSubmitError;
   }

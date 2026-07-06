@@ -182,6 +182,9 @@ List<RouteBase> _buildRoutes(RouterNotifier notifier) => [
               prefetchedClaim: state.extra is ClaimDetail
                   ? state.extra as ClaimDetail
                   : null,
+              declaredValue: state.extra is double
+                  ? state.extra as double
+                  : null,
             ),
           ),
         ],

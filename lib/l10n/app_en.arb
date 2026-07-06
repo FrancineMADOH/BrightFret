@@ -148,6 +148,8 @@
   "claimSubmitError": "Could not submit the claim. Please try again.",
   "claimDescriptionRequired": "Description is required.",
   "claimAmountInvalid": "Enter an amount greater than 0.",
+  "claimAmountExceedsValue": "Exceeds declared value ({amount} XAF max).",
+  "claimAmountExceedsDeclared": "The claimed amount exceeds the declared shipment value.",
   "backToShipment": "Back to shipment",
   "fileNewClaim": "File a new claim",
   "myClaims": "My claims",
