@@ -63,21 +63,26 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
 
   bool _validate(AppLocalizations l10n) {
     final descOk = _descController.text.trim().isNotEmpty;
-    final amount = double.tryParse(_amountController.text.trim());
-    final amountOk = amount != null && amount > 0;
+    final isDelayed = _claimType == 'delayed';
+
+    final amount = isDelayed ? 0.0 : double.tryParse(_amountController.text.trim());
+    final amountOk = isDelayed || (amount != null && amount > 0);
     final ceiling = widget.declaredValue;
-    final withinCeiling = ceiling == null ||
+    final withinCeiling = isDelayed ||
+        ceiling == null ||
         ceiling <= 0 ||
         (amount != null && amount <= ceiling);
 
     setState(() {
       _descError = descOk ? null : l10n.claimDescriptionRequired;
-      if (!amountOk) {
-        _amountError = l10n.claimAmountInvalid;
-      } else if (!withinCeiling) {
-        _amountError = l10n.claimAmountExceedsValue(ceiling.toInt());
-      } else {
-        _amountError = null;
+      if (!isDelayed) {
+        if (!amountOk) {
+          _amountError = l10n.claimAmountInvalid;
+        } else if (!withinCeiling) {
+          _amountError = l10n.claimAmountExceedsValue(ceiling.toInt());
+        } else {
+          _amountError = null;
+        }
       }
     });
     return descOk && amountOk && withinCeiling;
@@ -85,13 +90,13 @@ class _ClaimScreenState extends ConsumerState<ClaimScreen> {
 
   Future<void> _submit(AppLocalizations l10n) async {
     if (!_validate(l10n)) return;
+    final isDelayed = _claimType == 'delayed';
     await ref
         .read(claimNotifierProvider(widget.suffix, widget.instanceUrl).notifier)
         .submit(
           claimType: _claimType,
           description: _descController.text.trim(),
-          claimedAmount:
-              double.parse(_amountController.text.trim()),
+          claimedAmount: isDelayed ? 0.0 : double.parse(_amountController.text.trim()),
         );
   }
 
@@ -255,25 +260,27 @@ class _ClaimForm extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 24),
-          _SectionLabel(l10n.claimAmountLabel),
-          const SizedBox(height: 8),
-          TextField(
-            controller: amountController,
-            keyboardType:
-                const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-            ],
-            decoration: InputDecoration(
-              hintText: l10n.claimAmountHint,
-              errorText: amountError,
-              suffixText: 'XAF',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+          if (claimType != 'delayed') ...[
+            const SizedBox(height: 24),
+            _SectionLabel(l10n.claimAmountLabel),
+            const SizedBox(height: 8),
+            TextField(
+              controller: amountController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+              ],
+              decoration: InputDecoration(
+                hintText: l10n.claimAmountHint,
+                errorText: amountError,
+                suffixText: 'XAF',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             ),
-          ),
+          ],
           const SizedBox(height: 32),
           BfPrimaryButton(
             label: l10n.claimSubmit,
