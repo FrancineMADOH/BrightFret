@@ -248,7 +248,11 @@ class _PricingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPaid = shipment.paymentStatus == 'confirmed';
+    final (paymentLabel, paymentColor) = switch (shipment.paymentStatus) {
+      'full'    => (l10n.paymentConfirmed, AppColors.statusDelivered),
+      'partial' => (l10n.paymentPartial,   AppColors.statusWarning),
+      _         => (l10n.paymentPending,   AppColors.statusError),
+    };
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -262,10 +266,8 @@ class _PricingSection extends StatelessWidget {
           children: [
             Text('Paiement', style: AppTextStyles.bodySmall.copyWith(color: AppColors.statusArchived)),
             Text(
-              isPaid ? l10n.paymentConfirmed : l10n.paymentPending,
-              style: AppTextStyles.label.copyWith(
-                color: isPaid ? AppColors.statusDelivered : AppColors.statusWarning,
-              ),
+              paymentLabel,
+              style: AppTextStyles.label.copyWith(color: paymentColor),
             ),
           ],
         ),

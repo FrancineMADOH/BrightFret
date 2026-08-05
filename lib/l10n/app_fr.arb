@@ -155,10 +155,13 @@
   "@sectionClaim": { "description": "Titre section réclamation S08" },
 
   "paymentConfirmed": "✅ Payé",
-  "@paymentConfirmed": { "description": "Statut paiement confirmé S08" },
+  "@paymentConfirmed": { "description": "Statut paiement complet S08 (full)" },
 
-  "paymentPending": "⏳ En attente",
-  "@paymentPending": { "description": "Statut paiement en attente S08" },
+  "paymentPartial": "⏳ Partiel",
+  "@paymentPartial": { "description": "Statut paiement partiel S08 (partial)" },
+
+  "paymentPending": "❌ Non payé",
+  "@paymentPending": { "description": "Statut aucun paiement S08 (none)" },
 
   "reportIssue": "⚠️ Signaler un problème",
   "@reportIssue": { "description": "CTA réclamation S08 — pas de réclamation active" },

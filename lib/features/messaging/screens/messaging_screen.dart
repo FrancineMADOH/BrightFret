@@ -369,8 +369,10 @@ class _MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isClient = message.isFromClient;
-    final bubbleColor = isClient ? AppColors.primary : AppColors.divider;
-    final textColor = isClient ? AppColors.white : Colors.black87;
+    final cs = Theme.of(context).colorScheme;
+    final bubbleColor =
+        isClient ? AppColors.primary : cs.surfaceContainerHighest;
+    final textColor = isClient ? AppColors.white : cs.onSurface;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -491,7 +493,9 @@ class _AttachmentTile extends StatelessWidget {
   }
 
   Widget _fallbackChip(BuildContext context) {
-    final textColor = isClient ? AppColors.white : Colors.black87;
+    final textColor = isClient
+        ? AppColors.white
+        : Theme.of(context).colorScheme.onSurface;
     return InkWell(
       onTap: () => _open(context),
       child: Row(
@@ -578,12 +582,13 @@ class _MessageInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
-          border: Border(top: BorderSide(color: AppColors.divider)),
+        decoration: BoxDecoration(
+          color: cs.surface,
+          border: Border(top: BorderSide(color: cs.outlineVariant)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -623,7 +628,7 @@ class _MessageInput extends StatelessWidget {
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: AppColors.background,
+                      fillColor: cs.surfaceContainerHighest,
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 10),
                     ),

@@ -31,7 +31,7 @@ class FullShipment extends PublicShipment {
   final double declaredValue;
   final double totalAmount;
 
-  /// `'pending'` or `'confirmed'`.
+  /// `'none'` · `'partial'` · `'full'` — maps to Odoo `payment_status` selection.
   final String paymentStatus;
 
   /// Total weight in kg.
@@ -63,7 +63,7 @@ class FullShipment extends PublicShipment {
       supplierRef: json['supplier_ref'] as String?,
       declaredValue: (json['declared_value'] as num?)?.toDouble() ?? 0.0,
       totalAmount: (json['total_amount'] as num?)?.toDouble() ?? 0.0,
-      paymentStatus: json['payment_status'] as String? ?? 'pending',
+      paymentStatus: json['payment_status'] as String? ?? 'none',
       totalWeight: (json['total_weight'] as num?)?.toDouble() ?? 0.0,
       totalVolume: (json['total_volume'] as num?)?.toDouble() ?? 0.0,
       hasActiveClaim: json['has_active_claim'] as bool? ?? false,
