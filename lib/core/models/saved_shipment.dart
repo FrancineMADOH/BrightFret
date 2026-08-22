@@ -13,6 +13,7 @@ class SavedShipment extends HiveObject {
     required this.lastStatus,
     required this.lastSeen,
     this.isAuthenticated = false,
+    this.lastEventCount,
   });
 
   /// Full tracking code, e.g. KMG-2026-A7X9K2.
@@ -39,4 +40,10 @@ class SavedShipment extends HiveObject {
   /// Null if no claim has been observed yet on this device.
   @HiveField(6)
   String? lastClaimStatus;
+
+  /// Number of transit events known at the last refresh.
+  /// Null for shipments saved before this field was introduced — treated as 0
+  /// so the first refresh initialises it without emitting spurious updates.
+  @HiveField(7)
+  int? lastEventCount;
 }

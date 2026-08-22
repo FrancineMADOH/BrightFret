@@ -184,30 +184,32 @@ class _DetailBody extends StatelessWidget {
             l10n: l10n,
           ),
         ],
-        const SizedBox(height: 16),
-        Text(l10n.sectionClaim, style: AppTextStyles.heading2),
-        const SizedBox(height: 8),
-        _ClaimButton(
-          claimStatus: shipment.claimStatus,
-          l10n: l10n,
-          onTap: () {
-            if (shipment.claimStatus != null) {
-              context.goNamed(
-                AppRoute.claims.name,
-                pathParameters: {'suffix': suffix},
-                queryParameters: {'instance': instanceUrl},
-              );
-            } else {
-              context.goNamed(
-                AppRoute.claim.name,
-                pathParameters: {'suffix': suffix},
-                queryParameters: {'instance': instanceUrl},
-                extra: shipment.declaredValue,
-              );
-            }
-          },
-        ),
-        const SizedBox(height: 16),
+        if (forwarder.canCreateClaims) ...[
+          const SizedBox(height: 16),
+          Text(l10n.sectionClaim, style: AppTextStyles.heading2),
+          const SizedBox(height: 8),
+          _ClaimButton(
+            claimStatus: shipment.claimStatus,
+            l10n: l10n,
+            onTap: () {
+              if (shipment.claimStatus != null) {
+                context.goNamed(
+                  AppRoute.claims.name,
+                  pathParameters: {'suffix': suffix},
+                  queryParameters: {'instance': instanceUrl},
+                );
+              } else {
+                context.goNamed(
+                  AppRoute.claim.name,
+                  pathParameters: {'suffix': suffix},
+                  queryParameters: {'instance': instanceUrl},
+                  extra: shipment.declaredValue,
+                );
+              }
+            },
+          ),
+          const SizedBox(height: 16),
+        ],
       ],
     );
   }

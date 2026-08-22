@@ -12,14 +12,29 @@ import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_offline_banner.dart';
 import '../../../shared/widgets/bf_shipment_card.dart';
 import '../providers/home_provider.dart';
+import '../providers/saved_shipments_provider.dart';
 
 /// S03 — Home Hub.
 /// Entry point for tracking: search bar, QR scanner shortcut, recent shipments.
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(savedShipmentsProvider.notifier).refreshAll();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final shipments = ref.watch(homeShipmentsProvider);
     final isOnline = ref.watch(connectivityNotifierProvider);
     final l10n = AppLocalizations.of(context)!;

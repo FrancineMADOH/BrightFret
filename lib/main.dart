@@ -8,6 +8,7 @@ import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
 import 'core/storage/hive_service.dart';
 import 'core/utils/forwarder_resolver.dart';
+import 'features/tracking/providers/saved_shipments_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,12 +34,12 @@ class BrightFretApp extends ConsumerStatefulWidget {
   ConsumerState<BrightFretApp> createState() => _BrightFretAppState();
 }
 
-class _BrightFretAppState extends ConsumerState<BrightFretApp> {
+class _BrightFretAppState extends ConsumerState<BrightFretApp>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // Defer until after the first frame so the GoRouter is fully mounted
-    // before any deep-link navigation fires.
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       DeepLinkHandler.listen(ref.read(routerProvider));
@@ -46,7 +47,15 @@ class _BrightFretAppState extends ConsumerState<BrightFretApp> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.read(savedShipmentsProvider.notifier).refreshAll();
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     DeepLinkHandler.dispose();
     super.dispose();
   }

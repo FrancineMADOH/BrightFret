@@ -67,15 +67,39 @@ class SavedShipments extends _$SavedShipments {
     try {
       final dio = ref.read(dioForInstanceProvider(shipment.instanceUrl));
       final result = await TrackingService(dio).getPublicShipment(shipment.suffix);
+      var dirty = false;
+
       if (result.status != shipment.lastStatus) {
         shipment.lastStatus = result.status;
         shipment.lastSeen = DateTime.now();
-        await shipment.save();
         await HiveService.updates.add(AppUpdate(
           trackingCode: shipment.trackingCode,
           message: _apiStatusToShipmentStatus(result.status).name,
           detectedAt: DateTime.now(),
         ));
+        dirty = true;
+      }
+
+      final newCount = result.events.length;
+      final knownCount = shipment.lastEventCount;
+      if (knownCount == null) {
+        // First refresh after field introduction — initialise silently.
+        shipment.lastEventCount = newCount;
+        dirty = true;
+      } else if (newCount > knownCount) {
+        for (final event in result.events.skip(knownCount)) {
+          await HiveService.updates.add(AppUpdate(
+            trackingCode: shipment.trackingCode,
+            message: 'transit:${event.stage}',
+            detectedAt: DateTime.now(),
+          ));
+        }
+        shipment.lastEventCount = newCount;
+        dirty = true;
+      }
+
+      if (dirty) {
+        await shipment.save();
         ref.invalidate(hasUnreadUpdatesProvider);
       }
     } catch (_) {

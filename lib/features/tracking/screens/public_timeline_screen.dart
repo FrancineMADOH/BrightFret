@@ -95,6 +95,7 @@ class PublicTimelineScreen extends ConsumerWidget {
                 suffix: suffix,
                 instanceUrl: instanceUrl,
                 status: shipment.status,
+                eventCount: shipment.events.length,
               ),
             ]
           : null,
@@ -156,12 +157,14 @@ class _SaveButton extends ConsumerWidget {
     required this.suffix,
     required this.instanceUrl,
     required this.status,
+    required this.eventCount,
   });
 
   final String trackingCode;
   final String suffix;
   final String instanceUrl;
   final String status;
+  final int eventCount;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -172,7 +175,7 @@ class _SaveButton extends ConsumerWidget {
       tooltip: AppLocalizations.of(context)!.saveShipment,
       onPressed: () => ref
           .read(savedShipmentToggleProvider(trackingCode).notifier)
-          .toggle(suffix: suffix, instanceUrl: instanceUrl, status: status),
+          .toggle(suffix: suffix, instanceUrl: instanceUrl, status: status, eventCount: eventCount),
     );
   }
 }

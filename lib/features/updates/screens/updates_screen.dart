@@ -127,6 +127,9 @@ class _UpdateTile extends StatelessWidget {
         _ => state,
       };
     }
+    if (message.startsWith('transit:')) {
+      return message.substring(8);
+    }
     final status = ShipmentStatus.values
         .where((s) => s.name == message)
         .firstOrNull;
@@ -141,6 +144,7 @@ class _UpdateTile extends StatelessWidget {
   }
 
   static bool _isClaim(String message) => message.startsWith('claim:');
+  static bool _isTransit(String message) => message.startsWith('transit:');
 
   static String _relativeTime(DateTime dt, AppLocalizations l10n) {
     final diff = DateTime.now().difference(dt);
@@ -190,7 +194,9 @@ class _UpdateTile extends StatelessWidget {
               child: Text(
                 _isClaim(update.message)
                     ? l10n.updateClaimStatus(_statusLabel(update.message, l10n))
-                    : l10n.updateNewStatus(_statusLabel(update.message, l10n)),
+                    : _isTransit(update.message)
+                        ? l10n.updateNewTransitEvent(_statusLabel(update.message, l10n))
+                        : l10n.updateNewStatus(_statusLabel(update.message, l10n)),
                 style: AppTextStyles.bodySmall
                     .copyWith(color: AppColors.statusArchived),
                 maxLines: 2,

@@ -19,6 +19,7 @@ class SavedShipmentToggle extends _$SavedShipmentToggle {
     required String suffix,
     required String instanceUrl,
     required String status,
+    int? eventCount,
   }) async {
     if (state) {
       await HiveService.myShipments.delete(trackingCode);
@@ -31,6 +32,7 @@ class SavedShipmentToggle extends _$SavedShipmentToggle {
           instanceUrl: instanceUrl,
           lastStatus: status,
           lastSeen: DateTime.now(),
+          lastEventCount: eventCount,
         ),
       );
     }

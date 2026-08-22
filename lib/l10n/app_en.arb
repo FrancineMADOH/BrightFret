@@ -139,7 +139,7 @@
   "claimDelay": "Excessive delay",
   "claimSubmit": "Submit claim",
 
-  "claimSuccessTitle": "Claim submitted ✅",
+  "claimSuccessTitle": "Claim submitted",
   "claimSuccessRef": "Reference: {ref}",
   "@claimSuccessRef": {
     "placeholders": { "ref": { "type": "String" } }
@@ -231,6 +231,8 @@
   "cargoShareTotalWeight": "Total weight: {value}",
   "cargoShareTotalVolume": "Total volume: {value}",
   "cargoShareGrandTotal": "GRAND TOTAL: {value}",
+
+  "updateNewTransitEvent": "New stage: {stage}",
 
   "termsRequestBanner": "Your forwarder is asking you to accept their terms of use before continuing.",
   "termsReadLink": "Read the terms",

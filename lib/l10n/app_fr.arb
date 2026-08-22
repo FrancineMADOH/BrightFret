@@ -330,7 +330,7 @@
   "claimSubmit": "Soumettre la réclamation",
   "@claimSubmit": { "description": "Bouton soumission réclamation" },
 
-  "claimSuccessTitle": "Réclamation soumise ✅",
+  "claimSuccessTitle": "Réclamation soumise",
   "@claimSuccessTitle": { "description": "Titre succès S18" },
 
   "claimSuccessRef": "Référence : {ref}",
@@ -574,6 +574,12 @@
   "@cargoShareTotalVolume": { "description": "Ligne volume dans texte partagé", "placeholders": { "value": { "type": "String" } } },
   "cargoShareGrandTotal": "MONTANT TOTAL : {value}",
   "@cargoShareGrandTotal": { "description": "Ligne total dans texte partagé", "placeholders": { "value": { "type": "String" } } },
+
+  "updateNewTransitEvent": "Nouvelle étape : {stage}",
+  "@updateNewTransitEvent": {
+    "description": "Ligne de mise à jour dans S13 quand une nouvelle étape de transit est détectée",
+    "placeholders": { "stage": { "type": "String" } }
+  },
 
   "termsRequestBanner": "Votre transitaire vous demande d'accepter les conditions d'utilisation avant de continuer.",
   "@termsRequestBanner": { "description": "Texte du bandeau CGU affiché dans S11 quand terms_acceptance_required = true" },

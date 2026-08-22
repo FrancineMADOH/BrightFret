@@ -22,6 +22,7 @@ class CachedForwarderInfoAdapter extends TypeAdapter<CachedForwarderInfo> {
       logoUrl: fields[2] as String?,
       primaryColor: fields[3] as String?,
       contactPhone: fields[4] as String?,
+      canCreateClaims: fields[6] as bool?,
       cachedAt: fields[5] as DateTime,
     );
   }
@@ -29,7 +30,7 @@ class CachedForwarderInfoAdapter extends TypeAdapter<CachedForwarderInfo> {
   @override
   void write(BinaryWriter writer, CachedForwarderInfo obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.instanceUrl)
       ..writeByte(1)
@@ -40,6 +41,8 @@ class CachedForwarderInfoAdapter extends TypeAdapter<CachedForwarderInfo> {
       ..write(obj.primaryColor)
       ..writeByte(4)
       ..write(obj.contactPhone)
+      ..writeByte(6)
+      ..write(obj.canCreateClaims)
       ..writeByte(5)
       ..write(obj.cachedAt);
   }

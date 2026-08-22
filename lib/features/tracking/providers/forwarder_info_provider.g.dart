@@ -6,7 +6,7 @@ part of 'forwarder_info_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$forwarderInfoHash() => r'da5f001be09ae08a7d2862058dce1ef2d1993421';
+String _$forwarderInfoHash() => r'd96468a9944d713a2f122fc01d55770000a8d42b';
 
 /// Copied from Dart SDK
 class _SystemHash {

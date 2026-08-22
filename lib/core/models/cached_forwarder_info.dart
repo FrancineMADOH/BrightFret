@@ -12,6 +12,7 @@ class CachedForwarderInfo extends HiveObject {
     this.logoUrl,
     this.primaryColor,
     this.contactPhone,
+    this.canCreateClaims,
     required this.cachedAt,
   });
 
@@ -30,6 +31,11 @@ class CachedForwarderInfo extends HiveObject {
 
   @HiveField(4)
   String? contactPhone;
+
+  /// `true` when the forwarder's plan allows claim creation (Pro+). Nullable
+  /// to stay compatible with entries cached before this field was added.
+  @HiveField(6)
+  bool? canCreateClaims;
 
   @HiveField(5)
   DateTime cachedAt;

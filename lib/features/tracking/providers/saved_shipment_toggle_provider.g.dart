@@ -7,7 +7,7 @@ part of 'saved_shipment_toggle_provider.dart';
 // **************************************************************************
 
 String _$savedShipmentToggleHash() =>
-    r'3ba64f8a93d7661195d880efed143cace8e8ee98';
+    r'354e947a9507e29448900835e3dde7429d6da776';
 
 /// Copied from Dart SDK
 class _SystemHash {
