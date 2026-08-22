@@ -47,6 +47,9 @@ dependencies:
   # Deep links
   app_links: ^6.3.2
 
+  # External URL (terms of service)
+  url_launcher: ^6.3.0
+
   # Network status
   connectivity_plus: ^6.0.5
 

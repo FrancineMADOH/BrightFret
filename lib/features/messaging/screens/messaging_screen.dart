@@ -6,16 +6,20 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
-import '../../../core/providers/connectivity_provider.dart';
 import '../../../core/http/api_exception.dart';
+import '../../../core/http/dio_provider.dart';
+import '../../../core/providers/connectivity_provider.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../../../shared/widgets/bf_error_screen.dart';
 import '../../../shared/widgets/bf_loading_indicator.dart';
+import '../../shipment/providers/full_shipment_provider.dart';
+import '../../shipment/services/shipment_service.dart';
 import '../models/shipment_message.dart';
 import '../providers/messages_provider.dart';
 import '../services/messaging_service.dart';
@@ -169,6 +173,13 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
     final isOnline = ref.watch(connectivityNotifierProvider);
     final l10n = AppLocalizations.of(context)!;
 
+    final fullShipmentAsync = ref.watch(
+      fullShipmentProvider(widget.suffix, widget.instanceUrl),
+    );
+    final termsRequired =
+        fullShipmentAsync.value?.termsAcceptanceRequired ?? false;
+    final termsUrl = fullShipmentAsync.value?.termsAcceptanceUrl;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -183,8 +194,13 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
       bottomNavigationBar: const BfBottomNavBar(currentIndex: 1),
       body: Column(
         children: [
-          if (_sendError != null)
-            _ErrorBanner(message: _sendError!),
+          if (_sendError != null) _ErrorBanner(message: _sendError!),
+          if (termsRequired)
+            _TermsBanner(
+              suffix: widget.suffix,
+              instanceUrl: widget.instanceUrl,
+              termsUrl: termsUrl,
+            ),
           Expanded(
             child: messagesAsync.when(
               loading: () => const BfLoadingIndicator(),
@@ -243,6 +259,139 @@ class _MessagingScreenState extends ConsumerState<MessagingScreen> {
             onRemoveAttachment: () =>
                 setState(() => _pendingAttachment = null),
             l10n: l10n,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Terms banner (S11 — shown when terms_acceptance_required = true) ──────────
+
+class _TermsBanner extends ConsumerStatefulWidget {
+  const _TermsBanner({
+    required this.suffix,
+    required this.instanceUrl,
+    this.termsUrl,
+  });
+
+  final String suffix;
+  final String instanceUrl;
+  final String? termsUrl;
+
+  @override
+  ConsumerState<_TermsBanner> createState() => _TermsBannerState();
+}
+
+class _TermsBannerState extends ConsumerState<_TermsBanner> {
+  bool _accepting = false;
+
+  Future<void> _accept() async {
+    setState(() => _accepting = true);
+    try {
+      final dio = ref.read(dioForInstanceProvider(widget.instanceUrl));
+      await ShipmentService(dio).acceptTerms(widget.suffix);
+      if (!mounted) return;
+      ref.invalidate(fullShipmentProvider(widget.suffix, widget.instanceUrl));
+    } on UnauthorizedException {
+      if (!mounted) return;
+      await ref
+          .read(tokenStorageProvider)
+          .deleteToken(widget.instanceUrl, widget.suffix);
+      if (!mounted) return;
+      context.goNamed(
+        AppRoute.phoneVerify.name,
+        pathParameters: {'suffix': widget.suffix},
+        queryParameters: {'instance': widget.instanceUrl},
+      );
+    } on ApiException {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.errorNetworkBody),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _accepting = false);
+    }
+  }
+
+  Future<void> _readTerms() async {
+    if (widget.termsUrl == null) return;
+    final uri = Uri.tryParse(widget.termsUrl!);
+    if (uri != null && await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.primary.withAlpha(18),
+        border: const Border(
+          bottom: BorderSide(color: Color(0x26002868)),
+        ),
+      ),
+      padding: const EdgeInsets.fromLTRB(16, 12, 12, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.info_outline_rounded,
+                size: 16,
+                color: AppColors.primary.withAlpha(200),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  l10n.termsRequestBanner,
+                  style: AppTextStyles.bodySmall,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if (widget.termsUrl != null)
+                TextButton(
+                  onPressed: _readTerms,
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  ),
+                  child: Text(l10n.termsReadLink),
+                ),
+              const SizedBox(width: 4),
+              FilledButton(
+                onPressed: _accepting ? null : _accept,
+                style: FilledButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: _accepting
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.white,
+                        ),
+                      )
+                    : Text(l10n.termsAcceptButton),
+              ),
+            ],
           ),
         ],
       ),

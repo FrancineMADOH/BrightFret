@@ -24,6 +24,8 @@ class FullShipment extends PublicShipment {
     required this.hasActiveClaim,
     this.claimStatus,
     this.cargo,
+    required this.termsAcceptanceRequired,
+    this.termsAcceptanceUrl,
   });
 
   final String clientName;
@@ -45,6 +47,15 @@ class FullShipment extends PublicShipment {
 
   /// Cargo lines for the client-facing shipment summary. Null if no lines exist yet.
   final CargoSummary? cargo;
+
+  /// `true` when the forwarder has enabled terms-of-service AND the client has
+  /// not yet accepted them AND the shipment is not cancelled.
+  /// Pre-computed by the backend — Flutter only needs this single flag.
+  final bool termsAcceptanceRequired;
+
+  /// URL of the public terms page, e.g. `https://ops.example.com/terms/SUFFIX`.
+  /// Present even when [termsAcceptanceRequired] is `false` (for re-reading).
+  final String? termsAcceptanceUrl;
 
   /// Parses the JSON response from `GET /api/shipment/{suffix}`.
   factory FullShipment.fromJson(Map<String, dynamic> json) {
@@ -71,6 +82,9 @@ class FullShipment extends PublicShipment {
       cargo: json['cargo'] != null
           ? CargoSummary.fromJson(json['cargo'] as Map<String, dynamic>)
           : null,
+      termsAcceptanceRequired:
+          json['terms_acceptance_required'] as bool? ?? false,
+      termsAcceptanceUrl: json['terms_acceptance_url'] as String?,
     );
   }
 }

@@ -230,5 +230,9 @@
   "cargoShareSummary": "Cargo summary",
   "cargoShareTotalWeight": "Total weight: {value}",
   "cargoShareTotalVolume": "Total volume: {value}",
-  "cargoShareGrandTotal": "GRAND TOTAL: {value}"
+  "cargoShareGrandTotal": "GRAND TOTAL: {value}",
+
+  "termsRequestBanner": "Your forwarder is asking you to accept their terms of use before continuing.",
+  "termsReadLink": "Read the terms",
+  "termsAcceptButton": "Accept"
 }

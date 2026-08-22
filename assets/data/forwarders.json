@@ -4,7 +4,7 @@
     "BWF": {
       "name": "BrightFret Core",
       "url": "http://localhost:8070",
-      "database": "odoo"
+      "database": "bwfreight"
     },
     "CCI": {
       "name": "BrightFret",

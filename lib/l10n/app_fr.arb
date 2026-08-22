@@ -573,5 +573,12 @@
   "cargoShareTotalVolume": "Volume total : {value}",
   "@cargoShareTotalVolume": { "description": "Ligne volume dans texte partagé", "placeholders": { "value": { "type": "String" } } },
   "cargoShareGrandTotal": "MONTANT TOTAL : {value}",
-  "@cargoShareGrandTotal": { "description": "Ligne total dans texte partagé", "placeholders": { "value": { "type": "String" } } }
+  "@cargoShareGrandTotal": { "description": "Ligne total dans texte partagé", "placeholders": { "value": { "type": "String" } } },
+
+  "termsRequestBanner": "Votre transitaire vous demande d'accepter les conditions d'utilisation avant de continuer.",
+  "@termsRequestBanner": { "description": "Texte du bandeau CGU affiché dans S11 quand terms_acceptance_required = true" },
+  "termsReadLink": "Lire les conditions",
+  "@termsReadLink": { "description": "Lien qui ouvre la page CGU du transitaire dans le navigateur" },
+  "termsAcceptButton": "Accepter",
+  "@termsAcceptButton": { "description": "Bouton d'acceptation des CGU dans le bandeau S11" }
 }

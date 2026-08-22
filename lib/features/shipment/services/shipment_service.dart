@@ -21,4 +21,15 @@ class ShipmentService {
       throw e.asApiException;
     }
   }
+
+  /// Records the client's acceptance of the forwarder's terms of service.
+  /// Idempotent — safe to call even if terms were already accepted.
+  /// Throws [UnauthorizedException] if the token has expired.
+  Future<void> acceptTerms(String suffix) async {
+    try {
+      await _dio.post('/api/shipment/$suffix/terms');
+    } on DioException catch (e) {
+      throw e.asApiException;
+    }
+  }
 }
