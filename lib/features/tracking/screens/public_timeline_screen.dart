@@ -140,6 +140,20 @@ class PublicTimelineScreen extends ConsumerWidget {
         ],
       );
     }
+    if (error is RateLimitException) {
+      return BfErrorScreen(
+        icon: Icons.hourglass_empty_outlined,
+        title: l10n.errorRateLimitTitle,
+        body: l10n.errorRateLimitBody,
+        actions: [
+          BfErrorAction(
+            label: l10n.retry,
+            onTap: () =>
+                ref.invalidate(shipmentTrackingProvider(suffix, instanceUrl)),
+          ),
+        ],
+      );
+    }
     return BfErrorScreen(
       title: l10n.errorNetworkTitle,
       body: l10n.errorNetworkBody,

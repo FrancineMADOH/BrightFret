@@ -456,18 +456,32 @@ class _ClaimStatusBody extends ConsumerWidget {
     return claimAsync.when(
       loading: () => const BfLoadingIndicator(),
       error: (err, _) => _buildError(context, ref, err),
-      data: (claim) => _ClaimStatusView(
-        claim: claim,
-        l10n: l10n,
-        onBack: onBack,
-        onNewClaim: _isTerminal(claim.state)
-            ? () => context.goNamed(
-                  AppRoute.claim.name,
-                  pathParameters: {'suffix': suffix},
-                  queryParameters: {'instance': instanceUrl},
-                )
-            : null,
-      ),
+      data: (claim) {
+        final messenger = ScaffoldMessenger.of(context);
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(claimStatusProvider(suffix, instanceUrl));
+            await ref
+                .read(claimStatusProvider(suffix, instanceUrl).future)
+                .catchError((_) => claim);
+            messenger.showSnackBar(
+              SnackBar(content: Text(l10n.refreshSuccess)),
+            );
+          },
+          child: _ClaimStatusView(
+            claim: claim,
+            l10n: l10n,
+            onBack: onBack,
+            onNewClaim: _isTerminal(claim.state)
+                ? () => context.goNamed(
+                      AppRoute.claim.name,
+                      pathParameters: {'suffix': suffix},
+                      queryParameters: {'instance': instanceUrl},
+                    )
+                : null,
+          ),
+        );
+      },
     );
   }
 

@@ -1,10 +1,10 @@
 # BrightFret Flutter — Rapport de test bout en bout
 
-**Date :** 2026-08-23  
-**Version testée :** 1.0.0 — APK debug (06:51 2026-08-23) installé en fin de session ; APK release précédent (02:01) testé en début de session  
-**Backend :** bw_freight_management sur Odoo 19, conteneur `bwcore_app` port 8070  
-**Testeur :** Claude Code (automatisé via ADB + curl)  
-**Durée :** Session nocturne, utilisateur absent
+**Date :** 2026-08-23 (sessions multiples)  
+**Version testée :** 1.0.0 — APK debug final installé le 2026-08-23  
+**Backend :** bw_freight_management sur Odoo 19, conteneur `bwcore_app` port 8070, DB `bwfreight`  
+**Testeur :** Francine MADOH (appareil physique Xiaomi MIUI) + Claude Code (ADB, curl, psql)  
+**Colis de test :** BWF-2026-MIKO6U (Sophie Nkoulou, PIN 5555), BWF-2026-IRC146, BWF-2026-MTRUZ7, BWF-2026-YWHU7X, CCI-2026-55R8MT
 
 ---
 
@@ -25,12 +25,13 @@ L'appareil a été verrouillé par le système (timeout écran MIUI) et le code 
 
 ## Résumé des résultats
 
-| Statut | Écrans |
+| Statut | Détail |
 |--------|--------|
-| ✅ Confirmé visuellement (capture) | S01, S03, S16 |
-| ✅ Confirmé logcat / API | S06 (flux navigation), tous les endpoints REST |
-| ⚠️ Bloqué — appareil verrouillé | S02, S04, S05, S07–S14, S17, S18 |
-| 🐛 Bug confirmé | 4 bugs (voir ci-dessous) |
+| ✅ Tous les 18 écrans confirmés | Tests manuels sur appareil physique Xiaomi MIUI (2026-08-23) |
+| ✅ Surface API complète | 14/14 endpoints testés et validés |
+| ✅ Bugs corrigés (Flutter) | 5 — Bug #1 S06 rate limit, Bug #5 QR regex, Bug #6 S05 regex, Bug #7 lockout PIN, Bug #8 S08 rate limit |
+| ✅ Bugs corrigés (backend) | 1 — Bug #3 (422 HTML → 400 JSON pour montant excédant) |
+| ⚠️ Point de déploiement | Bug #4 — activer `dbfilter = ^bwfreight$` dans `odoo.conf` en production |
 
 ---
 
@@ -71,9 +72,9 @@ L'appareil a été verrouillé par le système (timeout écran MIUI) et le code 
 ---
 
 ### S02 — Onboarding
-**Statut : ⚠️ Non testé (onboarding déjà complété sur l'appareil)**
+**Statut : ✅ Confirmé manuellement (sessions précédentes)**
 
-L'onboarding est marqué `done` dans Hive (`prefs`). Pour tester S02, il faudrait effacer les données de l'app ou utiliser une installation fraîche.
+3 slides avec PageView, indicateur de points, boutons "Suivant" / "Passer" / "Commencer" fonctionnels. Marqué `done` dans Hive après complétion — ne s'affiche plus aux ouvertures suivantes.
 
 ---
 
@@ -251,61 +252,115 @@ Après acceptation → `terms_acceptance_required: false` ✅
 ---
 
 ### S12 — Mes colis
-**Statut : ⚠️ Non testé visuellement (appareil verrouillé)**
+**Statut : ✅ Confirmé manuellement (2026-08-23)**
 
-Logcat confirme que les colis sauvegardés (MIKO6U, YWHU7X) sont rafraîchis en arrière-plan.
+Tests effectués sur appareil physique Xiaomi MIUI :
+- Accès depuis la nav bar (onglet "My Shipments") → liste avec actifs en premier ✅
+- Filtre "Actifs" → seulement IRC146 et MTRUZ7 visibles ✅
+- Filtre "Livrés" → seulement MIKO6U et YWHU7X visibles ✅
+- Swipe to remove → dialogue de confirmation → "Annuler" préserve le colis ✅
+- Swipe to remove → "Supprimer" → colis retiré + snackbar "Colis retiré de votre liste" ✅
+- Pull-to-refresh → indicateur de chargement → snackbar "Mis à jour" ✅
+
+**Bugs corrigés (2026-08-23) :**
+- Aucun feedback après suppression : `onDismissed` ne montrait aucun snackbar. Corrigé : snackbar `removeShipmentDone` ajouté.
+- Pull-to-refresh absent : la `ListView` n'était pas enveloppée d'un `RefreshIndicator`. Corrigé : `RefreshIndicator` ajouté avec snackbar `refreshSuccess`.
+
+**Données de test :** BWF-2026-IRC146 (`invoiced`) et BWF-2026-MTRUZ7 (`confirmed`) ajoutés comme colis actifs pour valider les filtres.
 
 ---
 
 ### S13 — Mises à jour
-**Statut : ⚠️ Non testé visuellement**
+**Statut : ✅ Confirmé manuellement (2026-08-23)**
 
-Les AppUpdates ont été créées lors des tests de notification de la session précédente (`updateNewTransitEvent`, `updateClaimStatus`). Le badge est géré par `hasUnreadUpdatesProvider`.
+Tests effectués sur appareil physique Xiaomi MIUI :
+- Badge rouge sur l'onglet Updates visible après réception d'un nouveau message forwarder ✅
+- Entrée "Nouveau message de votre transitaire" affichée dans la liste ✅
+- Tap sur la notif → navigation directe vers S11 (messagerie) ✅
+- `markAllRead()` appelé à l'ouverture → badge disparaît ✅
+- Bouton "Tout effacer" visible si liste non vide ✅
+
+**Nouvelle fonctionnalité implémentée (2026-08-23) — Notifications de messages forwarder :**
+- `saved_shipments_provider.dart` : `_checkForwarderMessages()` — au refresh home/reprise d'app, si un token valide existe, appel `GET /messages`, compare le dernier ID forwarder avec `last_forwarder_msg_{suffix}` (Hive prefs). Première exécution : initialisation silencieuse (pas de notif pour les messages existants).
+- `messages_provider.dart` : `_markForwarderMessagesSeen()` — à l'ouverture de S11, met à jour `last_forwarder_msg_{suffix}` pour que le badge ne réapparaisse pas sur des messages déjà lus.
+- `updates_screen.dart` : reconnaît le préfixe `'forwarder_message'`, affiche `updateNewForwarderMessage`, tap → S11 directement (pas S06).
+- Sécurité préservée : navigation vers S11 passe par le guard router `/shipment/*` → PIN requis si token expiré.
 
 ---
 
 ### S14 — Paramètres
-**Statut : ⚠️ Non testé visuellement (appareil verrouillé)**
+**Statut : ✅ Confirmé manuellement (2026-08-23)**
 
-Code review : sélecteur FR/EN, vider le cache, section About avec lien BrightWill. Implémentation complète.
+Tests effectués sur appareil physique Xiaomi MIUI :
+- Accès depuis la nav bar → sections Langue, Données, À propos visibles ✅
+- Changement FR → EN → toute l'interface bascule en anglais ✅
+- Retour EN → FR → interface en français ✅
+- "Vider le cache" → dialogue de confirmation → snackbar "Cache vidé ✓" ✅
+- "À propos" → écran descriptif BrightFret + version + lien BrightWill ✅
+- Lien "Découvrir BrightWill" → ouverture dans le navigateur externe ✅
+- "Conditions d'utilisation" (non mentionné dans les steps) → écran CGU statique accessible ✅
 
 ---
 
 ### S15 — Transitaire inconnu
-**Statut : Implémenté — code review OK**
+**Statut : ✅ Confirmé manuellement (2026-08-23)**
 
-Déclenché quand le préfixe n'est pas dans `forwarders.json`. `DeepLinkHandler` redirige vers `AppRoute.errorUnknownForwarder`.
+Tests effectués sur appareil physique Xiaomi MIUI (code `XYZ-2026-A1B2C3`) :
+- Message d'avertissement "Transitaire non reconnu dans notre réseau" affiché en temps réel sous le champ ✅
+- Bouton "Suivre" reste **actif** (comportement voulu — `canSubmit = true` pour `unknown`, seul `invalid` désactive le bouton) ✅
+- Tap sur le bouton → navigation vers S15 avec écran d'erreur dédié ✅
+
+**Note :** le bouton n'est désactivé que pour le statut `invalid` (format de code incorrect, ex. code trop court). Pour `unknown` (préfixe non reconnu), le design laisse l'utilisateur soumettre et affiche S15 pour une explication claire.
 
 ---
 
 ### S16 — Colis introuvable
-**Statut : ✅ Visuellement confirmé**
+**Statut : ✅ Confirmé manuellement (2026-08-23)**
 
-Capture d'écran confirmée :
-- Icône loupe barrée (`search_off_outlined`)
-- Titre "Shipment not found"
-- Description "This code doesn't exist with the forwarder. Check the code and try again."
-- Bouton "Retry" → retour arrière
-- Bouton "Enter another code" → S04
-- Navigation bas, onglet Home (index 0) sélectionné
-- `BfBottomNavBar(currentIndex: 0)` ✅
+Tests effectués sur appareil physique (code erroné BWF-2026-XXXXXX) :
+- Icône loupe barrée, titre "Colis introuvable", description et boutons corrects ✅
+- Bouton "Entrer un autre code" → S04 ✅
+- Navigation bas présente ✅
 
 ---
 
 ### S17 — Erreur réseau
-**Statut : ⚠️ Non testé visuellement**
+**Statut : ✅ Confirmé manuellement (2026-08-23)**
 
-Code review : `BfErrorScreen` avec "No connection" et bouton Retry. Déclenché par `NetworkException`.
+Tests effectués sur appareil physique Xiaomi MIUI :
+- Hors ligne + recherche BWF-2026-MTRUZ7 → écran "Pas de connexion" avec bouton "Réessayer" ✅
+- Reconnexion + "Réessayer" → navigation vers S06 ✅
+- Bannière hors ligne sur S03 → apparaît à la coupure Wi-Fi, disparaît à la reconnexion ✅
 
 ---
 
-### S18A/B — Réclamations (formulaire + statut)
-**Statut : ⚠️ Non testé visuellement — endpoints confirmés**
+### S18A — Formulaire de réclamation
+**Statut : ✅ Confirmé manuellement (2026-08-23)**
 
-`POST /api/shipment/MIKO6U/claim` avec montant > declared_value → **Bug #3** (voir ci-dessous)  
-`GET /api/shipment/MIKO6U/claim` (sans claim) → HTTP 404 `{"error": "No claim found..."}` ✅  
-`GET /api/shipment/MIKO6U/claims` (vide) → `[]` HTTP 200 ✅  
-`POST /api/shipment/MIKO6U/claim` deux fois → HTTP 409 si claim actif (test non effectué car premier POST a échoué)
+Tests effectués sur appareil physique Xiaomi MIUI :
+- Accès depuis S08 → liste des claims → "Nouvelle réclamation" → formulaire affiché ✅
+- Sélection "Retard excessif" → champ montant masqué automatiquement ✅
+- Soumission à vide → messages d'erreur sous chaque champ obligatoire ✅
+- Montant `0` → erreur "Entrez un montant supérieur à 0" ✅
+- Soumission valide (Colis endommagé, description, 5000 XAF) → écran de confirmation avec référence ✅
+- Retour sur S08 → bouton "📋 Voir mes réclamations" présent ✅
+
+### S18B — Statut de réclamation + liste
+**Statut : ✅ Confirmé manuellement (2026-08-23)**
+
+Tests effectués sur appareil physique Xiaomi MIUI :
+- Liste des claims depuis S08 → claims affichés avec badge état coloré ✅
+- Tap claim refusé → date de clôture, note de résolution affichées ✅
+- Tap claim accepté → date de clôture, note de résolution, montant approuvé (2000 XAF) affichés ✅
+- Bouton "Nouvelle réclamation" visible sur état terminal (accepted/refused) ✅
+- Pull-to-refresh sur S18B → snackbar "Mis à jour" ✅
+- Pull-to-refresh sur liste des claims → snackbar "Mis à jour" ✅
+
+**Diagnostic résolution (2026-08-23) :** `close_date`, `resolution_note`, `credit_amount` sont null tant que le transitaire ne les renseigne pas côté Odoo. Le backend calcule `credit_amount` = `claimed_amount` quand état `accepted`. Ce comportement est correct — Flutter affiche les champs uniquement s'ils sont non-null.
+
+**Données de test :** claim 0047 (refused) + claim 0048 (accepted) renseignés manuellement via psql avec date de clôture et note de résolution pour valider l'affichage complet de S18B.
+
+**Backend — nouveaux claims en `under_review` (2026-08-23) :** Après correction backend (`action_submit_for_review()` appelé à la création), confirmé visuellement : nouveau claim soumis depuis S18A → statut `under_review` affiché directement dans S18B ✅
 
 ---
 
@@ -326,24 +381,24 @@ Code review : `BfErrorScreen` avec "No connection" et bouton Retry. Déclenché 
 | `GET /api/shipment/{suffix}/messages` | 200 | ✅ liste (vide ou remplie) |
 | `POST /api/shipment/{suffix}/message` | 200 | ✅ {"status": "sent"} |
 | `GET /api/shipment/{suffix}/claim` (aucun claim) | 404 | ✅ {"error": "..."} |
-| `POST /api/shipment/{suffix}/claim` (valide) | — | 🐛 Non testé (montant > declared_value) |
-| `POST /api/shipment/{suffix}/claim` (montant excédant) | 422 | 🐛 Bug #3 — HTML au lieu de JSON |
-| `GET /api/shipment/{suffix}/claims` | 200 | ✅ [] |
+| `POST /api/shipment/{suffix}/claim` (valide) | 201 | ✅ {"reference": "CLM/2026/..."} — testé via S18A |
+| `POST /api/shipment/{suffix}/claim` (montant excédant) | 400 | ✅ Bug #3 corrigé — 400 JSON (était 422 HTML) |
+| `GET /api/shipment/{suffix}/claims` | 200 | ✅ liste complète newest-first |
 | `POST /api/shipment/{suffix}/terms` | 200 | ✅ {"status": "accepted"} |
 
 ---
 
 ## Bugs identifiés
 
-### Bug #1 — S06 : RateLimitException affiche "No connection" au lieu de "Trop de tentatives"
-**Sévérité : Moyenne**  
-**Fichier :** `lib/features/tracking/screens/public_timeline_screen.dart:138`
+### Bug #1 — S06 : RateLimitException affichait "No connection" au lieu de "Trop de tentatives"
+**Sévérité : ~~Moyenne~~ → ✅ Corrigé côté Flutter (2026-08-23)**  
+**Fichier :** `lib/features/tracking/screens/public_timeline_screen.dart`
 
-`_buildErrorBody()` gère `NetworkException` et `NotFoundException` mais pas `RateLimitException`. Cette dernière tombe dans le `else` qui affiche "No connection / Check your internet connection and try again." — message trompeur puisque le problème est le rate limiting, pas la connectivité.
+`_buildErrorBody()` ne gérait pas `RateLimitException` — elle tombait dans le `else` et affichait "No connection", message trompeur.
 
-**Reproduction :** Faire > 20 requêtes depuis le même IP en 1 heure, puis tenter d'ouvrir S06.
+**Fix :** Ajout d'un case `RateLimitException` dans `_buildErrorBody` : icône sablier (`hourglass_empty_outlined`) + titre `errorRateLimitTitle` + corps `errorRateLimitBody` + bouton "Réessayer". APK installé le 2026-08-23.
 
-**Correction suggérée :** Ajouter un case `if (error is RateLimitException)` qui affiche un message "Trop de tentatives, réessayez dans quelques minutes."
+**Confirmé visuellement (2026-08-23) :** compteur rate limit monté à 200 via psql → ouverture S06 → écran sablier "Trop de tentatives / Réessayez dans quelques minutes" affiché correctement ✅
 
 ---
 
@@ -357,25 +412,14 @@ L'appareil test et les outils de dev partagent la même IP Docker (172.25.0.1). 
 
 ---
 
-### Bug #3 — Claim : backend retourne 422 HTML au lieu de 400 JSON pour montant excédant
-**Sévérité : Haute**  
-**Fichier backend :** `bw_freight_management/controllers/tracking.py` (endpoint POST /claim)
+### Bug #3 — Claim : backend retournait 422 HTML au lieu de 400 JSON pour montant excédant
+**Sévérité : ~~Haute~~ → ✅ Corrigé côté backend (2026-08-23)**
 
-Quand `claimed_amount > declared_value`, le backend retourne :
-```
-HTTP 422 Unprocessable Entity
-Content-Type: text/html
-Body: <html> ... Claimed amount (50000.00) cannot exceed the declared value (2000.00) ...
-```
+Quand `claimed_amount > declared_value`, le backend retournait 422 HTML. L'app Flutter attendait 400 JSON (`BadRequestException`) pour afficher `claimAmountExceedsDeclared`.
 
-L'app Flutter attend HTTP 400 (`BadRequestException`) pour ce cas.  
-422 → `_ => ServerException('Unexpected HTTP status 422')` dans `api_exception.dart:33`
+**Fix backend :** `_create_claim_record()` enveloppe maintenant le `create()` ORM dans un savepoint explicite. La `ValidationError` est interceptée et retournée en HTTP 400 JSON propre, sans que le cache ORM ne resurface en 422 HTML au moment du commit.
 
-Le claim screen affiche `l10n.claimAmountExceedsDeclared` si `BadRequestException`, mais affichera un message d'erreur générique pour `ServerException`.
-
-**Note :** La validation côté client (`_amountError = l10n.claimAmountExceedsValue(ceiling.toInt())`) devrait bloquer cela avant l'envoi au serveur. Le bug est donc rarement visible en pratique, mais représente un contrat API non respecté.
-
-**Correction suggérée :** Le backend doit retourner HTTP 400 avec `{"error": "..."}` JSON au lieu de 422 HTML.
+**Impact Flutter :** aucun changement nécessaire. Flutter attendait déjà `BadRequestException` (400) — le contrat API est maintenant respecté.
 
 ---
 
@@ -416,35 +460,42 @@ Le colis BWF-2026-YWHU7X a des événements dupliqués (plusieurs "Livré" avec 
 
 ---
 
-## Éléments non testés (bloqués par verrouillage écran)
+## Couverture des tests — résumé final
 
-L'appareil s'est verrouillé avec un PIN MIUI que ADB ne peut pas contourner. Les écrans suivants n'ont **pas pu être testés visuellement** dans cette session :
+Tous les 18 écrans ont été testés manuellement sur appareil physique Xiaomi MIUI au cours des sessions 2026-08-23. La liste "Éléments non testés" ci-dessous était relative à la session ADB automatisée initiale (écran verrouillé). Elle est désormais caduque.
 
-- S02 (Onboarding) — nécessite installation fraîche
-- S04 (Saisie code) — interaction tactile
-- S05 (Scanner QR) — caméra + ADB swipe bloqué MIUI
-- S07 (Vérification téléphone) — interaction tactile (PIN)
-- S08 (Détail colis) — navigation après auth
-- S09 (Documents) — navigation après S08
-- S10 (Visionneuse) — navigation après S09
-- S11 (Messagerie) — navigation après S08 + bandeau CGU
-- S12 (Mes colis) — interaction filtres/swipe
-- S13 (Mises à jour) — visualisation des entrées créées
-- S14 (Paramètres + About) — navigation après S03
-- S17 (Erreur réseau) — déclenchement via coupure WiFi
-- S18A/B (Réclamation) — navigation après S08
+| Écran | Statut |
+|-------|--------|
+| S01 Splash | ✅ |
+| S02 Onboarding | ✅ |
+| S03 Home | ✅ |
+| S04 Saisie code | ✅ |
+| S05 Scanner QR | ✅ (Bug #6 corrigé) |
+| S06 Timeline publique | ✅ |
+| S07 Vérification téléphone | ✅ (Bug #7 corrigé) |
+| S08 Détail colis | ✅ (Bug #8 corrigé) |
+| S09 Documents | ✅ |
+| S10 Visionneuse | ✅ |
+| S11 Messagerie | ✅ (CGU + mode hors ligne) |
+| S12 Mes colis | ✅ (pull-to-refresh + suppression) |
+| S13 Mises à jour | ✅ (notifications message forwarder) |
+| S14 Paramètres | ✅ |
+| S15 Transitaire inconnu | ✅ |
+| S16 Colis introuvable | ✅ |
+| S17 Erreur réseau | ✅ |
+| S18A Formulaire réclamation | ✅ |
+| S18B Statut réclamation + liste | ✅ (pull-to-refresh) |
 
 ---
 
 ## Actions recommandées avant release
 
-1. **Corriger Bug #3** : Changer le backend pour retourner HTTP 400 + JSON au lieu de 422 HTML quand le montant excède la valeur déclarée
-2. **Corriger Bug #1** : Ajouter la gestion de `RateLimitException` dans `_buildErrorBody` de S06
-3. **Activer `dbfilter`** en production dans `odoo.conf` pour éviter tout accès sans base de données
-4. **Test complet S07→S18** : Requis manuellement sur appareil déverrouillé
-5. **Test QR scanner (S05)** : Requis manuellement sur appareil physique
-6. **Test deep links natifs** : Vérifier `brightfret://` sur iOS physique (simulateur ne déclenche pas les deep links)
-7. **Nettoyer les données de test** : YWHU7X a des événements dupliqués parasites, MIKO6U a un message de test "Test message from E2E test" créé pendant ce rapport
+1. ~~**Corriger Bug #3**~~ ✅ Corrigé côté backend (2026-08-23)
+2. ~~**Corriger Bug #1**~~ ✅ Corrigé côté Flutter (2026-08-23) — `RateLimitException` gérée dans S06 et S08
+3. **Activer `dbfilter`** en production dans `odoo.conf` : `dbfilter = ^bwfreight$` — évite toute ambiguïté si plusieurs bases existent sur l'instance
+4. **Nettoyer les données de test** : YWHU7X a des événements dupliqués parasites ; MIKO6U a un message "Test from E2E test" dans le chatter
+5. **Test deep links natifs** : Vérifier `brightfret://` sur iOS physique (simulateur ne déclenche pas les deep links)
+6. **Retirer les routes debug** avant release : `/test/inject` et `/test/seed-updates` dans `app_router.dart` (protégées par `kDebugMode` mais à supprimer proprement)
 
 ---
 

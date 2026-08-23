@@ -44,19 +44,31 @@ class ClaimsListScreen extends ConsumerWidget {
       body: claimsAsync.when(
         loading: () => const BfLoadingIndicator(),
         error: (err, _) => _buildError(context, ref, l10n),
-        data: (claims) => _buildList(context, claims, l10n),
+        data: (claims) => _buildList(context, ref, claims, l10n),
       ),
     );
   }
 
   Widget _buildList(
     BuildContext context,
+    WidgetRef ref,
     List<ClaimDetail> claims,
     AppLocalizations l10n,
   ) {
     final hasActive = claims.any((c) => _activeStates.contains(c.state));
+    final messenger = ScaffoldMessenger.of(context);
 
-    return ListView(
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.invalidate(claimsListProvider(suffix, instanceUrl));
+        await ref
+            .read(claimsListProvider(suffix, instanceUrl).future)
+            .catchError((_) => <ClaimDetail>[]);
+        messenger.showSnackBar(
+          SnackBar(content: Text(l10n.refreshSuccess)),
+        );
+      },
+      child: ListView(
       padding: const EdgeInsets.all(16),
       children: [
         if (claims.isEmpty)
@@ -95,6 +107,7 @@ class ClaimsListScreen extends ConsumerWidget {
           ),
         ],
       ],
+    ),
     );
   }
 
