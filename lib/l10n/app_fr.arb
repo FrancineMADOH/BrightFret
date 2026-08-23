@@ -585,6 +585,7 @@
   "@cargoShareGrandTotal": { "description": "Ligne total dans texte partagé", "placeholders": { "value": { "type": "String" } } },
 
   "updateNewTransitEvent": "Nouvelle étape : {stage}",
+  "updateNewForwarderMessage": "Nouveau message de votre transitaire",
   "@updateNewTransitEvent": {
     "description": "Ligne de mise à jour dans S13 quand une nouvelle étape de transit est détectée",
     "placeholders": { "stage": { "type": "String" } }

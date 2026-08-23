@@ -6,7 +6,7 @@ part of 'saved_shipments_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$savedShipmentsHash() => r'b50c21dead6b39cd58d13c6871fb81ecc4628340';
+String _$savedShipmentsHash() => r'0261745fd5efaec9554275fc785de156a1c78227';
 
 /// Manages the list of saved shipments from [HiveService.myShipments].
 /// Active shipments are sorted first, then by most recently seen.

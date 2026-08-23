@@ -8,6 +8,8 @@ import '../../../core/models/app_update.dart';
 import '../../../core/models/saved_shipment.dart';
 import '../../../core/providers/updates_provider.dart';
 import '../../../core/storage/hive_service.dart';
+import '../../messaging/models/shipment_message.dart';
+import '../../messaging/services/messaging_service.dart';
 import '../services/tracking_service.dart';
 
 part 'saved_shipments_provider.g.dart';
@@ -105,7 +107,56 @@ class SavedShipments extends _$SavedShipments {
     } catch (_) {
       // Offline or API error — keep existing cached data silently.
     }
+
+    await _checkForwarderMessages(shipment);
   }
+
+  /// Checks for new forwarder messages on authenticated shipments.
+  /// Creates an [AppUpdate] when a message newer than the last-detected one
+  /// is found. Stores the latest message ID in Hive prefs to avoid duplicates.
+  /// First call initialises silently (no notification for pre-existing messages).
+  Future<void> _checkForwarderMessages(SavedShipment shipment) async {
+    try {
+      final tokenKey = '${shipment.instanceUrl}:${shipment.suffix}';
+      final stored = HiveService.tokens.get(tokenKey);
+      if (stored == null || stored.isExpired) return;
+
+      final dio = ref.read(dioForInstanceProvider(shipment.instanceUrl));
+      final messages = await MessagingService(dio).getMessages(shipment.suffix);
+
+      ShipmentMessage? latest;
+      for (final m in messages.reversed) {
+        if (!m.isFromClient) {
+          latest = m;
+          break;
+        }
+      }
+      if (latest == null) return;
+
+      final prefKey = _forwarderMsgKey(shipment.suffix);
+      final lastId = HiveService.prefs.get(prefKey, defaultValue: 0) as int;
+
+      if (lastId == 0) {
+        // First time — initialise silently, no notification for pre-existing messages.
+        await HiveService.prefs.put(prefKey, latest.id);
+        return;
+      }
+
+      if (latest.id > lastId) {
+        await HiveService.updates.add(AppUpdate(
+          trackingCode: shipment.trackingCode,
+          message: 'forwarder_message',
+          detectedAt: DateTime.now(),
+        ));
+        await HiveService.prefs.put(prefKey, latest.id);
+        ref.invalidate(hasUnreadUpdatesProvider);
+      }
+    } catch (_) {
+      // Best-effort — ignore failures silently.
+    }
+  }
+
+  static String _forwarderMsgKey(String suffix) => 'last_forwarder_msg_$suffix';
 
   static bool _isActive(String status) {
     final s = status.toLowerCase();

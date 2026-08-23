@@ -208,30 +208,45 @@ Tests effectués sur appareil physique Xiaomi MIUI après authentification S07 (
 ---
 
 ### S09 — Documents
-**Statut : ⚠️ Non testé visuellement — endpoint confirmé**
+**Statut : ✅ Confirmé manuellement (2026-08-23)**
 
-`GET /api/shipment/MIKO6U/documents` → 3 images PNG + 1 QR code en base64 ✅  
-URLs relatives `/web/content/{id}?access_token=...` → absolutisées par `ShipmentDocument.fromJson(json, baseUrl: instanceUrl)` ✅
+Tests effectués sur appareil physique Xiaomi MIUI :
+- Navigation depuis S08 ("Voir tous les documents") → liste de 6 documents ✅
+- Icônes correctes : bleu pour images PNG, rouge pour PDF ✅
+- Nom du fichier + taille/date en sous-titre ✅
+- Bouton "Ouvrir" → navigation vers S10 ✅
+- Bouton ⬇ → indicateur circulaire de progression → snackbar "Téléchargement réussi" ✅
+- Pull-to-refresh → snackbar "Mis à jour" ✅
+
+**Données de test :** 1 image PNG ajoutée en base (`ir.attachment` id=864 "Bon de livraison MIKO6U.png") + 4 images d'événements existantes + QR Code base64 inline.
 
 ---
 
 ### S10 — Visionneuse de documents
-**Statut : ⚠️ Non testé visuellement**
+**Statut : ✅ Confirmé manuellement (2026-08-23)**
 
-Code review : zoom image, PDF indisponible sur web, bouton download/share. Implémentation dans `document_viewer_screen.dart`.
+Tests effectués sur appareil physique Xiaomi MIUI :
+- Fond noir, nom du fichier dans l'AppBar, icônes ⬇ et partage visibles ✅
+- Image affichée centrée avec zoom pinch-to-zoom (min ×0.5, max ×5) ✅
+- Téléchargement depuis S10 : indicateur circulaire → snackbar "Téléchargement réussi" ✅
+- Partage : feuille native Android avec nom + URL du document ✅
+- QR Code de suivi (base64 inline) : image affichée directement sans requête réseau, zoom fonctionnel ✅
 
 ---
 
 ### S11 — Messagerie
-**Statut : ⚠️ Non testé visuellement — endpoint confirmé**
+**Statut : ✅ Confirmé manuellement (2026-08-23)**
 
-`GET /api/shipment/MIKO6U/messages` (avant envoi) → `[]` ✅  
-`POST /api/shipment/MIKO6U/message` avec body → `{"status": "sent"}` ✅  
-`GET /api/shipment/MIKO6U/messages` (après envoi) → message visible avec `is_from_client: true` ✅  
+Tests effectués sur appareil physique Xiaomi MIUI :
+- **T11.1 — Bandeau CGU** : à l'ouverture de S11, bandeau `_TermsBanner` affiché avec texte d'acceptation et liens "Lire les conditions" / "Accepter" ✅
+- **T11.2 — Lire les conditions** : tap "Lire les conditions" → navigation vers l'écran CGU statique ✅
+- **T11.3 — Accepter** : tap "Accepter" → bandeau disparaît, zone de saisie active, `POST /api/shipment/MIKO6U/terms` envoyé ✅
+- **T11.4 — Envoyer un message** : saisie + envoi → message apparaît en bulle "Vous" avec heure ✅
+- **T11.5 — Messages existants** : messages précédents visibles, bulles client/forwarder différenciées ✅
+- **T11.6 — Mode hors ligne** : coupure réseau → bouton "Envoyer" affiche icône wifi barré (désactivé visuellement) ✅ — Note : pas de snackbar explicite, mais le signal visuel (icône wifi barré) est suffisant pour communiquer l'état hors ligne
 
-**CGU :** `terms_acceptance_required: true` dans la réponse S08.  
-`POST /api/shipment/MIKO6U/terms` → `{"status": "accepted"}` ✅  
-Deuxième appel S08 → `terms_acceptance_required: false` ✅
+**CGU backend :** `terms_acceptance_required` réinitialisé à `true` via psql (`terms_accepted = false` sur `freight_shipment` id=63). Confirmé via `GET /api/shipment/MIKO6U` → `terms_acceptance_required: true` ✅  
+Après acceptation → `terms_acceptance_required: false` ✅
 
 ---
 

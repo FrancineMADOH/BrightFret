@@ -117,6 +117,7 @@ class _UpdateTile extends StatelessWidget {
   /// - A [ShipmentStatus.name] (written by [SavedShipments._refreshOne])
   /// - `"claim:<state>"` (written by [_detectClaimUpdate] in fullShipmentProvider)
   static String _statusLabel(String message, AppLocalizations l10n) {
+    if (message == 'forwarder_message') return l10n.updateNewForwarderMessage;
     if (message.startsWith('claim:')) {
       final state = message.substring(6);
       return switch (state) {
@@ -145,6 +146,7 @@ class _UpdateTile extends StatelessWidget {
 
   static bool _isClaim(String message) => message.startsWith('claim:');
   static bool _isTransit(String message) => message.startsWith('transit:');
+  static bool _isForwarderMessage(String message) => message == 'forwarder_message';
 
   static String _relativeTime(DateTime dt, AppLocalizations l10n) {
     final diff = DateTime.now().difference(dt);
@@ -159,6 +161,16 @@ class _UpdateTile extends StatelessWidget {
     if (parsed == null) return;
     final instanceUrl = ForwarderResolver.resolveUrl(parsed.prefix);
     if (instanceUrl == null) return;
+
+    if (_isForwarderMessage(update.message)) {
+      context.goNamed(
+        AppRoute.messaging.name,
+        pathParameters: {'suffix': parsed.suffix},
+        queryParameters: {'instance': instanceUrl},
+      );
+      return;
+    }
+
     context.goNamed(
       AppRoute.publicTimeline.name,
       pathParameters: {'suffix': parsed.suffix},
@@ -192,11 +204,13 @@ class _UpdateTile extends StatelessWidget {
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(
-                _isClaim(update.message)
-                    ? l10n.updateClaimStatus(_statusLabel(update.message, l10n))
-                    : _isTransit(update.message)
-                        ? l10n.updateNewTransitEvent(_statusLabel(update.message, l10n))
-                        : l10n.updateNewStatus(_statusLabel(update.message, l10n)),
+                _isForwarderMessage(update.message)
+                    ? l10n.updateNewForwarderMessage
+                    : _isClaim(update.message)
+                        ? l10n.updateClaimStatus(_statusLabel(update.message, l10n))
+                        : _isTransit(update.message)
+                            ? l10n.updateNewTransitEvent(_statusLabel(update.message, l10n))
+                            : l10n.updateNewStatus(_statusLabel(update.message, l10n)),
                 style: AppTextStyles.bodySmall
                     .copyWith(color: AppColors.statusArchived),
                 maxLines: 2,

@@ -236,6 +236,7 @@
   "cargoShareGrandTotal": "GRAND TOTAL: {value}",
 
   "updateNewTransitEvent": "New stage: {stage}",
+  "updateNewForwarderMessage": "New message from your forwarder",
 
   "aboutBrightwillTitle": "Powered by BrightWill",
   "aboutBrightwillBody": "Want to track your international shipments? BrightFret is available through BrightWill partner forwarders. Are you a freight forwarder and want to offer this solution to your clients?",
