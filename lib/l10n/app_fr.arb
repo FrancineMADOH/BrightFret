@@ -40,6 +40,9 @@
   "retry": "Réessayer",
   "@retry": { "description": "Action réessayer" },
 
+  "refreshSuccess": "Mis à jour",
+  "@refreshSuccess": { "description": "Snackbar après pull-to-refresh réussi" },
+
   "close": "Fermer",
   "@close": { "description": "Action fermer" },
 

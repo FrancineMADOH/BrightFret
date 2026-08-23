@@ -55,6 +55,11 @@ class PublicTimelineScreen extends ConsumerWidget {
             await ref
                 .read(shipmentTrackingProvider(suffix, instanceUrl).future);
           } catch (_) {}
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(l10n.refreshSuccess)),
+            );
+          }
         },
         child: trackingAsync.when(
           loading: () => const BfLoadingIndicator(),

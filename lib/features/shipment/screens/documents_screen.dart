@@ -60,6 +60,11 @@ class DocumentsScreen extends ConsumerWidget {
                   await ref
                       .read(documentsProvider(suffix, instanceUrl).future)
                       .catchError((_) => <ShipmentDocument>[]);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l10n.refreshSuccess)),
+                    );
+                  }
                 },
                 child: ListView.separated(
                   padding: const EdgeInsets.symmetric(vertical: 8),

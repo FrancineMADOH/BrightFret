@@ -72,6 +72,11 @@ class ShipmentDetailScreen extends ConsumerWidget {
               await ref
                   .read(fullShipmentProvider(suffix, instanceUrl).future)
                   .catchError((_) => shipment);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(l10n.refreshSuccess)),
+                );
+              }
             },
             child: _DetailBody(
               shipment: shipment,
