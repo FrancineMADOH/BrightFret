@@ -93,6 +93,7 @@
   "filterActive": "Active",
   "filterDelivered": "Delivered",
   "removeShipment": "Remove",
+  "removeShipmentDone": "Shipment removed from your list",
   "removeShipmentTitle": "Remove this shipment?",
   "removeShipmentBody": "The shipment will be removed from your local list. Your data with the forwarder is not affected.",
 

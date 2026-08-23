@@ -124,38 +124,57 @@ class _MyShipmentsScreenState extends ConsumerState<MyShipmentsScreen> {
           Expanded(
             child: filtered.isEmpty
                 ? _EmptyState(l10n: l10n)
-                : ListView.builder(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    itemCount: filtered.length,
-                    itemBuilder: (_, i) {
-                      final s = filtered[i];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Dismissible(
-                          key: Key(s.trackingCode),
-                          direction: DismissDirection.endToStart,
-                          background: _RemoveBackground(
-                            label: l10n.removeShipment,
-                          ),
-                          confirmDismiss: (_) => _confirmRemove(l10n),
-                          onDismissed: (_) => ref
-                              .read(savedShipmentsProvider.notifier)
-                              .remove(s.trackingCode),
-                          child: BfShipmentCard(
-                            trackingCode: s.trackingCode,
-                            transportType: _transportType(s),
-                            status: _parseStatus(s.lastStatus),
-                            lastUpdated: s.lastSeen,
-                            onTap: () => context.goNamed(
-                              AppRoute.publicTimeline.name,
-                              pathParameters: {'suffix': s.suffix},
-                              queryParameters: {'instance': s.instanceUrl},
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      final messenger = ScaffoldMessenger.of(context);
+                      await ref
+                          .read(savedShipmentsProvider.notifier)
+                          .refreshAll();
+                      if (mounted) {
+                        messenger.showSnackBar(
+                          SnackBar(content: Text(l10n.refreshSuccess)),
+                        );
+                      }
+                    },
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      itemCount: filtered.length,
+                      itemBuilder: (_, i) {
+                        final s = filtered[i];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Dismissible(
+                            key: Key(s.trackingCode),
+                            direction: DismissDirection.endToStart,
+                            background: _RemoveBackground(
+                              label: l10n.removeShipment,
+                            ),
+                            confirmDismiss: (_) => _confirmRemove(l10n),
+                            onDismissed: (_) {
+                              ref
+                                  .read(savedShipmentsProvider.notifier)
+                                  .remove(s.trackingCode);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(l10n.removeShipmentDone)),
+                              );
+                            },
+                            child: BfShipmentCard(
+                              trackingCode: s.trackingCode,
+                              transportType: _transportType(s),
+                              status: _parseStatus(s.lastStatus),
+                              lastUpdated: s.lastSeen,
+                              onTap: () => context.goNamed(
+                                AppRoute.publicTimeline.name,
+                                pathParameters: {'suffix': s.suffix},
+                                queryParameters: {'instance': s.instanceUrl},
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
           ),
         ],

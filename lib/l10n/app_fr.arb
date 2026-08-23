@@ -241,6 +241,7 @@
   "@filterDelivered": { "description": "Filtre S12 — colis livrés" },
 
   "removeShipment": "Retirer",
+  "removeShipmentDone": "Colis retiré de votre liste",
   "@removeShipment": { "description": "Action swipe S12 — retirer un colis" },
 
   "removeShipmentTitle": "Retirer ce colis ?",
