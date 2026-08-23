@@ -17,6 +17,12 @@ class AboutScreen extends StatelessWidget {
         BfStaticSection(heading: l10n.aboutWhatTitle, body: l10n.aboutWhatBody),
         BfStaticSection(heading: l10n.aboutHowTitle, body: l10n.aboutHowBody),
         BfStaticSection(
+          heading: l10n.aboutBrightwillTitle,
+          body: l10n.aboutBrightwillBody,
+          linkLabel: l10n.aboutBrightwillLink,
+          linkUrl: 'https://www.brightwill.org/fret',
+        ),
+        BfStaticSection(
             heading: l10n.aboutVersionTitle, body: l10n.aboutVersionBody),
       ],
     );

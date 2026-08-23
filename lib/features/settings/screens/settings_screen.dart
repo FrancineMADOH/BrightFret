@@ -54,7 +54,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           _InfoTile(
             icon: Icons.local_shipping_outlined,
-            label: 'BrightFret',
+            label: 'BrightWill',
             value: '© 2026',
           ),
           _NavTile(

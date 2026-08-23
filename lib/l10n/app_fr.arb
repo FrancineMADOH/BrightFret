@@ -22,7 +22,7 @@
   "onboardingSlide2Title": "Accédez à tous vos documents",
   "@onboardingSlide2Title": { "description": "Titre slide 2 onboarding" },
 
-  "onboardingSlide2Body": "Factures, photos, bons de livraison — tous vos documents en un seul endroit.",
+  "onboardingSlide2Body": "Factures, photos, bons de livraison : tous vos documents en un seul endroit.",
   "@onboardingSlide2Body": { "description": "Corps slide 2 onboarding" },
 
   "onboardingSlide3Title": "Communiquez avec votre transitaire",
@@ -169,10 +169,10 @@
   "viewClaim": "📋 Voir ma réclamation",
   "@viewClaim": { "description": "CTA réclamation S08 — réclamation existante" },
 
-  "viewAllDocuments": "Voir tous les documents →",
+  "viewAllDocuments": "Voir tous les documents",
   "@viewAllDocuments": { "description": "Lien vers S09 depuis S08" },
 
-  "openMessaging": "Accéder à la messagerie →",
+  "openMessaging": "Accéder à la messagerie",
   "@openMessaging": { "description": "Lien vers S11 depuis S08" },
 
   "helpNoPhone": "Je n'ai pas communiqué mon numéro",
@@ -196,10 +196,10 @@
   "tooManyAttempts": "Trop de tentatives. Réessayez dans 10 minutes.",
   "@tooManyAttempts": { "description": "Blocage après 3 tentatives échouées" },
 
-  "offlineBannerGeneric": "⚠️ Hors ligne — Les données affichées peuvent ne pas être à jour.",
+  "offlineBannerGeneric": "⚠️ Hors ligne. Les données affichées peuvent ne pas être à jour.",
   "@offlineBannerGeneric": { "description": "Bannière générique hors-ligne (sans date)" },
 
-  "offlineDataBanner": "⚠️ Hors ligne — Données du {datetime}",
+  "offlineDataBanner": "⚠️ Hors ligne. Données du {datetime}",
   "@offlineDataBanner": {
     "description": "Bannière données en cache affichées hors ligne",
     "placeholders": {
@@ -266,6 +266,12 @@
 
   "errorNetworkBody": "Vérifiez votre connexion Internet et réessayez.",
   "@errorNetworkBody": { "description": "Corps S17" },
+
+  "errorRateLimitTitle": "Trop de requêtes",
+  "@errorRateLimitTitle": { "description": "Titre erreur 429 — rate limit dépassé" },
+
+  "errorRateLimitBody": "Vous avez effectué trop de requêtes. Patientez quelques minutes puis réessayez.",
+  "@errorRateLimitBody": { "description": "Corps erreur 429 — rate limit dépassé" },
 
   "claimTitle": "Signaler un problème",
   "@claimTitle": { "description": "Titre écran réclamation S18A" },
@@ -412,7 +418,7 @@
     }
   },
 
-  "forwarderUnknown": "Transitaire non référencé — essayez le scanner QR",
+  "forwarderUnknown": "Transitaire non référencé. Essayez le scanner QR.",
   "@forwarderUnknown": { "description": "Feedback validation transitaire inconnu" },
 
   "invalidCodeFormat": "Format attendu : KMG-2026-A7X9K2",
@@ -526,7 +532,7 @@
   "aboutHowTitle": "Comment ça marche",
   "aboutHowBody": "Votre transitaire vous communique un code de suivi unique. Saisissez-le ou scannez son QR code dans l'application pour accéder aux étapes de votre expédition, à vos documents et pour échanger directement avec votre transitaire.",
   "aboutVersionTitle": "Version",
-  "aboutVersionBody": "Version 1.0.0 — © 2026 BrightFret. Tous droits réservés.",
+  "aboutVersionBody": "Version 1.0.0 · © 2026 BrightWill. Tous droits réservés.",
 
   "termsTitle": "Conditions d'utilisation",
   "termsAcceptanceTitle": "Acceptation des conditions",
@@ -536,7 +542,7 @@
   "termsResponsibilityTitle": "Votre responsabilité",
   "termsResponsibilityBody": "Vous êtes responsable de l'exactitude du code de suivi saisi et de la confidentialité des informations associées à votre compte. Ne partagez votre code de suivi qu'avec des personnes de confiance.",
   "termsLiabilityTitle": "Limites de responsabilité",
-  "termsLiabilityBody": "Les informations affichées proviennent de votre transitaire et peuvent évoluer sans préavis. BrightFret ne peut être tenu responsable des retards, pertes ou litiges liés au transport de vos marchandises — ceux-ci relèvent de la responsabilité du transitaire.",
+  "termsLiabilityBody": "Les informations affichées proviennent de votre transitaire et peuvent évoluer sans préavis. BrightFret ne peut être tenu responsable des retards, pertes ou litiges liés au transport de vos marchandises ; ceux-ci relèvent de la responsabilité du transitaire.",
   "termsChangesTitle": "Modifications et contact",
   "termsChangesBody": "Ces conditions peuvent être mises à jour à tout moment. Pour toute question, contactez directement votre transitaire depuis la messagerie intégrée à l'application.",
 
@@ -564,7 +570,7 @@
   "@cargoSectionTitle": { "description": "Titre section cargaison sur S08" },
   "cargoViewButton": "Voir la facture",
   "@cargoViewButton": { "description": "Bouton ouvrir récapitulatif cargaison depuis S08" },
-  "cargoShareTitle": "Détail du colis — {code}",
+  "cargoShareTitle": "Détail du colis : {code}",
   "@cargoShareTitle": { "description": "Titre du texte partagé", "placeholders": { "code": { "type": "String" } } },
   "cargoShareSummary": "Récapitulatif de la cargaison",
   "@cargoShareSummary": { "description": "Sous-titre du texte partagé" },
@@ -580,6 +586,10 @@
     "description": "Ligne de mise à jour dans S13 quand une nouvelle étape de transit est détectée",
     "placeholders": { "stage": { "type": "String" } }
   },
+
+  "aboutBrightwillTitle": "Propulsé par BrightWill",
+  "aboutBrightwillBody": "Vous voulez suivre vos colis à l'international ? BrightFret est disponible auprès des transitaires partenaires BrightWill. Vous êtes transitaire et vous souhaitez proposer cette solution à vos clients ?",
+  "aboutBrightwillLink": "Découvrir BrightWill",
 
   "termsRequestBanner": "Votre transitaire vous demande d'accepter les conditions d'utilisation avant de continuer.",
   "@termsRequestBanner": { "description": "Texte du bandeau CGU affiché dans S11 quand terms_acceptance_required = true" },

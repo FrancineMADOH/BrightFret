@@ -3,6 +3,20 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
+class _NoTransitionBuilder extends PageTransitionsBuilder {
+  const _NoTransitionBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) =>
+      child;
+}
+
 /// Builds the [ThemeData] for BrightFret.
 /// Apply via [MaterialApp.router]'s `theme` and `darkTheme` parameters.
 abstract class AppTheme {
@@ -43,6 +57,12 @@ abstract class AppTheme {
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
+      ),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: _NoTransitionBuilder(),
+          TargetPlatform.iOS: _NoTransitionBuilder(),
+        },
       ),
       dividerTheme: const DividerThemeData(color: AppColors.divider, space: 1),
       inputDecorationTheme: InputDecorationTheme(

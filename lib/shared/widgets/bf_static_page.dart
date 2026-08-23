@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_text_styles.dart';
@@ -7,10 +8,17 @@ import 'bf_bottom_nav.dart';
 
 /// One titled paragraph block on a [BfStaticPage].
 class BfStaticSection {
-  const BfStaticSection({required this.heading, required this.body});
+  const BfStaticSection({
+    required this.heading,
+    required this.body,
+    this.linkLabel,
+    this.linkUrl,
+  });
 
   final String heading;
   final String body;
+  final String? linkLabel;
+  final String? linkUrl;
 }
 
 /// Simple scrollable title+paragraphs page — used for "About" and
@@ -52,6 +60,23 @@ class BfStaticPage extends StatelessWidget {
                 style: AppTextStyles.body
                     .copyWith(color: AppColors.statusArchived, height: 1.4),
               ),
+              if (section.linkLabel != null && section.linkUrl != null) ...[
+                const SizedBox(height: 10),
+                InkWell(
+                  onTap: () => launchUrl(
+                    Uri.parse(section.linkUrl!),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                  child: Text(
+                    section.linkLabel!,
+                    style: AppTextStyles.body.copyWith(
+                      color: AppColors.primary,
+                      decoration: TextDecoration.underline,
+                      decorationColor: AppColors.primary,
+                    ),
+                  ),
+                ),
+              ],
             ],
           );
         },

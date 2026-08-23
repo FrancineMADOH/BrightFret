@@ -339,7 +339,7 @@ class _CardFooter extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
       child: Text(
-        '$forwarderName — ${l10n.cargoTagline}',
+        '$forwarderName\n${l10n.cargoTagline}',
         style: AppTextStyles.caption.copyWith(color: Colors.grey[400]),
         textAlign: TextAlign.center,
       ),

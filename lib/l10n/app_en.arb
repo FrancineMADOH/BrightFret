@@ -16,7 +16,7 @@
   "onboardingSlide1Title": "Track your shipments in real time",
   "onboardingSlide1Body": "Stay informed at every step of your shipments from China to Cameroon.",
   "onboardingSlide2Title": "Access all your documents",
-  "onboardingSlide2Body": "Invoices, photos, delivery notes — all your documents in one place.",
+  "onboardingSlide2Body": "Invoices, photos, delivery notes: all your documents in one place.",
   "onboardingSlide3Title": "Talk to your forwarder",
   "onboardingSlide3Body": "Ask questions and get updates directly from the app, at any time.",
 
@@ -65,10 +65,10 @@
   "paymentPending": "❌ Unpaid",
   "reportIssue": "⚠️ Report an issue",
   "viewClaim": "📋 View my claim",
-  "viewAllDocuments": "View all documents →",
-  "openMessaging": "Open messaging →",
+  "viewAllDocuments": "View all documents",
+  "openMessaging": "Open messaging",
 
-  "offlineBannerGeneric": "⚠️ Offline — Displayed data may be out of date.",
+  "offlineBannerGeneric": "⚠️ Offline. Displayed data may be out of date.",
 
   "helpNoPhone": "I haven't shared my number",
   "helpNoPhoneTitle": "No number on file?",
@@ -79,7 +79,7 @@
   "verificationError": "Incorrect code. Please try again.",
   "tooManyAttempts": "Too many attempts. Try again in 10 minutes.",
 
-  "offlineDataBanner": "⚠️ Offline — Data from {datetime}",
+  "offlineDataBanner": "⚠️ Offline. Data from {datetime}",
   "offlineDocumentsUnavailable": "Documents unavailable offline",
   "offlineMessagingUnavailable": "Messaging requires a connection",
 
@@ -103,6 +103,8 @@
   "errorNotFoundBody": "This code doesn't exist with the forwarder. Check the code and try again.",
   "errorNetworkTitle": "No connection",
   "errorNetworkBody": "Check your internet connection and try again.",
+  "errorRateLimitTitle": "Too many requests",
+  "errorRateLimitBody": "You've made too many requests. Please wait a few minutes and try again.",
 
   "claimTitle": "Report an issue",
   "claimStatusTitle": "My claim",
@@ -174,7 +176,7 @@
       "name": { "type": "String" }
     }
   },
-  "forwarderUnknown": "Forwarder not in network — try the QR scanner",
+  "forwarderUnknown": "Forwarder not in network. Try the QR scanner.",
   "invalidCodeFormat": "Expected format: KMG-2026-A7X9K2",
   "recentCodes": "Recent codes",
 
@@ -200,7 +202,7 @@
   "aboutHowTitle": "How it works",
   "aboutHowBody": "Your forwarder gives you a unique tracking code. Enter it or scan its QR code in the app to see your shipment's progress, access your documents, and message your forwarder directly.",
   "aboutVersionTitle": "Version",
-  "aboutVersionBody": "Version 1.0.0 — © 2026 BrightFret. All rights reserved.",
+  "aboutVersionBody": "Version 1.0.0 · © 2026 BrightWill. All rights reserved.",
 
   "termsTitle": "Terms & conditions",
   "termsAcceptanceTitle": "Acceptance of terms",
@@ -210,7 +212,7 @@
   "termsResponsibilityTitle": "Your responsibility",
   "termsResponsibilityBody": "You are responsible for the accuracy of the tracking code you enter and for keeping the information linked to your account confidential. Only share your tracking code with people you trust.",
   "termsLiabilityTitle": "Limits of liability",
-  "termsLiabilityBody": "The information shown comes from your forwarder and may change without notice. BrightFret cannot be held responsible for delays, losses or disputes related to the transport of your goods — these are the forwarder's responsibility.",
+  "termsLiabilityBody": "The information shown comes from your forwarder and may change without notice. BrightFret cannot be held responsible for delays, losses or disputes related to the transport of your goods; these are the forwarder's responsibility.",
   "termsChangesTitle": "Changes & contact",
   "termsChangesBody": "These terms may be updated at any time. For any question, contact your forwarder directly through the messaging feature built into the app.",
 
@@ -226,13 +228,17 @@
   "cargoTagline": "your trusted freight forwarder",
   "cargoSectionTitle": "Shipment detail",
   "cargoViewButton": "View invoice",
-  "cargoShareTitle": "Shipment detail — {code}",
+  "cargoShareTitle": "Shipment detail: {code}",
   "cargoShareSummary": "Cargo summary",
   "cargoShareTotalWeight": "Total weight: {value}",
   "cargoShareTotalVolume": "Total volume: {value}",
   "cargoShareGrandTotal": "GRAND TOTAL: {value}",
 
   "updateNewTransitEvent": "New stage: {stage}",
+
+  "aboutBrightwillTitle": "Powered by BrightWill",
+  "aboutBrightwillBody": "Want to track your international shipments? BrightFret is available through BrightWill partner forwarders. Are you a freight forwarder and want to offer this solution to your clients?",
+  "aboutBrightwillLink": "Discover BrightWill",
 
   "termsRequestBanner": "Your forwarder is asking you to accept their terms of use before continuing.",
   "termsReadLink": "Read the terms",

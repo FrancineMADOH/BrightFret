@@ -10,8 +10,9 @@ import '../../../shared/widgets/bf_bottom_nav.dart';
 
 // ── QR URL parsing ────────────────────────────────────────────────────────────
 
+// Accepts both /track/{suffix} (backend QR) and /api/track/{suffix} (spec).
 final _qrUrlPattern = RegExp(
-  r'^(https?://[^/\s]+)/api/track/([A-Za-z0-9]{6})$',
+  r'^(https?://[^/\s]+?)(?:/api)?/track/([A-Za-z0-9]{6})$',
 );
 
 ({String instanceUrl, String suffix})? _parseQrUrl(String raw) {

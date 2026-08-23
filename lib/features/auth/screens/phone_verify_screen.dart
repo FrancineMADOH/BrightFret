@@ -11,6 +11,7 @@ import '../../../core/constants/app_text_styles.dart';
 import '../../../core/http/api_exception.dart';
 import '../../../core/http/dio_provider.dart';
 import '../../../core/router/app_router.dart';
+import '../../../core/storage/hive_service.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../../shared/widgets/bf_bottom_nav.dart';
 import '../services/auth_service.dart';
@@ -44,6 +45,10 @@ class _PhoneVerifyScreenState extends ConsumerState<PhoneVerifyScreen> {
   Timer? _blockTimer;
   Duration _remaining = Duration.zero;
 
+  // Hive prefs keys scoped to this suffix so multiple shipments don't collide.
+  String get _hiveKeyUntil => 'lockout_until_${widget.suffix}';
+  String get _hiveKeyCount => 'lockout_count_${widget.suffix}';
+
   String get _pin => _controllers.map((c) => c.text).join();
   bool get _isBlocked =>
       _blockedUntil != null && DateTime.now().isBefore(_blockedUntil!);
@@ -53,8 +58,44 @@ class _PhoneVerifyScreenState extends ConsumerState<PhoneVerifyScreen> {
     super.initState();
     // Token-skip logic is now handled by the router redirect (RouterNotifier).
     // S07 only renders when no valid token exists — no per-screen check needed.
+    _restorePersistedLockout();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _focusNodes[0].requestFocus();
+      if (mounted && !_isBlocked) _focusNodes[0].requestFocus();
+    });
+  }
+
+  void _restorePersistedLockout() {
+    final prefs = HiveService.prefs;
+    final storedMs = prefs.get(_hiveKeyUntil) as int?;
+    if (storedMs == null) return;
+    final until = DateTime.fromMillisecondsSinceEpoch(storedMs);
+    if (!DateTime.now().isBefore(until)) {
+      // Lockout has expired — clean up stale keys.
+      prefs.delete(_hiveKeyUntil);
+      prefs.delete(_hiveKeyCount);
+      return;
+    }
+    _failureCount = (prefs.get(_hiveKeyCount) as int?) ?? 3;
+    _blockedUntil = until;
+    _remaining = until.difference(DateTime.now());
+    // Restart the countdown timer.
+    _blockTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) { timer.cancel(); return; }
+      final remaining = _blockedUntil!.difference(DateTime.now());
+      if (remaining.isNegative) {
+        timer.cancel();
+        HiveService.prefs.delete(_hiveKeyUntil);
+        HiveService.prefs.delete(_hiveKeyCount);
+        setState(() {
+          _blockedUntil = null;
+          _errorMessage = null;
+          _failureCount = 0;
+          _remaining = Duration.zero;
+        });
+        _focusNodes[0].requestFocus();
+      } else {
+        setState(() => _remaining = remaining);
+      }
     });
   }
 
@@ -96,6 +137,9 @@ class _PhoneVerifyScreenState extends ConsumerState<PhoneVerifyScreen> {
         instanceUrl: widget.instanceUrl,
       );
       await ref.read(tokenStorageProvider).saveToken(token);
+      // Clear any persisted lockout state on successful auth.
+      HiveService.prefs.delete(_hiveKeyUntil);
+      HiveService.prefs.delete(_hiveKeyCount);
       if (!mounted) return;
       context.goNamed(
         AppRoute.shipmentDetail.name,
@@ -124,8 +168,12 @@ class _PhoneVerifyScreenState extends ConsumerState<PhoneVerifyScreen> {
   }
 
   void _handleBlock(String message) {
+    final until = DateTime.now().add(const Duration(minutes: 10));
+    // Persist so the countdown survives navigation away and back.
+    HiveService.prefs.put(_hiveKeyUntil, until.millisecondsSinceEpoch);
+    HiveService.prefs.put(_hiveKeyCount, _failureCount);
     setState(() {
-      _blockedUntil = DateTime.now().add(const Duration(minutes: 10));
+      _blockedUntil = until;
       _errorMessage = message;
       _remaining = const Duration(minutes: 10);
     });
@@ -138,12 +186,15 @@ class _PhoneVerifyScreenState extends ConsumerState<PhoneVerifyScreen> {
       final remaining = _blockedUntil!.difference(DateTime.now());
       if (remaining.isNegative) {
         timer.cancel();
+        HiveService.prefs.delete(_hiveKeyUntil);
+        HiveService.prefs.delete(_hiveKeyCount);
         setState(() {
           _blockedUntil = null;
           _errorMessage = null;
           _failureCount = 0;
           _remaining = Duration.zero;
         });
+        _focusNodes[0].requestFocus();
       } else {
         setState(() => _remaining = remaining);
       }

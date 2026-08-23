@@ -108,6 +108,20 @@ class ShipmentDetailScreen extends ConsumerWidget {
       });
       return const BfLoadingIndicator();
     }
+    if (error is RateLimitException) {
+      return BfErrorScreen(
+        icon: Icons.hourglass_bottom_outlined,
+        title: l10n.errorRateLimitTitle,
+        body: l10n.errorRateLimitBody,
+        actions: [
+          BfErrorAction(
+            label: l10n.retry,
+            onTap: () =>
+                ref.invalidate(fullShipmentProvider(suffix, instanceUrl)),
+          ),
+        ],
+      );
+    }
     return BfErrorScreen(
       icon: Icons.wifi_off_outlined,
       title: l10n.errorNetworkTitle,
@@ -342,22 +356,24 @@ class _DocumentsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(l10n.sectionDocuments, style: AppTextStyles.heading2),
-            TextButton(
-              onPressed: onViewAll,
-              child: Text(l10n.viewAllDocuments),
-            ),
-          ],
-        ),
+        Text(l10n.sectionDocuments, style: AppTextStyles.heading2),
         const SizedBox(height: 4),
         Text(
           l10n.offlineDocumentsUnavailable,
           style: AppTextStyles.bodySmall.copyWith(color: AppColors.statusArchived),
+        ),
+        const SizedBox(height: 8),
+        OutlinedButton.icon(
+          icon: const Icon(Icons.folder_outlined),
+          label: Text(l10n.viewAllDocuments),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.statusActive,
+            side: const BorderSide(color: AppColors.statusActive),
+            padding: const EdgeInsets.symmetric(vertical: 14),
+          ),
+          onPressed: onViewAll,
         ),
       ],
     );
@@ -372,13 +388,20 @@ class _MessagingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(l10n.sectionMessaging, style: AppTextStyles.heading2),
-        TextButton(
+        const SizedBox(height: 8),
+        OutlinedButton.icon(
+          icon: const Icon(Icons.chat_bubble_outline),
+          label: Text(l10n.openMessaging),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.statusDelivered,
+            side: const BorderSide(color: AppColors.statusDelivered),
+            padding: const EdgeInsets.symmetric(vertical: 14),
+          ),
           onPressed: onTap,
-          child: Text(l10n.openMessaging),
         ),
       ],
     );
@@ -439,13 +462,18 @@ class _CargoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(l10n.cargoSectionTitle, style: AppTextStyles.heading2),
         const SizedBox(height: 8),
         OutlinedButton.icon(
           icon: const Icon(Icons.inventory_2_outlined),
           label: Text(l10n.cargoViewButton),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.statusWarning,
+            side: const BorderSide(color: AppColors.statusWarning),
+            padding: const EdgeInsets.symmetric(vertical: 14),
+          ),
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => CargoSummaryScreen(
