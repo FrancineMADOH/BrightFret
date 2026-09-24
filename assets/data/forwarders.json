@@ -1,15 +1,15 @@
 {
   "version": 1,
   "forwarders": {
-    "BWF": {
-      "name": "BrightFret Core",
-      "url": "http://localhost:8070",
-      "database": "bwfreight"
-    },
     "CCI": {
       "name": "BrightFret",
       "url": "https://bw-dev-services.brightwill.org",
       "database": "brightwill_dev_dev"
+    },
+    "CIG": {
+      "name": "Christ International Group",
+      "url": "https://christinternationalgroup.com",
+      "database": "christinternationalgroup_prod_prod"
     }
   }
 }

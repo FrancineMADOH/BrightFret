@@ -65,20 +65,20 @@ abstract class DeepLinkHandler {
     final fullCode = segments.first;
     final parsed = TrackingCodeParser.parse(fullCode);
     if (parsed == null) {
-      debugPrint('[DeepLink] Ignored — invalid code format: $fullCode');
+      if (kDebugMode) debugPrint('[DeepLink] Ignored — invalid code format: $fullCode');
       return;
     }
 
     final entry = ForwarderResolver.resolve(parsed.prefix);
     if (entry == null) {
-      debugPrint('[DeepLink] Unknown forwarder prefix: ${parsed.prefix}');
+      if (kDebugMode) debugPrint('[DeepLink] Unknown forwarder prefix: ${parsed.prefix}');
       router.go(AppRoute.errorUnknownForwarder.path);
       return;
     }
 
     final encoded = Uri.encodeQueryComponent(entry.url);
     final path = '/track/${parsed.suffix}?instance=$encoded';
-    debugPrint('[DeepLink] → $path');
+    if (kDebugMode) debugPrint('[DeepLink] → $path');
     router.go(path);
   }
 }

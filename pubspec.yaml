@@ -1,7 +1,7 @@
 name: brightfret
 description: BrightFret — freight tracking app for end clients (China → Cameroon/Africa).
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: '>=3.6.0 <4.0.0'

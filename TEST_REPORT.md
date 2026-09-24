@@ -136,32 +136,12 @@ Tests effectués sur appareil physique :
 - Bottom nav : onglet "My Shipments" (index 1) sélectionné ✅
 - Bouton accès détail authentifié (→ S07) visible et fonctionnel ✅
 
-**Statut précédent : ⚠️ Partiellement testé — bug identifié (session précédente)**
-
 **Navigation deep link :** Confirmée via logcat :
 ```
 [DeepLink] → /track/IRC146?instance=http%3A%2F%2Flocalhost%3A8070
 ```
 
-**API backend :** L'endpoint `GET /api/track/IRC146` retourne correctement avec `X-Odoo-Database: bwfreight` :
-```json
-{
-  "tracking_code": "BWF-2026-IRC146",
-  "status": "in_transit",
-  "transport_type": "air",
-  "origin": "GUANGZHOU BAIYUN INTERNATIONAL AIRPORT",
-  "destination": "AEROPORT INTERNATIONAL DE YAOUNDE-NSIMALEN",
-  "events": [...]
-}
-```
-
-**Bug observé :** L'écran affichait "Shipment not found" en début de session (voir Bug #1 ci-dessous). Cause probable : le rate limiter était déjà à son seuil (20 requêtes) au moment du premier accès, retournant 429. La gestion du 429 dans S06 s'affiche comme "No connection" (générique), pas comme "Trop de tentatives". L'écran S16 observé en capture avait probablement été déclenché lors d'un test antérieur.
-
-**Code review :**
-- `BfBottomNavBar(currentIndex: 1)` → onglet "My shipments" sélectionné ✅
-- Thème forwarder dynamique via `BfForwarderTheme` ✅
-- Barre de progression et étapes animées (`bf_timeline_step.dart`) ✅
-- Bouton "Save" / "Remove" via `SavedShipmentToggle` ✅
+**Rate limit (Bug #1 — corrigé) :** compteur monté à 200 via psql → S06 affiche icône sablier + "Trop de tentatives / Réessayez dans quelques minutes" ✅
 
 ---
 
