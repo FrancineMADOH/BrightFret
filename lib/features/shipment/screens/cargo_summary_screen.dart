@@ -29,7 +29,7 @@ class CargoSummaryScreen extends StatelessWidget {
     buf.writeln(l10n.cargoShareTitle(trackingCode));
     buf.writeln('$forwarderName\n');
     for (final line in cargo.lines) {
-      final unit = line.isByWeight ? 'kg' : 'm³';
+      final unit = line.isByWeight ? 'kg' : line.isByUnit ? 'pcs' : 'm³';
       buf.writeln('• ${line.name}');
       buf.writeln(
           '  ${fmt.format(line.totalMeasure)} $unit × ${fmtAmt.format(line.price)} ${cargo.currency}/$unit = ${fmtAmt.format(line.totalPrice)} ${cargo.currency}');
@@ -211,7 +211,7 @@ class _CargoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final fmt = NumberFormat('#,##0.###', numLocale);
     final fmtAmt = NumberFormat('#,##0', numLocale);
-    final unit = line.isByWeight ? 'kg' : 'm³';
+    final unit = line.isByWeight ? 'kg' : line.isByUnit ? 'pcs' : 'm³';
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),

@@ -1,7 +1,7 @@
 name: brightfret
-description: BrightFret — freight tracking app for end clients (China → Cameroon/Africa).
+description: BrightFret — freight tracking app for end clients.
 publish_to: 'none'
-version: 1.0.0+2
+version: 1.0.0+6
 
 environment:
   sdk: '>=3.6.0 <4.0.0'
@@ -26,7 +26,7 @@ dependencies:
   hive_flutter: ^1.1.0
 
   # QR scanning
-  mobile_scanner: ^5.2.3
+  mobile_scanner: ^6.0.0
 
   # Documents & images
   flutter_pdfview: ^1.3.2

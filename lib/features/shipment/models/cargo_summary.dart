@@ -1,6 +1,8 @@
 /// One cargo line on a shipment, from `freight.shipment.line`.
-/// Unit price is per kg (billing_type='weight') or per m³ (billing_type='volume').
-/// Total = quantity × weight_or_volume × price.
+/// Unit price is per kg (billing_type='weight'), per m³ (billing_type='volume'),
+/// or per piece (billing_type='unit').
+/// Total = quantity × weight_or_volume × price  (weight/volume)
+///       = quantity × price                      (unit)
 class CargoLine {
   const CargoLine({
     required this.name,
@@ -14,7 +16,7 @@ class CargoLine {
 
   final String name;
 
-  /// `'weight'` or `'volume'`.
+  /// `'weight'`, `'volume'`, or `'unit'`.
   final String billingType;
 
   /// Number of packages / units.
@@ -26,17 +28,22 @@ class CargoLine {
   /// Volume per unit in m³.
   final double volume;
 
-  /// Unit price per kg or per m³ (from the pricing grid).
+  /// Unit price per kg, per m³, or per piece (from the pricing grid).
   final double price;
 
-  /// Total for this line: quantity × weight_or_volume × price.
+  /// Total for this line (computed by Odoo, not re-derived here).
   final double totalPrice;
 
   bool get isByWeight => billingType == 'weight';
+  bool get isByUnit   => billingType == 'unit';
 
-  /// Billed measure for this line (qty × weight or qty × volume).
-  double get totalMeasure =>
-      isByWeight ? quantity * weight : quantity * volume;
+  /// Billed measure for this line:
+  /// weight → qty × weight (kg), volume → qty × volume (m³), unit → qty (pcs).
+  double get totalMeasure {
+    if (isByWeight) return quantity * weight;
+    if (isByUnit)   return quantity;
+    return quantity * volume;
+  }
 
   factory CargoLine.fromJson(Map<String, dynamic> json) => CargoLine(
         name: json['name'] as String? ?? '',
